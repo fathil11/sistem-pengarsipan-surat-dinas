@@ -14,6 +14,7 @@ class CreateMailFilesTable extends Migration
     public function up()
     {
         Schema::create('mail_files', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('mail_version_id');
             $table->foreign('mail_version_id')->references('id')->on('mail_versions');
             $table->string('original_name');
