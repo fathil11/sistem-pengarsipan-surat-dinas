@@ -17,8 +17,8 @@ class CreateMailCorrectionsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('mail_transaction_id');
             $table->foreign('mail_transaction_id')->references('id')->on('mail_transactions');
-            $table->unsignedBigInteger('type_id');
-            $table->foreign('type_id')->references('id')->on('correction_types');
+            $table->unsignedBigInteger('correction_type_id');
+            $table->foreign('correction_type_id')->references('id')->on('correction_types');
             $table->longText('note');
             $table->softDeletes();
             $table->timestamps();
