@@ -15,8 +15,10 @@ class CreateMailPropertiesTable extends Migration
     {
         Schema::create('mail_properties', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('property_id');
-            $table->string('property_type');
+            $table->unsignedBigInteger('mail_id');
+            $table->morphs('property');
+            // $table->unsignedBigInteger('property_id');
+            // $table->string('property_type');
             $table->softDeletes();
             $table->timestamps();
         });
