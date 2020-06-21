@@ -15,8 +15,8 @@ class CreateMailsTable extends Migration
     {
         Schema::create('mails', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('directory_code');
-            $table->string('code')->unique();
+            $table->string('directory_code')->nullable();
+            $table->string('code')->unique()->nullable();
             $table->string('title');
             $table->string('origin');
             $table->string('folder');

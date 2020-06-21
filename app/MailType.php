@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class MailType extends Model
 {
-    public function property()
+    public function mails()
     {
-        return $this->hasMany(MailProperty::class);
+        return $this->hasMany(Mail::class);
     }
 }

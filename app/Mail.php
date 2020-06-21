@@ -11,8 +11,18 @@ class Mail extends Model
         return $this->hasMany(MailVersion::class);
     }
 
-    public function mailProperty()
+    public function type()
     {
-        return $this->hasMany(MailProperty::class);
+        return $this->belongsTo(MailType::class);
+    }
+
+    public function reference()
+    {
+        return $this->belongsTo(MailReference::class);
+    }
+
+    public function priority()
+    {
+        return $this->belongsTo(MailPriority::class);
     }
 }
