@@ -23,8 +23,7 @@ class CreateUsersTable extends Migration
             $table->foreign('position_detail_id')->references('id')->on('position_details');
             $table->unsignedBigInteger('department_id');
             $table->foreign('department_id')->references('id')->on('departments');
-2e4fb40ea16403541
-')->unique();
+            $table->string('email')->unique();
             $table->string('username')->unique();
             $table->string('password');
             $table->softDeletes();
