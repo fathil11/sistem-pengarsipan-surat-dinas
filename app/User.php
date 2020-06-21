@@ -47,6 +47,11 @@ class User extends Authenticatable
         return $this->belongsTo(PositionDetail::class);
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
     public function mailTransactions()
     {
         return $this->hasMany(MailTransaction::class);
