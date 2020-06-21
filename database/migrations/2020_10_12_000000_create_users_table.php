@@ -17,11 +17,14 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('nip')->unique();
             $table->string('name');
-            // $table->unsignedBigInteger('position_id');
-            // $table->foreign('position_id')->references('id')->on('positions');
-            // $table->unsignedBigInteger('position_detail_id');
-            // $table->foreign('position_detail_id')->references('id')->on('position_details');
-            $table->string('email')->unique();
+            $table->unsignedBigInteger('position_id');
+            $table->foreign('position_id')->references('id')->on('positions');
+            $table->unsignedBigInteger('position_detail_id');
+            $table->foreign('position_detail_id')->references('id')->on('position_details');
+            $table->unsignedBigInteger('department_id');
+            $table->foreign('department_id')->references('id')->on('departments');
+2e4fb40ea16403541
+')->unique();
             $table->string('username')->unique();
             $table->string('password');
             $table->softDeletes();
