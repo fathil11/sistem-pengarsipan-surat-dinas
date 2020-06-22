@@ -23,6 +23,7 @@ class TestingController extends Controller
 {
     public function storeMailIn(Request $request)
     {
+        return response(200);
         // TODO:
         // - Check Role (TU)
         // Fail -> return abort:401, "Anda tidak memiliki akses"
