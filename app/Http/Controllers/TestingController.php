@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Auth;
 
 use App\User;
+use App\UserPosition;
 
 use App\Mail;
 use App\MailVersion;
@@ -109,7 +110,7 @@ class TestingController extends Controller
 
     private function getUsersInRole(String $role)
     {
-        return DB::table('user_positions')->where('role', $role)->get();
+        return UserPosition::where('role', $role)->get();
     }
 
     private function getSecretariesId()
