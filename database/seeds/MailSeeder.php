@@ -25,9 +25,9 @@ class MailSeeder extends Seeder
             'title' => 'undangan rapat dinas',
             'origin' => 'pemerintah provinsi',
             'mail_folder_id' => '1',
-            'type_id' => '1',
-            'reference_id' => '2',
-            'priority_id' => '1',
+            'mail_type_id' => '1',
+            'mail_reference_id' => '2',
+            'mail_priority_id' => '1',
             'mail_created_at' => Carbon::now(),
         ]);
 
@@ -52,9 +52,9 @@ class MailSeeder extends Seeder
             'title' => 'permohonan obat-obatan',
             'origin' => 'puskesmas',
             'mail_folder_id' => '2',
-            'type_id' => '2',
-            'reference_id' => '2',
-            'priority_id' => '1',
+            'mail_type_id' => '2',
+            'mail_reference_id' => '2',
+            'mail_priority_id' => '1',
             'mail_created_at' => Carbon::now(),
         ]);
 

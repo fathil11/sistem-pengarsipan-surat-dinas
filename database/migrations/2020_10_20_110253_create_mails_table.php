@@ -22,12 +22,12 @@ class CreateMailsTable extends Migration
             $table->string('origin');
             $table->unsignedBigInteger('mail_folder_id');
             $table->foreign('mail_folder_id')->references('id')->on('mail_folders');
-            $table->unsignedBigInteger('type_id');
-            $table->foreign('type_id')->references('id')->on('mail_types');
-            $table->unsignedBigInteger('reference_id');
-            $table->foreign('reference_id')->references('id')->on('mail_references');
-            $table->unsignedBigInteger('priority_id');
-            $table->foreign('priority_id')->references('id')->on('mail_priorities');
+            $table->unsignedBigInteger('mail_type_id');
+            $table->foreign('mail_type_id')->references('id')->on('mail_types');
+            $table->unsignedBigInteger('mail_reference_id');
+            $table->foreign('mail_reference_id')->references('id')->on('mail_references');
+            $table->unsignedBigInteger('mail_priority_id');
+            $table->foreign('mail_priority_id')->references('id')->on('mail_priorities');
             $table->dateTimeTz('mail_created_at')->nullable();
             $table->dateTimeTz('mail_updated_at')->nullable();
             $table->softDeletes();
