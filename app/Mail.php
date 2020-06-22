@@ -11,6 +11,11 @@ class Mail extends Model
         return $this->hasMany(MailVersion::class);
     }
 
+    public function folder()
+    {
+        return $this->belongsTo(MailFolder::class);
+    }
+
     public function type()
     {
         return $this->belongsTo(MailType::class);

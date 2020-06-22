@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PositionDetail extends Model
+class UserPositionDetail extends Model
 {
     public function users()
     {

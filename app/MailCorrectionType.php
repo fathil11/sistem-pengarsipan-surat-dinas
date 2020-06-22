@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CorrectionType extends Model
+class MailCorrectionType extends Model
 {
     public function mailCorrection()
     {

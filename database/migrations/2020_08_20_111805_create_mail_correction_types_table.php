@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDepartmentsTable extends Migration
+class CreateMailCorrectionTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateDepartmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('departments', function (Blueprint $table) {
-            $table->id();
-            $table->string('department');
-            $table->string('department_abbreviation');
+        Schema::create('mail_correction_types', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('type');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateDepartmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('mail_correction_types');
     }
 }

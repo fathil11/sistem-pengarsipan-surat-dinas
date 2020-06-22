@@ -19,7 +19,8 @@ class CreateMailsTable extends Migration
             $table->string('code')->unique()->nullable();
             $table->string('title');
             $table->string('origin');
-            $table->string('folder');
+            $table->unsignedBigInteger('mail_folder_id');
+            $table->foreign('mail_folder_id')->references('id')->on('mail_folders');
             $table->unsignedBigInteger('type_id');
             $table->foreign('type_id')->references('id')->on('mail_types');
             $table->unsignedBigInteger('reference_id');

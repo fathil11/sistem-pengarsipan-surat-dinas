@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePositionDetailsTable extends Migration
+class CreateUserDepartmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreatePositionDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('position_details', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('position_detail');
-            $table->softDeletes();
+        Schema::create('user_departments', function (Blueprint $table) {
+            $table->id();
+            $table->string('department');
+            $table->string('department_abbreviation');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreatePositionDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('position_details');
+        Schema::dropIfExists('user_departments');
     }
 }

@@ -11,8 +11,8 @@ class MailCorrection extends Model
         return $this->belongsTo(MailTransaction::class);
     }
 
-    public function correctionType()
+    public function mailCorrectionType()
     {
-        return $this->belongsTo(CorrectionType::class);
+        return $this->belongsTo(MailCorrectionType::class);
     }
 }

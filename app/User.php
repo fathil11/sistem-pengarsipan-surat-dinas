@@ -39,26 +39,26 @@ class User extends Authenticatable
 
     public function position()
     {
-        return $this->belongsTo(Position::class);
-    }
-
-    public function positionDetail()
-    {
-        return $this->belongsTo(PositionDetail::class);
+        return $this->belongsTo(UserPosition::class);
     }
 
     public function department()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(UserDepartment::class);
     }
 
-    public function mailTransactions()
+    public function positionDetail()
     {
-        return $this->hasMany(MailTransaction::class);
+        return $this->belongsTo(UserPositionDetail::class);
     }
 
-    public function mailTargetTransaction()
+    public function outcomingMailTransactions()
     {
-        return $this->hasMany(MailTransaction::class, 'target_user_id');
+        return $this->belongsToMany(MailVersion::class, 'mail_transactions')->withPivot(['target_user_id'])->withTimestamps();
+    }
+
+    public function incomingMailTransaction()
+    {
+        return $this->belongsToMany(MailVersion::class, 'mail_transactions', 'target_user_id')->withPivot(['user_id'])->withTimestamps();
     }
 }

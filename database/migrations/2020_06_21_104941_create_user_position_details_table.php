@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCorrectionTypesTable extends Migration
+class CreateUserPositionDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateCorrectionTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('correction_types', function (Blueprint $table) {
+        Schema::create('user_position_details', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('type');
+            $table->string('position_detail');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateCorrectionTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('correction_types');
+        Schema::dropIfExists('user_position_details');
     }
 }
