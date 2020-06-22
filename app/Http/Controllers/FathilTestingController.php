@@ -107,13 +107,19 @@ class FathilTestingController extends Controller
         // === Validate Form ===
         $request->validate([
             'department' => 'required|min:3|max:50',
+            'department_abbreviation' => 'required|min:2|max:50',
         ]);
 
         // === Create UserDepartment ===
         UserDepartment::create([
-            'department' => $request->department
+            'department' => $request->department,
+            'department_abbreviation' => $request->department_abbreviation
         ]);
 
         return response(200);
+    }
+
+    public function storeUserPositionDetail(Request $request)
+    {
     }
 }

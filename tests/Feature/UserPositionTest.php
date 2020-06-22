@@ -21,7 +21,7 @@ class UserPositionTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $response = $this->post('/test/user/jabatan', [
+        $response = $this->post('/test/pengguna/jabatan', [
             'position' => 'Testing',
             'role' => 'admin'
         ]);
@@ -32,7 +32,7 @@ class UserPositionTest extends TestCase
     /** @test */
     public function false_role_cant_added()
     {
-        $response = $this->post('/test/user/jabatan', [
+        $response = $this->post('/test/pengguna/jabatan', [
             'position' => 'Testing',
             'role' => 'test'
         ]);
@@ -41,9 +41,9 @@ class UserPositionTest extends TestCase
     }
 
     /** @test */
-    public function position_with_less_than_3_letters_cant_added()
+    public function position_with_less_than_3_characters_cant_added()
     {
-        $response = $this->post('/test/user/jabatan', [
+        $response = $this->post('/test/pengguna/jabatan', [
             'position' => 'aa',
             'role' => 'test'
         ]);
@@ -52,9 +52,9 @@ class UserPositionTest extends TestCase
     }
 
     /** @test */
-    public function role_with_less_than_3_letters_cant_added()
+    public function role_with_less_than_3_characters_cant_added()
     {
-        $response = $this->post('/test/user/jabatan', [
+        $response = $this->post('/test/pengguna/jabatan', [
             'position' => 'Testing',
             'role' => 'aa'
         ]);
