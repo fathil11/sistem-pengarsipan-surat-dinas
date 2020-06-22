@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 use App\User;
 use App\UserPosition;
@@ -14,13 +14,14 @@ use App\MailVersion;
 use App\MailFile;
 use App\MailTransaction;
 
+use App\MailFolder;
 use App\MailPriority;
 use App\MailReference;
 use App\MailType;
 
 class TestingController extends Controller
 {
-    public function storeMailIn()
+    public function storeMailIn(Request $request)
     {
         // TODO:
             // - Check Role (TU)
@@ -38,16 +39,17 @@ class TestingController extends Controller
                 'code' => 'required|min:3|unique:mails|max:50',
                 'title' => 'required|min:3|max:50',
                 'origin' => 'required|min:3|max:50',
-                'mail_folder' => 'required|min:3|max:50',
-                'type' => 'required|numeric',
-                'reference' => 'required|numeric',
-                'priority' => 'required|numeric',
+                'mail_folder_id' => 'required|numeric',
+                'mail_type_id' => 'required|numeric',
+                'mail_reference_id' => 'required|numeric',
+                'mail_priority_id' => 'required|numeric',
                 'mail_created_at' => 'required|date',
 
-                'file' => 'file|mimes:pdf,doc,jpeg,jpg,png|size:5120',
+                'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|size:5120',
             ]);
 
-            if (MailPriority::find($request->priority)->exists() &&
+            if (MailFolder::find($request->priority)->exists() &&
+                MailPriority::find($request->priority)->exists() &&
                 MailType::find($request->type)->exists() &&
                 MailReference::find($request->reference)->exists()) {
                     // === Query ===
@@ -60,10 +62,10 @@ class TestingController extends Controller
                         'code' => $request->code,
                         'title' => $request->title,
                         'origin' => $request->origin,
-                        'mail_folder_id' => $request->mail_folder,
-                        'type_id' => $request->type,
-                        'reference_id' => $request->reference_id,
-                        'priority_id' => $request->priority_id,
+                        'mail_folder_id' => $request->mail_folder_id,
+                        'mail_type_id' => $request->mail_type_id,
+                        'mail_reference_id' => $request->mail_reference_id,
+                        'mail_priority_id' => $request->mail_priority_id,
                         'mail_created_at' => $request->mail_created_at,
                     ]);
 
@@ -81,13 +83,13 @@ class TestingController extends Controller
                     // - original_name -> "getOriginalFileName()"
                     // - type -> File extension
 
-                    $file_mail = $request->file('file');
+                    $file = $request->file('file');
 
                     MailFile::create([
                         'mail_version_id' => $mail_version->id,
-                        'original_name' => $file_mail->getClientOriginalName(),
-                        'directory_name' => $request->folder,
-                        'type' => $file_mail->getClientOriginalExtension(),
+                        'original_name' => $file->getClientOriginalName(),
+                        'directory_name' => $file->store('documents'),
+                        'type' => $file->getClientOriginalExtension(),
                     ]);
 
                     // - Create Mail Transaction
@@ -96,32 +98,18 @@ class TestingController extends Controller
                     // - target_user_id -> All user (Sekrestaris)
                     // - type -> create
 
-                    MailTransaction::create([
-                        'mail_version_id' => $mail_version->id,
-                        'user_id' => Auth::user()->id,
-                        'target_user_id' => getSecretariesId(),
-                        'type' => 'create',
-                    ]);
+                    $secretaries = User::getUsersInRole("sekretaris");
+                    foreach($secretaries as $secretary){
+                        $secretary_data = User::where('position_id', $secretary->id)->get();
+                        MailTransaction::create([
+                            'mail_version_id' => $mail_version->id,
+                            'user_id' => Auth::user()->id,
+                            'target_user_id' => $secretary_data->id,
+                            'type' => 'create',
+                        ]);
+                    }
                 } else {
                     redirect('/');
                 }
-    }
-
-
-    private function getUsersInRole(String $role)
-    {
-        return UserPosition::where('role', $role)->get();
-    }
-
-    private function getSecretariesId()
-    {
-        $secretaries = getUsersInRole("sekretaris");
-        $secretaries_id = '';
-        foreach ($secretaries as $secretary) {
-            $secretary_data = User::where('position_id', $secretary->id)->get();
-            $secretary_id = $secretary_data->id;
-            $secretaries_id = $secretary_id . ",";
-        }
-        return $secretaries_id;
     }
 }
