@@ -5,21 +5,15 @@ namespace App\Http\Controllers;
 use App\Mail;
 use App\MailFile;
 use App\MailVersion;
+use App\User;
 use App\UserDepartment;
 use App\UserPosition;
+use App\UserPositionDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class FathilTestingController extends Controller
 {
-    private $roles = [
-    'admin',
-    'kepala_dinas',
-    'sekretaris',
-    'kepala_bidang',
-    'kepala_seksie',
-    'kepala_tu'
-    ];
-
     public function storeMailOut(Request $request)
     {
         // TODO:
@@ -89,7 +83,7 @@ class FathilTestingController extends Controller
         ]);
 
         // === Check Role format is Correct ===
-        if (!in_array($request->role, $this->roles)) {
+        if (!UserPosition::checkRoleIsExists($request->role)) {
             return redirect()->back()->withErrors('Format akses tidak sesuai !');
         }
 
@@ -121,5 +115,64 @@ class FathilTestingController extends Controller
 
     public function storeUserPositionDetail(Request $request)
     {
+        // === Validate Form ===
+        $request->validate([
+            'position_detail' => 'required|min:3|max:50',
+        ]);
+
+        // === Create UserDepartment ===
+        UserPositionDetail::create([
+            'position_detail' => $request->position_detail,
+        ]);
+
+        return response(200);
+    }
+
+    public function storeUser(Request $request)
+    {
+        // === Validate Form ===
+        $request->validate([
+            'nip' => 'required|min:3|max:50',
+            'name' => 'required|min:3|max:255',
+            'user_position_id' => 'required|numeric|min:1|max:255',
+            'user_department_id' => 'nullable|numeric|min:1|max:255',
+            'user_position_detail_id' => 'nullable|numeric|min:1|max:255',
+            'email' => 'required|min:5|max:255|email:rfc',
+            'phone_number' => 'required|min:5|max:20',
+            'username' => 'required|min:5|max:255',
+            'password' => 'required|min:6|max:512',
+        ]);
+
+        // === Validate UserPosition is exist ===
+        if (!UserPosition::checkPositionIdIsExists($request->user_position_id)) {
+            return redirect()->back()->withErrors('Format jabatan tidak sesuai !');
+        }
+
+        // === Process UserDepartment & UserPositionDetails ===
+        /*
+        User with position role is Admin, Kepala Dinas, Sekretaris, or Kepala TU does't have UserDepartment and UserPositionDetail.
+        */
+        $user_department_id = null;
+        $user_position_id = null;
+
+        if (UserPosition::checkPositionIdHasExtra($request->user_position_id)) {
+            $user_department_id = $request->user_department_id;
+            $user_position_id = $request->user_position_id;
+        }
+
+        // === Create UserDepartment ===
+        User::create([
+            'nip' => $request->nip,
+            'name' => $request->name,
+            'user_position_id' => $request->user_position_id,
+            'user_department_id' => $user_department_id,
+            'user_position_detail_id' => $user_position_id,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response(200);
     }
 }
