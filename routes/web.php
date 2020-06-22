@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 // Route for Testing
 Route::group(['prefix' => 'test'], function () {
-    Route::post('/user/jabatan', 'FathilTestingController@storeUserPosition');
+    Route::post('/pengguna/jabatan', 'FathilTestingController@storeUserPosition');
+    Route::post('/pengguna/bidang', 'FathilTestingController@storeUserDepartment');
+    Route::post('/pengguna/unit-kerja', 'FathilTestingController@storeUserPositionDetail');
 });
 
 Route::get('/', function () {
