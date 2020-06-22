@@ -8,7 +8,7 @@ class MailCorrection extends Model
 {
     public function mailTransaction()
     {
-        return $this->belongsTo(MailTransaction::class);
+        return $this->belongsTo(MailTransaction::class, );
     }
 
     public function mailCorrectionType()

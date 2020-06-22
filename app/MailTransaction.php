@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\App;
 
 class MailTransaction extends Model
 {
+    protected $guarded = [];
+
     public function user()
     {
         return $this->belongsToMany(User::class)->withPivot(['target_user_id'])->withTimestamps();
@@ -19,7 +21,7 @@ class MailTransaction extends Model
 
     public function mailVersion()
     {
-        return $this->belongsToMany(MailVersion::class);
+        return $this->belongsToMany(MailVersion::class, 'mail_version_id');
     }
 
     public function transactionLog()

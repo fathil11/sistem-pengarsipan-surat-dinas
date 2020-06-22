@@ -69,6 +69,8 @@ class User extends Authenticatable
 
     public static function getUsersInRole(String $role)
     {
-        return UserPosition::where('role', $role)->get();
+        $user_position = UserPosition::where('role', $role)->first();
+
+        return User::where('user_position_id', $user_position->id)->get();
     }
 }

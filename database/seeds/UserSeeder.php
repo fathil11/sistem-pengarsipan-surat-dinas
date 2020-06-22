@@ -71,7 +71,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'nip' => '00005',
             'name' => 'Arif Budiman',
-            'user_position_id' => 5,
+            'user_position_id' => 4,
             'user_position_detail_id' => 2,
             'user_department_id' => 3,
             'email' => 'arif@gmail.com',
