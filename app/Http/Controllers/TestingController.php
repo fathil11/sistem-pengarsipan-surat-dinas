@@ -116,11 +116,11 @@ class TestingController extends Controller
     private function getSecretariesId()
     {
         $secretaries = getUsersInRole("sekretaris");
-        $secretaries_id = array();
+        $secretaries_id = '';
         foreach ($secretaries as $secretary) {
             $secretary_data = User::where('position_id', $secretary->id)->get();
             $secretary_id = $secretary_data->id;
-            $secretaries_id = array_merge($secretaries_id, array_flatten($participantss));
+            $secretaries_id = $secretary_id . ",";
         }
         return $secretaries_id;
     }
