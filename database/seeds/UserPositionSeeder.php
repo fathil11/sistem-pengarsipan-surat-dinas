@@ -41,5 +41,10 @@ class UserPositionSeeder extends Seeder
             'position' => 'Ketua Seksie',
             'role' => 'Ketua Seksie'
         ]);
+
+        DB::table('user_positions')->insert([
+            'position' => 'Kepala TU',
+            'role' => 'TU'
+        ]);
     }
 }

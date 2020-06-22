@@ -89,5 +89,16 @@ class UserSeeder extends Seeder
             'username' => 'eka',
             'password' => Hash::make('123123')
         ]);
+
+        DB::table('users')->insert([
+            'nip' => '00007',
+            'name' => 'Wily',
+            'user_position_id' => 7,
+            // 'user_position_detail_id' => 4,
+            // 'user_department_id' => 1,
+            'email' => 'wily@gmail.com',
+            'username' => 'wilyeka',
+            'password' => Hash::make('123123')
+        ]);
     }
 }
