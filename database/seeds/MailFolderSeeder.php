@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\MailFolder;
 
-class AdminMailFolderSeeder extends Seeder
+class MailFolderSeeder extends Seeder
 {
     /**
      * Run the database seeds.

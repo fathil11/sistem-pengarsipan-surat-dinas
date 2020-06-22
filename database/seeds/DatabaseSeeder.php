@@ -18,11 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
 
         // Mail Seeder
-        $this->call(AdminMailPrioritySeeder::class);
-        $this->call(AdminMailReferenceSeeder::class);
-        $this->call(AdminMailTypeSeeder::class);
-        $this->call(AdminMailFolderSeeder::class);
-
+        $this->call(MailPrioritySeeder::class);
+        $this->call(MailReferenceSeeder::class);
+        $this->call(MailTypeSeeder::class);
+        $this->call(MailFolderSeeder::class);
         $this->call(MailSeeder::class);
     }
 }

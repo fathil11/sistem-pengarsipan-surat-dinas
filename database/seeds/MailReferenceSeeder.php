@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\MailReference;
 
-class AdminMailReferenceSeeder extends Seeder
+class MailReferenceSeeder extends Seeder
 {
     /**
      * Run the database seeds.

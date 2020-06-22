@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\MailPriority;
 
-class AdminMailPrioritySeeder extends Seeder
+class MailPrioritySeeder extends Seeder
 {
     /**
      * Run the database seeds.
