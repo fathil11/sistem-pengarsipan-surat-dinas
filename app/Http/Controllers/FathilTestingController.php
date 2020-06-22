@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail;
 use App\MailFile;
 use App\MailVersion;
+use App\UserDepartment;
 use App\UserPosition;
 use Illuminate\Http\Request;
 
@@ -79,28 +80,40 @@ class FathilTestingController extends Controller
         // $mail_transaction =
     }
 
-    public function createUserPosition(Request $request)
+    public function storeUserPosition(Request $request)
     {
-
         // === Validate Form ===
         $request->validate([
             'position' => 'required|min:3|max:50',
             'role' => 'required|min:3|max:50'
         ]);
 
-        $position = $request->position;
-        $role = $request->role;
-
         // === Check Role format is Correct ===
-        if (!in_array($role, $this->roles)) {
-            dd('Format akses tidak sesuai !');
+        if (!in_array($request->role, $this->roles)) {
             return redirect()->back()->withErrors('Format akses tidak sesuai !');
         }
 
-        // === Check Role format is Correct ===
+        // === Create UserPosition ===
         UserPosition::create([
-            'position' => $position,
-            'role' => $role
+            'position' => $request->position,
+            'role' => $request->role
         ]);
+
+        return response(200);
+    }
+
+    public function storeUserDepartment(Request $request)
+    {
+        // === Validate Form ===
+        $request->validate([
+            'department' => 'required|min:3|max:50',
+        ]);
+
+        // === Create UserDepartment ===
+        UserDepartment::create([
+            'department' => $request->department
+        ]);
+
+        return response(200);
     }
 }

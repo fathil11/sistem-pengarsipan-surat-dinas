@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route for Testing
 Route::group(['prefix' => 'test'], function () {
+    Route::post('/user/jabatan', 'FathilTestingController@storeUserPosition');
 });
 
 Route::get('/', function () {
