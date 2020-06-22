@@ -20,7 +20,7 @@ use App\MailType;
 
 class TestingController extends Controller
 {
-    public function storeMailIn()
+    public function storeMailIn(Request $request)
     {
         // TODO:
             // - Check Role (TU)
@@ -99,7 +99,7 @@ class TestingController extends Controller
                     MailTransaction::create([
                         'mail_version_id' => $mail_version->id,
                         'user_id' => Auth::user()->id,
-                        'target_user_id' => getSecretariesId(),
+                        'target_user_id' => $this->getSecretariesId(),
                         'type' => 'create',
                     ]);
                 } else {
@@ -115,7 +115,7 @@ class TestingController extends Controller
 
     private function getSecretariesId()
     {
-        $secretaries = getUsersInRole("sekretaris");
+        $secretaries = $this->getUsersInRole("sekretaris");
         $secretaries_id = '';
         foreach ($secretaries as $secretary) {
             $secretary_data = User::where('position_id', $secretary->id)->get();
