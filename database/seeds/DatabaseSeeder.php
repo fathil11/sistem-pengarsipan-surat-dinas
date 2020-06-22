@@ -15,5 +15,8 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminMailPrioritySeeder::class);
         $this->call(AdminMailReferenceSeeder::class);
         $this->call(AdminMailTypeSeeder::class);
+        $this->call(AdminMailFolderSeeder::class);
+
+        $this->call(MailSeeder::class);
     }
 }
