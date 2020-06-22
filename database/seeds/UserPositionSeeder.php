@@ -14,37 +14,37 @@ class UserPositionSeeder extends Seeder
     {
         DB::table('user_positions')->insert([
             'position' => 'Admin',
-            'role' => 'Admin'
+            'role' => 'admin'
         ]);
 
         DB::table('user_positions')->insert([
             'position' => 'Kepala Dinas',
-            'role' => 'Kepala Dinas'
+            'role' => 'kepala_dinas'
         ]);
 
         DB::table('user_positions')->insert([
             'position' => 'Asisten Kepala Dinas',
-            'role' => 'Kepala Dinas'
+            'role' => 'kepala_dinas'
         ]);
 
         DB::table('user_positions')->insert([
             'position' => 'Sekretaris',
-            'role' => 'Sekretaris'
+            'role' => 'sekretaris'
         ]);
 
         DB::table('user_positions')->insert([
-            'position' => 'Ketua Bidang',
-            'role' => 'Kepala Bidang'
+            'position' => 'Kepala Bidang',
+            'role' => 'kepala_bidang'
         ]);
 
         DB::table('user_positions')->insert([
-            'position' => 'Ketua Seksie',
-            'role' => 'Ketua Seksie'
+            'position' => 'Kepala Seksie',
+            'role' => 'kepala_seksie'
         ]);
 
         DB::table('user_positions')->insert([
             'position' => 'Kepala TU',
-            'role' => 'TU'
+            'role' => 'kepala_tu'
         ]);
     }
 }
