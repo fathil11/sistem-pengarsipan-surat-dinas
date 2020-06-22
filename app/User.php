@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->position->role;
     }
+
+    public static function getUsersInRole(String $role)
+    {
+        return UserPosition::where('role', $role)->get();
+    }
 }
