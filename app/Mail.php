@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mail extends Model
 {
+    protected $guarded = [];
+
     public function mailVersions()
     {
         return $this->hasMany(MailVersion::class);
