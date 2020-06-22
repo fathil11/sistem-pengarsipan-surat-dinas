@@ -54,11 +54,11 @@ class User extends Authenticatable
 
     public function outcomingMailTransactions()
     {
-        return $this->belongsToMany(MailVersion::class, 'mail_transactions')->withPivot(['target_user_id'])->withTimestamps();
+        return $this->belongsToMany(MailVersion::class, 'mail_transactions')->withPivot(['target_user_id', 'type'])->withTimestamps();
     }
 
     public function incomingMailTransaction()
     {
-        return $this->belongsToMany(MailVersion::class, 'mail_transactions', 'target_user_id')->withPivot(['user_id'])->withTimestamps();
+        return $this->belongsToMany(MailVersion::class, 'mail_transactions', 'target_user_id')->withPivot(['user_id', 'type'])->withTimestamps();
     }
 }
