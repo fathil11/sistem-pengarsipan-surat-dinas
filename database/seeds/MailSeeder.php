@@ -40,7 +40,7 @@ class MailSeeder extends Seeder
             'mail_version_id' => $mail_version[0]->id,
             'original_name' => 'udg-001',
             'directory_name' => 'rs-udg-001',
-            'type' => 'undangan'
+            'type' => 'jpg'
         ]);
 
 
@@ -67,7 +67,7 @@ class MailSeeder extends Seeder
             'mail_version_id' => $mail_version[1]->id,
             'original_name' => 'mhn-001',
             'directory_name' => 'rs-mhn-001',
-            'type' => 'permohonan'
+            'type' => 'jpg'
         ]);
 
         $mail_version[1] = MailVersion::create([
@@ -79,7 +79,7 @@ class MailSeeder extends Seeder
             'mail_version_id' => $mail_version[1]->id,
             'original_name' => 'mhn-001',
             'directory_name' => 'rs-mhn-001',
-            'type' => 'permohonan'
+            'type' => 'jpg'
         ]);
     }
 }
