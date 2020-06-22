@@ -39,17 +39,17 @@ class User extends Authenticatable
 
     public function position()
     {
-        return $this->belongsTo(UserPosition::class);
+        return $this->belongsTo(UserPosition::class, 'user_position_id');
     }
 
     public function department()
     {
-        return $this->belongsTo(UserDepartment::class);
+        return $this->belongsTo(UserDepartment::class, 'user_department_id');
     }
 
     public function positionDetail()
     {
-        return $this->belongsTo(UserPositionDetail::class);
+        return $this->belongsTo(UserPositionDetail::class, 'user_position_detail_id');
     }
 
     public function outcomingMailTransactions()
@@ -60,5 +60,10 @@ class User extends Authenticatable
     public function incomingMailTransaction()
     {
         return $this->belongsToMany(MailVersion::class, 'mail_transactions', 'target_user_id')->withPivot(['user_id', 'type'])->withTimestamps();
+    }
+
+    public function getRole()
+    {
+        return $this->position->role;
     }
 }
