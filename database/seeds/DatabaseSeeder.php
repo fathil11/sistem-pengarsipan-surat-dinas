@@ -15,5 +15,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UserPositionSeeder::class);
         $this->call(UserPositionDetailSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(AdminMailPrioritySeeder::class);
+        $this->call(AdminMailReferenceSeeder::class);
+        $this->call(AdminMailTypeSeeder::class);
     }
 }
