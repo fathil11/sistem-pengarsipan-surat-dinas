@@ -17,9 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 // Route for Testing
 Route::group(['prefix' => 'test'], function () {
-    // User
     Route::post('/surat/masuk/buat', 'TestingController@storeMailIn');
     Route::post('/pengguna/surat/tipe', 'TestingController@storeMailType');
+
+    // User
     Route::post('/pengguna', 'FathilTestingController@storeUser');
 
     // User Position
