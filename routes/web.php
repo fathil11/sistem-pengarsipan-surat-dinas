@@ -21,22 +21,24 @@ Route::group(['prefix' => 'test'], function () {
     Route::post('/pengguna/surat/tipe', 'TestingController@storeMailType');
 
     // User
-    Route::post('/pengguna', 'FathilTestingController@storeUser');
+    Route::post('/pengguna', 'UserSettingController@storeUser');
+    Route::patch('/pengguna/{id}', 'UserSettingController@updateUser');
+    Route::delete('/pengguna/{id}', 'UserSettingController@deleteUser');
 
     // User Position
-    Route::post('/pengguna/jabatan', 'FathilTestingController@storeUserPosition');
-    Route::patch('/pengguna/jabatan/{id}', 'FathilTestingController@updateUserPosition');
-    Route::delete('/pengguna/jabatan/{id}', 'FathilTestingController@deleteUserPosition');
+    Route::post('/pengguna/jabatan', 'UserSettingController@storeUserPosition');
+    Route::patch('/pengguna/jabatan/{id}', 'UserSettingController@updateUserPosition');
+    Route::delete('/pengguna/jabatan/{id}', 'UserSettingController@deleteUserPosition');
 
     // User Department
-    Route::post('/pengguna/bidang', 'FathilTestingController@storeUserDepartment');
-    Route::patch('/pengguna/bidang/{id}', 'FathilTestingController@updateUserDepartment');
-    Route::delete('/pengguna/bidang/{id}', 'FathilTestingController@deleteUserDepartment');
+    Route::post('/pengguna/bidang', 'UserSettingController@storeUserDepartment');
+    Route::patch('/pengguna/bidang/{id}', 'UserSettingController@updateUserDepartment');
+    Route::delete('/pengguna/bidang/{id}', 'UserSettingController@deleteUserDepartment');
 
     // User Position Detail
-    Route::post('/pengguna/unit-kerja', 'FathilTestingController@storeUserPositionDetail');
-    Route::patch('/pengguna/unit-kerja/{id}', 'FathilTestingController@updateUserPositionDetail');
-    Route::delete('/pengguna/unit-kerja/{id}', 'FathilTestingController@deleteUserPositionDetail');
+    Route::post('/pengguna/unit-kerja', 'UserSettingController@storeUserPositionDetail');
+    Route::patch('/pengguna/unit-kerja/{id}', 'UserSettingController@updateUserPositionDetail');
+    Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
 Route::get('/', 'TestingController@tes');
