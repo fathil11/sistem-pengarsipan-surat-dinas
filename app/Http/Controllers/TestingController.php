@@ -128,7 +128,19 @@ class TestingController extends Controller
         }
     }
 
-    public function updateMailIn(Request $request, Mail $mail){
+    public function updateMailIn(Request $request, $id){
+
+
+        //kurang cek jika mail belum dikirim sekretaris
+
+
+
+
+
+        $mail = Mail::find($id);
+        if ($mail->kind != 'in'){
+            return redirect('/');
+        }
         // === Validation ===
         $request->validate([
             'directory_code' => 'required|min:3|max:50',
@@ -148,7 +160,7 @@ class TestingController extends Controller
             MailReference::find($request->mail_reference_id)->exists()) {
 
             // === UPDATE Mail ===
-            Mail::where('id', $mail->id)
+            Mail::where('id', $id)
             ->update([
                 'kind' => 'in',
                 'directory_code' => $request->directory_code,
@@ -164,9 +176,9 @@ class TestingController extends Controller
             ]);
 
             // === UPDATE MailVersion ===
-            $mail_version_last = Mail::find($mail->id)->mailVersions()->latest();
+            $mail_version_last = Mail::find($id)->mailVersions->last();
             $mail_version = MailVersion::create([
-                'mail_id' => $mail->id,
+                'mail_id' => $id,
                 'version' => $mail_version_last->version+1,
             ]);
 
@@ -193,7 +205,7 @@ class TestingController extends Controller
             // - type -> create
 
             // === Create MailTransaction ===
-            $mail_transactions = MailVersion::find($mail_version_last)->mailTransactions();
+            $mail_transactions = MailVersion::find($mail_version_last->id)->mailTransactions;
             foreach($mail_transactions as $mail_transaction){
                 MailTransaction::where('id', $mail_transaction->id)
                 ->update([
@@ -207,21 +219,63 @@ class TestingController extends Controller
         }
     }
 
+
+    //=== CRUD FOR MAIL TYPE ===
     public function storeMailType()
     {
         MailType::create($this->validateMailComponent());
         return response(200);
     }
 
+    public function updateMailType($id)
+    {
+        MailType::where('id', $id)->update($this->validateMailComponent());
+        return response(200);
+    }
+
+    public function deleteMailType($id)
+    {
+        MailType::findOrFail($id)->delete();
+        return response(200);
+    }
+
+
+    //=== CRUD FOR MAIL PRIORITY ===
     public function storeMailPriority()
     {
         MailPriority::create($this->validateMailComponent());
         return response(200);
     }
 
+    public function updateMailPriority($id)
+    {
+        MailPriority::where('id', $id)->update($this->validateMailComponent());
+        return response(200);
+    }
+
+    public function deleteMailPriority($id)
+    {
+        MailPriority::findOrFail($id)->delete();
+        return response(200);
+    }
+
+
+    //=== CRUD FOR MAIL REFERENCE ===
     public function storeMailReference()
     {
         MailReference::create($this->validateMailComponent());
+        return response(200);
+    }
+
+    public function updateMailReference($id)
+    {
+        MailReference::where('id', $id)->update($this->validateMailComponent());
+        return response(200);
+    }
+
+    public function deleteMailReference($id)
+    {
+        MailReference::findOrFail($id)->delete();
         return response(200);
     }
 
@@ -234,29 +288,14 @@ class TestingController extends Controller
             ]);
     }
 
+
+
     public function tes()
     {
-        // $positions = UserPosition::with('users')->where('role', 'sekretaris')->get();
-        // $collections = collect();
-        // foreach($positions as $position){
-        //     $user = $position->users;
-        //     $collections = $collections->merge($user);
-        // }
-        // dump($collections);
-
-        // $secretaries = UserPosition::with('users')->where('role', 'sekretaris')->get();
-        // foreach($secretaries as $secretaryArray){
-        //     $secretary = $secretaryArray->users;
-        //     dump($secretary);
-        // }
-        if (MailFolder::where('id', 4)->exists() &&
-        MailPriority::where('id', 3)->exists() &&
-        MailType::where('id', 3)->exists() &&
-        MailReference::where('id', 3)->exists()) {
-            dd('success');
-        }
-        else {
-            dd('gagal');
+        $mail_transactions = MailVersion::find(3)->mailTransactions;
+        // dd($mail_transactions);
+        foreach($mail_transactions as $mail_transaction){
+            dump($mail_transaction->id);
         }
     }
 }

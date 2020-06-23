@@ -73,14 +73,13 @@ class MailInTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-
-        $response = $this->post('/test/surat/masuk/buat', [
+        $response = $this->patch('/test/surat/masuk/1/update', [
             'directory_code' => 'udg-002',
             'code' => 'rs-udg-002',
             'title' => 'undangan seminar kesehatan',
             'origin' => 'Universitas Melawi',
             'mail_folder_id' => 1,
-            'mail_type_id' => 11,
+            'mail_type_id' => 1,
             'mail_reference_id' => 2,
             'mail_priority_id' => 1,
             'mail_created_at' => Carbon::now(),

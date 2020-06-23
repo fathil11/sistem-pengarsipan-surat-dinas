@@ -4,9 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MailTransaction extends Model
 {
+    use SoftDeletes;
     protected $guarded = [];
 
     public function user()

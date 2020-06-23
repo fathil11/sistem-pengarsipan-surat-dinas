@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Mail;
 use App\MailFile;
 use App\MailVersion;
+use App\MailTransaction;
 
 use Carbon\Carbon;
 
@@ -43,6 +44,20 @@ class MailSeeder extends Seeder
             'type' => 'jpg'
         ]);
 
+        MailTransaction::create([
+            'mail_version_id' => '1',
+            'user_id' => '8',
+            'target_user_id' => '4',
+            'type' => 'create',
+        ]);
+
+        MailTransaction::create([
+            'mail_version_id' => '1',
+            'user_id' => '8',
+            'target_user_id' => '9',
+            'type' => 'create',
+        ]);
+
 
         //Mail 2
         $mail[1] = Mail::create([
@@ -70,6 +85,20 @@ class MailSeeder extends Seeder
             'type' => 'jpg'
         ]);
 
+        MailTransaction::create([
+            'mail_version_id' => '2',
+            'user_id' => '8',
+            'target_user_id' => '4',
+            'type' => 'create',
+        ]);
+
+        MailTransaction::create([
+            'mail_version_id' => '2',
+            'user_id' => '8',
+            'target_user_id' => '9',
+            'type' => 'create',
+        ]);
+
         $mail_version[1] = MailVersion::create([
             'mail_id' => $mail[1]->id,
             'version' => '2',
@@ -80,6 +109,20 @@ class MailSeeder extends Seeder
             'original_name' => 'mhn-001',
             'directory_name' => 'rs-mhn-001',
             'type' => 'jpg'
+        ]);
+
+        MailTransaction::create([
+            'mail_version_id' => '3',
+            'user_id' => '8',
+            'target_user_id' => '4',
+            'type' => 'create',
+        ]);
+
+        MailTransaction::create([
+            'mail_version_id' => '3',
+            'user_id' => '8',
+            'target_user_id' => '9',
+            'type' => 'create',
         ]);
     }
 }

@@ -18,11 +18,26 @@ class UserDepartmentTest extends TestCase
     /** @test */
     public function a_department_can_added()
     {
-        $response = $this->post('/test/pengguna/bidang', [
-            'department' => 'Ilmu Pengetahuan dan Teknologi',
-            'department_abbreviation' => 'IPTEK',
-        ]);
+        $response = $this->createUserDepartment();
+        $response->assertStatus(200);
+    }
 
+    /** @test */
+    public function a_department_can_updated()
+    {
+        $this->createUserDepartment();
+        $response = $this->patch('/test/pengguna/bidang/1', [
+            'department' => 'updated department',
+            'department_abbreviation' => 'updated department abbreviation'
+        ]);
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function a_department_can_deleted()
+    {
+        $this->createUserDepartment();
+        $response = $this->delete('/test/pengguna/bidang/1');
         $response->assertStatus(200);
     }
 
@@ -46,5 +61,13 @@ class UserDepartmentTest extends TestCase
         ]);
 
         $response->assertRedirect();
+    }
+
+    private function createUserDepartment()
+    {
+        return $this->post('/test/pengguna/bidang', [
+            'department' => 'Ilmu Pengetahuan dan Teknologi',
+            'department_abbreviation' => 'IPTEK',
+        ]);
     }
 }

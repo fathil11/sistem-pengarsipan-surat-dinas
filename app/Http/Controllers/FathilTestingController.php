@@ -33,7 +33,7 @@ class FathilTestingController extends Controller
 
         */
 
-        // === Validation ===
+        // Validation
         $request->validate([
             'title' => 'required|min:3|max:50',
             'mail_folder_id' => 'required|numeric|min:1|max:255',
@@ -44,7 +44,7 @@ class FathilTestingController extends Controller
             'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|size:5120',
         ]);
 
-        // === Create (Mail) ===
+        // Create (Mail)
         $mail = Mail::create([
             'kind' => 'out',
             'title' => $request->title,
@@ -55,13 +55,13 @@ class FathilTestingController extends Controller
             'mail_priority_id' => $request->mail_priority_id
         ]);
 
-        // === Create & Assign (Mail Version) ===
+        // Create & Assign (Mail Version)
         $mail_version = MailVersion::create([
             'mail_id' => $mail->id,
             'version' => '1',
         ]);
 
-        // === Create & Store File (Mail File) ===
+        // Create & Store File (Mail File)
         $file = $request->file('file');
         $mail_file = MailFile::create([
             'mail_version_id' => $mail_version->id,
@@ -70,24 +70,26 @@ class FathilTestingController extends Controller
             'type' => $file->getClientOriginalExtension(),
         ]);
 
-        // === Create & Process (Mail Transaction) ===
+        // Create & Process (Mail Transaction)
         // $mail_transaction =
     }
 
+
+    /** Store User Position */
     public function storeUserPosition(Request $request)
     {
-        // === Validate Form ===
+        // Validate Form
         $request->validate([
             'position' => 'required|min:3|max:50',
             'role' => 'required|min:3|max:50'
         ]);
 
-        // === Check Role format is Correct ===
+        // Check Role format is Correct
         if (!UserPosition::checkRoleIsExists($request->role)) {
             return redirect()->back()->withErrors('Format akses tidak sesuai !');
         }
 
-        // === Create UserPosition ===
+        // Create UserPosition
         UserPosition::create([
             'position' => $request->position,
             'role' => $request->role
@@ -96,15 +98,51 @@ class FathilTestingController extends Controller
         return response(200);
     }
 
+    /** Update User Position */
+    public function updateUserPosition(Request $request, $id)
+    {
+        // Validate Form
+        $request->validate([
+            'position' => 'required|min:3|max:50',
+            'role' => 'required|min:3|max:50'
+        ]);
+
+        // Check UserPosition is Exists
+        $user_position = UserPosition::findOrFail($id);
+
+        // Check Role format is Correct
+        if (!UserPosition::checkRoleIsExists($request->role)) {
+            return redirect()->back()->withErrors('Format akses tidak sesuai !');
+        }
+
+        // Update UserPosition
+        $user_position->update([
+            'position' => $request->position,
+            'role' => $request->role
+        ]);
+
+        return response(200);
+    }
+
+    /** Delete User Position */
+    public function deleteUserPosition($id)
+    {
+        // Check UserPosition is Exists
+        $user_position = UserPosition::findOrFail($id);
+        $user_position->delete();
+        return response(200);
+    }
+
+    /** Store User Department */
     public function storeUserDepartment(Request $request)
     {
-        // === Validate Form ===
+        // Validate Form
         $request->validate([
             'department' => 'required|min:3|max:50',
             'department_abbreviation' => 'required|min:2|max:50',
         ]);
 
-        // === Create UserDepartment ===
+        // Create UserDepartment
         UserDepartment::create([
             'department' => $request->department,
             'department_abbreviation' => $request->department_abbreviation
@@ -113,14 +151,46 @@ class FathilTestingController extends Controller
         return response(200);
     }
 
+    /** Update User Department */
+    public function updateUserDepartment(Request $request, $id)
+    {
+        // Validate Form
+        $request->validate([
+            'department' => 'required|min:3|max:50',
+            'department_abbreviation' => 'required|min:2|max:50',
+        ]);
+
+        // Check UserDepartment is Exists
+        $user_department = UserDepartment::findOrFail($id);
+
+
+        // Update UserDepartment
+        $user_department->update([
+            'department' => $request->department,
+            'department_abbreviation' => $request->department_abbreviation
+        ]);
+
+        return response(200);
+    }
+
+    /** Delete User Department */
+    public function deleteUserDepartment($id)
+    {
+        // Check UserDepartment is Exists
+        $user_department = UserDepartment::findOrFail($id);
+        $user_department->delete();
+        return response(200);
+    }
+
+    /** Store User Position Detail */
     public function storeUserPositionDetail(Request $request)
     {
-        // === Validate Form ===
+        // Validate Form
         $request->validate([
             'position_detail' => 'required|min:3|max:50',
         ]);
 
-        // === Create UserDepartment ===
+        // Create UserDepartment
         UserPositionDetail::create([
             'position_detail' => $request->position_detail,
         ]);
@@ -128,9 +198,37 @@ class FathilTestingController extends Controller
         return response(200);
     }
 
+    /** Update User Position Detail */
+    public function updateUserPositionDetail(Request $request, $id)
+    {
+        // Validate Form
+        $request->validate([
+            'position_detail' => 'required|min:3|max:50',
+        ]);
+
+        // Check UserPositionDetail is Exists
+        $user_position_detail = UserPositionDetail::findOrFail($id);
+
+        // Update UserPositionDetail
+        $user_position_detail->update([
+            'position_detail' => $request->position_detail,
+        ]);
+
+        return response(200);
+    }
+
+    /** Delete User Position Detail */
+    public function deleteUserPositionDetail($id)
+    {
+        // Check UserPositionDetail is Exists
+        $user_position_detail = UserPositionDetail::findOrFail($id);
+        $user_position_detail->delete();
+        return response(200);
+    }
+
     public function storeUser(Request $request)
     {
-        // === Validate Form ===
+        // Validate Form
         $request->validate([
             'nip' => 'required|min:3|max:50',
             'name' => 'required|min:3|max:255',
@@ -143,12 +241,12 @@ class FathilTestingController extends Controller
             'password' => 'required|min:6|max:512',
         ]);
 
-        // === Validate UserPosition is exist ===
+        // Validate UserPosition is exist
         if (!UserPosition::checkPositionIdIsExists($request->user_position_id)) {
             return redirect()->back()->withErrors('Format jabatan tidak sesuai !');
         }
 
-        // === Process UserDepartment & UserPositionDetails ===
+        // Process UserDepartment & UserPositionDetails
         /*
         User with position role is Admin, Kepala Dinas, Sekretaris, or Kepala TU does't have UserDepartment and UserPositionDetail.
         */
@@ -160,7 +258,7 @@ class FathilTestingController extends Controller
             $user_position_id = $request->user_position_id;
         }
 
-        // === Create UserDepartment ===
+        // Create UserDepartment
         User::create([
             'nip' => $request->nip,
             'name' => $request->name,

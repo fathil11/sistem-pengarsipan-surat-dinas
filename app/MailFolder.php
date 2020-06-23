@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MailFolder extends Model
 {
+
     protected $guarded = [];
 
     public function mails()
