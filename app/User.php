@@ -2,9 +2,10 @@
 
 namespace App;
 
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -65,16 +66,22 @@ class User extends Authenticatable
         return $this->position->role;
     }
 
-    public static function getWithRole($role)
+    public function getDepartment()
     {
-        $positions = UserPosition::with('users')->where('role', $role)->get();
+        return $this->department->department;
+    }
 
-        $users = collect();
-        foreach ($positions as $position) {
-            $user = $position->users;
-            $users = $users->merge($user);
-        }
+    public function scopeWithDepartment(Builder $query, $department)
+    {
+        return $query->whereHas('department', function (Builder $query) use ($department) {
+            return $query->where('department', $department);
+        });
+    }
 
-        return $users;
+    public function scopeWithRole(Builder $query, $role)
+    {
+        return $query->whereHas('position', function (Builder $query) use ($role) {
+            return $query->where('role', $role);
+        });
     }
 }
