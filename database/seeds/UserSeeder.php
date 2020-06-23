@@ -100,5 +100,16 @@ class UserSeeder extends Seeder
             'username' => 'wilyeka',
             'password' => Hash::make('123123')
         ]);
+
+        DB::table('users')->insert([
+            'nip' => '00008',
+            'name' => 'Syahrul Santoro',
+            'user_position_id' => 4,
+            // 'user_position_detail_id' => 1,
+            // 'user_department_id' => 1,
+            'email' => 'syahrul@gmail.com',
+            'username' => 'syahrul',
+            'password' => Hash::make('123123')
+        ]);
     }
 }

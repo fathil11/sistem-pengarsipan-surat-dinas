@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 // Route for Testing
 Route::group(['prefix' => 'test'], function () {
     // User
+    Route::post('/surat/masuk/buat', 'TestingController@storeMailIn');
+    Route::post('/pengguna/surat/tipe', 'TestingController@storeMailType');
     Route::post('/pengguna', 'FathilTestingController@storeUser');
 
     // User Position
@@ -36,6 +38,4 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'FathilTestingController@deleteUserPositionDetail');
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'TestingController@tes');
