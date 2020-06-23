@@ -24,6 +24,4 @@ Route::group(['prefix' => 'test'], function () {
     Route::post('/pengguna/unit-kerja', 'FathilTestingController@storeUserPositionDetail');
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'TestingController@tes');

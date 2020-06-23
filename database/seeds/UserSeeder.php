@@ -71,7 +71,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'nip' => '00005',
             'name' => 'Arif Budiman',
-            'user_position_id' => 4,
+            'user_position_id' => 5,
             'user_position_detail_id' => 2,
             'user_department_id' => 3,
             'email' => 'arif@gmail.com',
@@ -98,6 +98,17 @@ class UserSeeder extends Seeder
             // 'user_department_id' => 1,
             'email' => 'wily@gmail.com',
             'username' => 'wilyeka',
+            'password' => Hash::make('123123')
+        ]);
+
+        DB::table('users')->insert([
+            'nip' => '00008',
+            'name' => 'Syahrul Santoro',
+            'user_position_id' => 4,
+            // 'user_position_detail_id' => 1,
+            // 'user_department_id' => 1,
+            'email' => 'syahrul@gmail.com',
+            'username' => 'syahrul',
             'password' => Hash::make('123123')
         ]);
     }

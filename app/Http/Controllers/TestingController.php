@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Collection;
 
 use App\User;
+use App\UserPosition;
 
 use App\Mail;
 use App\MailVersion;
@@ -47,7 +49,7 @@ class TestingController extends Controller
             'mail_priority_id' => 'required|numeric',
             'mail_created_at' => 'required|date',
 
-            // 'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|size:5120',
+            'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|max:5120',
         ]);
 
         if (MailFolder::find($request->mail_folder_id)->exists() &&
@@ -89,14 +91,14 @@ class TestingController extends Controller
             // - type -> File extension
 
             // === Create & Store File (Mail File) ===
-            // $file = $request->file('file');
+            $file = $request->file('file');
 
-            // MailFile::create([
-            //     'mail_version_id' => $mail_version->id,
-            //     'original_name' => $file->getClientOriginalName(),
-            //     'directory_name' => $file->store('documents'),
-            //     'type' => $file->getClientOriginalExtension(),
-            // ]);
+            MailFile::create([
+                'mail_version_id' => $mail_version->id,
+                'original_name' => $file->getClientOriginalName(),
+                'directory_name' => $file->store('documents'),
+                'type' => $file->getClientOriginalExtension(),
+            ]);
 
             // - Create Mail Transaction
             // - mail_version_id -> id Created mail version
@@ -105,14 +107,17 @@ class TestingController extends Controller
             // - type -> create
 
             // === Create MailTransaction ===
-            $secretaries = UserPosition::getUsersInRole("sekretaris");
-            foreach($secretaries as $secretary){
-                dd($secretary);
-                $secretary_data = User::where('user_position_id', $secretary->id)->get();
+            $positions = UserPosition::with('users')->where('role', 'sekretaris')->get();
+            $collections = collect();
+            foreach($positions as $position){
+                $user = $position->users;
+                $collections = $collections->merge($user);
+            }
+            foreach($collections as $collection){
                 MailTransaction::create([
                     'mail_version_id' => $mail_version->id,
-                    'user_id' => Auth::user()->id,
-                    'target_user_id' => $secretary_data->id,
+                    'user_id' => 1,
+                    'target_user_id' => $collection->id,
                     'type' => 'create',
                 ]);
             }
@@ -124,7 +129,6 @@ class TestingController extends Controller
     }
 
     public function updateMailIn(Request $request, Mail $mail){
-
         // === Validation ===
         $request->validate([
             'directory_code' => 'required|min:3|max:50',
@@ -227,6 +231,24 @@ class TestingController extends Controller
             'type' => 'required|min:3|max:50',
             'code' => 'required|min:2|max:50',
             'color' => 'required|min:3|max:50',
-        ]);
+            ]);
+    }
+
+    public function tes()
+    {
+        $positions = UserPosition::with('users')->where('role', 'sekretaris')->get();
+        $collections = collect();
+        foreach($positions as $position){
+            $user = $position->users;
+            $collections = $collections->merge($user);
+        }
+        dump($collections);
+
+        $secretaries = UserPosition::with('users')->where('role', 'sekretaris')->get();
+        foreach($secretaries as $secretaryArray){
+            $secretary = $secretaryArray->users;
+            dump($secretary);
+        }
     }
 }
+
