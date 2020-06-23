@@ -116,7 +116,7 @@ class TestingController extends Controller
             foreach($collections as $collection){
                 MailTransaction::create([
                     'mail_version_id' => $mail_version->id,
-                    'user_id' => 1,
+                    'user_id' => Auth::user()->id,
                     'target_user_id' => $collection->id,
                     'type' => 'create',
                 ]);
