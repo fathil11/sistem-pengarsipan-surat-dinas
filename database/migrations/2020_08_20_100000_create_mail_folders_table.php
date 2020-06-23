@@ -16,6 +16,7 @@ class CreateMailFoldersTable extends Migration
         Schema::create('mail_folders', function (Blueprint $table) {
             $table->id();
             $table->string('folder');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

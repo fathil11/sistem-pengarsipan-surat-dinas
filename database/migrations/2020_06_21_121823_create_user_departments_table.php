@@ -17,6 +17,7 @@ class CreateUserDepartmentsTable extends Migration
             $table->id();
             $table->string('department');
             $table->string('department_abbreviation')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
