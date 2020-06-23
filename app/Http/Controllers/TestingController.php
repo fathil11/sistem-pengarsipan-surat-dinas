@@ -83,7 +83,7 @@ class TestingController extends Controller
             // === Create MailVersion ===
             $mail_version = MailVersion::create([
                 'mail_id' => $mail->id,
-                'version' => '1',
+                // 'version' => '1',
             ]);
 
             // - Create Mail File
@@ -108,7 +108,7 @@ class TestingController extends Controller
             // - type -> create
 
             // === Create MailTransaction ===
-            $users = User::getWithRole('sekretaris');
+            $users = User::select('id')->withRole('sekretaris')->get();
             foreach($users as $user){
                 $mail_transaction = MailTransaction::create([
                     'mail_version_id' => $mail_version->id,
@@ -130,16 +130,16 @@ class TestingController extends Controller
 
     public function updateMailIn(Request $request, $id)
     {
-        $mail_version_last = Mail::find($id)->mailVersions->last();
-        $tes = MailVersion::find($mail_version_last->id)->mailTransactions->where('type', 'send');
+        $mail_version_last = Mail::findOrFail($id)->mailVersions->last();
+        $tes = MailVersion::find($mail_version_last->id)->mailTransactions->where('type', 'memo');
         if (!$tes->isEmpty()){
             return redirect('/');
         }
 
 
-        $mail = Mail::find($id);
+        $mail = Mail::findOrFail($id);
         if ($mail->kind != 'in'){
-            return redirect('/');
+            return response(403);
         }
 
         // === Validation ===
@@ -161,8 +161,7 @@ class TestingController extends Controller
             MailReference::find($request->mail_reference_id)->exists()) {
 
             // === UPDATE Mail ===
-            Mail::where('id', $id)
-            ->update([
+            $mail->update([
                 'kind' => 'in',
                 'directory_code' => $request->directory_code,
                 'code' => $request->code,
@@ -178,10 +177,9 @@ class TestingController extends Controller
 
             if (request()->has('file')){
                 // === UPDATE MailVersion ===
-                $mail_version_last = Mail::find($id)->mailVersions->last();
                 $mail_version = MailVersion::create([
                     'mail_id' => $id,
-                    'version' => $mail_version_last->version+1,
+                    // 'version' => $mail_version_last->version+1,
                 ]);
 
                 // === Create & Store File (Mail File) ===
@@ -197,6 +195,21 @@ class TestingController extends Controller
                     'directory_name' => $file->store('documents'),
                     'type' => $file->getClientOriginalExtension(),
                 ]);
+
+                // === Create MailTransaction ===
+                $users = User::select('id')->withRole('sekretaris')->get();
+                foreach($users as $user){
+                    $mail_transaction = MailTransaction::create([
+                        'mail_version_id' => $mail_version->id,
+                        'user_id' => Auth::user()->id,
+                        'target_user_id' => $user->id,
+                        'type' => 'update',
+                    ]);
+                    MailLog::create([
+                        'mail_transaction_id' => $mail_transaction->id,
+                        'log' => 'delivered',
+                    ]);
+                }
             }
 
             // - Create Mail Transaction
@@ -206,13 +219,17 @@ class TestingController extends Controller
             // - type -> create
 
             // === Create MailTransaction ===
-            $users = User::getWithRole('sekretaris');
+            $users = User::select('id')->withRole('sekretaris')->get();
             foreach($users as $user){
-                MailTransaction::create([
-                    'mail_version_id' => $mail_version->id,
+                $mail_transaction = MailTransaction::create([
+                    'mail_version_id' => $mail_version_last->id,
                     'user_id' => Auth::user()->id,
                     'target_user_id' => $user->id,
                     'type' => 'update',
+                ]);
+                MailLog::create([
+                    'mail_transaction_id' => $mail_transaction->id,
+                    'log' => 'delivered',
                 ]);
             }
             return response(200);
@@ -224,16 +241,15 @@ class TestingController extends Controller
 
     public function deleteMailIn($id){
 
-        $mail_version_last = Mail::find($id)->mailVersions->last();
-        $tes = MailVersion::find($mail_version_last->id)->mailTransactions->where('type', 'send');
-        if (!$tes->isEmpty()){
-            return redirect('/');
-        }
-
+        // $mail_version_last = Mail::find($id)->mailVersions->last();
+        // $tes = MailVersion::find($mail_version_last->id)->mailTransactions->where('type', 'memo');
+        // if (!$tes->isEmpty()){
+        //     return redirect('/');
+        // }
 
         $mail = Mail::find($id);
         if ($mail->kind != 'in'){
-            return redirect('/');
+            return response(403);
         }
 
         // === UPDATE Mail ===
@@ -241,12 +257,37 @@ class TestingController extends Controller
         return response(200);
     }
 
+    public function forwardMailIn(Request $request, $id){
+        $mail = Mail::findOrFail($id);
+        if ($mail->kind != 'in'){
+            return response(403);
+        }
+        $user = Auth::user();
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $id)->get()->last();
+        $mail_transaction = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
+        $mail_log = $mail_transaction->transactionLog->last();
+
+        if ($mail_log->log != 'delivered'){
+            return redirect('/');
+        }
+
+        $request->validate([
+            'memo' => 'required|min:3|max:50',
+        ]);
+    }
+
 
 
     public function tes()
     {
-        $mail_transactions = MailVersion::find(1)->mailTransactions;
-        dd($mail_transactions);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', 1)->get()->last();
+        $mail_transaction = $mail_version_last->mailTransactions->where('target_user_id', 9)->last();
+        $mail_log = $mail_transaction->transactionLog->last();
+        if ($mail_log->log != 'delivered'){
+            dump('false');
+        }
+
+        dump($mail_log);
     }
 }
 

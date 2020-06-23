@@ -90,6 +90,20 @@ class MailInTest extends TestCase
     {
         $this->seed('DatabaseSeeder');
 
+        $user = User::create([
+            'nip' => $this->faker->creditCardNumber(),
+            'name' => $this->faker->name(),
+            'user_position_id' => 7,
+            'user_department_id' => null,
+            'user_position_detail_id' => null,
+            'email' => $this->faker->email(),
+            'phone_number' => $this->faker->phoneNumber(),
+            'username' => $this->faker->userName(),
+            'password' => '123123',
+        ]);
+
+        $this->actingAs($user);
+
         $this->withoutExceptionHandling();
 
         $response = $this->patch('/test/surat/masuk/1', [
