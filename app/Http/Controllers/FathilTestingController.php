@@ -75,14 +75,26 @@ class FathilTestingController extends Controller
             'type' => $file->getClientOriginalExtension(),
         ]);
 
-        $target_user_id = 'tes';
+        $user = User::findOrFail(Auth::user()->id);
+
+        if ($user->id == 0 || $user->id == 1) {
+            $target_user_role = 'kepala_tu';
+        // $target_user_id = User
+        } else {
+            $target_user_role = UserPosition::getTopRole($user);
+        }
 
         // Create & Process (Mail Transaction)
-        $mail_transaction = Mail::create([
-            'mail_version_id' => $mail_version->id,
-            'user_id' => Auth::user()->id,
-            'target_user_id' => $target_user_id,
-            'type' => 'create'
-        ]);
+        // $mail_transaction = Mail::create([
+        //     'mail_version_id' => $mail_version->id,
+        //     'user_id' => Auth::user()->id,
+        //     'target_user_id' => $target_user_id,
+        //     'type' => 'create'
+        // ]);
+    }
+
+    public function temp()
+    {
+        dd(UserPosition::getTopRole('sekretaris'));
     }
 }

@@ -64,4 +64,17 @@ class User extends Authenticatable
     {
         return $this->position->role;
     }
+
+    public static function getWithRole($role)
+    {
+        $positions = UserPosition::with('users')->where('role', $role)->get();
+
+        $users = collect();
+        foreach ($positions as $position) {
+            $user = $position->users;
+            $users = $users->merge($user);
+        }
+
+        return $users;
+    }
 }

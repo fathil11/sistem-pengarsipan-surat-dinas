@@ -17,18 +17,18 @@ use Illuminate\Support\Facades\Route;
 
 // Route for Testing
 Route::group(['prefix' => 'test'], function () {
-    Route::post('/surat/masuk/buat','TestingController@storeMailIn');
-    Route::patch('/surat/masuk/{id}/update','TestingController@updateMailIn');
+    Route::post('/surat/masuk/buat', 'TestingController@storeMailIn');
+    Route::patch('/surat/masuk/{id}/update', 'TestingController@updateMailIn');
 
-    Route::post('/pengguna/surat/jenis','TestingController@storeMailType');
-    Route::patch('/pengguna/surat/jenis/{id}','TestingController@updateMailType');
-    Route::delete('/pengguna/surat/jenis/{id}','TestingController@deleteMailType');
-    Route::post('/pengguna/surat/sifat','TestingController@storeMailReference');
-    Route::patch('/pengguna/surat/sifat/{id}','TestingController@updateMailReference');
-    Route::delete('/pengguna/surat/sifat/{id}','TestingController@deleteMailReference');
-    Route::post('/pengguna/surat/prioritas','TestingController@storeMailPriority');
-    Route::patch('/pengguna/surat/prioritas/{id}','TestingController@updateMailPriority');
-    Route::delete('/pengguna/surat/prioritas/{id}','TestingController@deleteMailPriority');
+    Route::post('/pengguna/surat/jenis', 'TestingController@storeMailType');
+    Route::patch('/pengguna/surat/jenis/{id}', 'TestingController@updateMailType');
+    Route::delete('/pengguna/surat/jenis/{id}', 'TestingController@deleteMailType');
+    Route::post('/pengguna/surat/sifat', 'TestingController@storeMailReference');
+    Route::patch('/pengguna/surat/sifat/{id}', 'TestingController@updateMailReference');
+    Route::delete('/pengguna/surat/sifat/{id}', 'TestingController@deleteMailReference');
+    Route::post('/pengguna/surat/prioritas', 'TestingController@storeMailPriority');
+    Route::patch('/pengguna/surat/prioritas/{id}', 'TestingController@updateMailPriority');
+    Route::delete('/pengguna/surat/prioritas/{id}', 'TestingController@deleteMailPriority');
 
     // User
     Route::post('/pengguna', 'UserSettingController@storeUser');
@@ -51,4 +51,4 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
-Route::get('/', 'TestingController@tes');
+Route::get('/', 'FathilTestingController@temp');
