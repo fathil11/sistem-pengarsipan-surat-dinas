@@ -16,12 +16,30 @@ class UserPositionDetailTest extends TestCase
      * @return void
      */
 
+
+    /** @test */
     public function a_position_detail_can_added()
     {
-        $response = $this->post('/test/pengguna/unit-kerja', [
-            'position_detail' => 'Kepala Bidang IPTEK',
-        ]);
+        $response = $this->createUserPositionDetail();
+        $response->assertStatus(200);
+    }
 
+    /** @test */
+    public function a_position_detail_can_updated()
+    {
+        $this->createUserPositionDetail();
+
+        $response = $this->patch('/test/pengguna/unit-kerja/1', [
+            'position_detail' => 'Updated Kepala Bidang IPTEK',
+        ]);
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function a_position_detail_can_deleted()
+    {
+        $this->createUserPositionDetail();
+        $response = $this->delete('/test/pengguna/unit-kerja/1');
         $response->assertStatus(200);
     }
 
@@ -43,5 +61,12 @@ class UserPositionDetailTest extends TestCase
         ]);
 
         $response->assertRedirect();
+    }
+
+    private function createUserPositionDetail()
+    {
+        return $this->post('/test/pengguna/unit-kerja', [
+            'position_detail' => 'Kepala Bidang IPTEK',
+        ]);
     }
 }

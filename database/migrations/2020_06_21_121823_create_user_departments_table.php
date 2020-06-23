@@ -16,7 +16,7 @@ class CreateUserDepartmentsTable extends Migration
         Schema::create('user_departments', function (Blueprint $table) {
             $table->id();
             $table->string('department');
-            $table->string('department_abbreviation');
+            $table->string('department_abbreviation')->nullable();
             $table->timestamps();
         });
     }
