@@ -52,10 +52,10 @@ class TestingController extends Controller
             'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|max:5120',
         ]);
 
-        if (MailFolder::find($request->mail_folder_id)->exists() &&
-            MailPriority::find($request->mail_priority_id)->exists() &&
-            MailType::find($request->mail_type_id)->exists() &&
-            MailReference::find($request->mail_reference_id)->exists()) {
+        if (MailFolder::where('id', $request->mail_folder_id)->exists() &&
+            MailPriority::where('id', $request->mail_priority_id)->exists() &&
+            MailType::where('id', $request->mail_type_id)->exists() &&
+            MailReference::where('id', $request->mail_reference_id)->exists()) {
             // === Query ===
             // - Create Mail
             // - fill attr
@@ -124,7 +124,7 @@ class TestingController extends Controller
             return response(200);
 
         } else {
-            return response(302);
+            return redirect('/');
         }
     }
 
@@ -203,7 +203,7 @@ class TestingController extends Controller
             return response(200);
 
         } else {
-            return response(302);
+            return redirect('/');
         }
     }
 
@@ -236,18 +236,27 @@ class TestingController extends Controller
 
     public function tes()
     {
-        $positions = UserPosition::with('users')->where('role', 'sekretaris')->get();
-        $collections = collect();
-        foreach($positions as $position){
-            $user = $position->users;
-            $collections = $collections->merge($user);
-        }
-        dump($collections);
+        // $positions = UserPosition::with('users')->where('role', 'sekretaris')->get();
+        // $collections = collect();
+        // foreach($positions as $position){
+        //     $user = $position->users;
+        //     $collections = $collections->merge($user);
+        // }
+        // dump($collections);
 
-        $secretaries = UserPosition::with('users')->where('role', 'sekretaris')->get();
-        foreach($secretaries as $secretaryArray){
-            $secretary = $secretaryArray->users;
-            dump($secretary);
+        // $secretaries = UserPosition::with('users')->where('role', 'sekretaris')->get();
+        // foreach($secretaries as $secretaryArray){
+        //     $secretary = $secretaryArray->users;
+        //     dump($secretary);
+        // }
+        if (MailFolder::where('id', 4)->exists() &&
+        MailPriority::where('id', 3)->exists() &&
+        MailType::where('id', 3)->exists() &&
+        MailReference::where('id', 3)->exists()) {
+            dd('success');
+        }
+        else {
+            dd('gagal');
         }
     }
 }
