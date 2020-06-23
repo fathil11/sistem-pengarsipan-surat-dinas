@@ -31,6 +31,9 @@ Route::group(['prefix' => 'test'], function () {
     Route::patch('/pengguna/surat/prioritas/{id}', 'MailSettingController@updateMailPriority');
     Route::delete('/pengguna/surat/prioritas/{id}', 'MailSettingController@deleteMailPriority');
 
+    // Mail Out
+    Route::post('/surat/keluar', 'FathilTestingController@storeMailOut');
+
     // User
     Route::post('/pengguna', 'UserSettingController@storeUser');
     Route::patch('/pengguna/{id}', 'UserSettingController@updateUser');

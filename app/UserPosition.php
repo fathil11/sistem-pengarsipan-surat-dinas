@@ -43,13 +43,17 @@ class UserPosition extends Model
         return true;
     }
 
-    public static function checkPositionIdHasExtra($position_id)
+    public static function checkRoleHasExtra($role)
     {
-        $role = self::find($position_id)->role;
         if (in_array($role, self::$roles['no_extra'])) {
             return false;
         }
         return true;
+    }
+
+    public static function checkPositionIdHasExtra($position_id)
+    {
+        return self::checkRoleHasExtra(self::find($position_id)->role);
     }
 
     public static function getTopRole($role)
