@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\MailOutRequest;
-use App\Repository\MailRepository;
 use Illuminate\Database\Eloquent\Builder;
 
 class FathilTestingController extends Controller
@@ -230,22 +229,8 @@ class FathilTestingController extends Controller
         }
     }
 
-    public function checkMailAttributeIsExists(
-        $mail_folder_id,
-        $mail_priority_id,
-        $mail_type_id,
-        $mail_reference_id
-    ) {
-        return MailFolder::find($mail_folder_id)->exists() &&
-            MailPriority::find($mail_priority_id)->exists() &&
-            MailType::find($mail_type_id)->exists() &&
-            MailReference::find($mail_reference_id)->exists();
-    }
-
     public function temp()
     {
-        $mail = new MailRepository();
-        $user = $mail->getWithSameStakeholder(4, 'out');
-        dd($user);
+        $user = User::find(99);
     }
 }

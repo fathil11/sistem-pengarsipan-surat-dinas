@@ -15,6 +15,7 @@ use App\MailVersion;
 use App\MailFile;
 use App\MailTransaction;
 use App\MailLog;
+use App\MailMemo;
 
 use App\MailFolder;
 use App\MailPriority;
@@ -108,19 +109,19 @@ class TestingController extends Controller
             // - type -> create
 
             // === Create MailTransaction ===
-            $users = User::select('id')->withRole('sekretaris')->get();
-            foreach($users as $user){
-                $mail_transaction = MailTransaction::create([
-                    'mail_version_id' => $mail_version->id,
-                    'user_id' => Auth::user()->id,
-                    'target_user_id' => $user->id,
-                    'type' => 'create',
-                ]);
-                MailLog::create([
-                    'mail_transaction_id' => $mail_transaction->id,
-                    'log' => 'delivered',
-                ]);
-            }
+            $user = User::findOrFail(Auth::user()->id);
+            $target_user = User::select('id')->withPosition('Sekretaris')->first();
+
+            $mail_transaction = MailTransaction::create([
+                'mail_version_id' => $mail_version->id,
+                'user_id' => $user->id,
+                'target_user_id' => $target_user->id,
+                'type' => 'create',
+            ]);
+            MailLog::create([
+                'mail_transaction_id' => $mail_transaction->id,
+                'log' => 'send',
+            ]);
             return response(200);
 
         } else {
@@ -130,16 +131,18 @@ class TestingController extends Controller
 
     public function updateMailIn(Request $request, $id)
     {
-        $mail_version_last = Mail::findOrFail($id)->mailVersions->last();
-        $tes = MailVersion::find($mail_version_last->id)->mailTransactions->where('type', 'memo');
-        if (!$tes->isEmpty()){
-            return redirect('/');
-        }
-
-
         $mail = Mail::findOrFail($id);
         if ($mail->kind != 'in'){
             return response(403);
+        }
+
+        $mail_version_last = $mail->mailVersions->last();
+        $user = User::findOrFail(Auth::user()->id);
+
+        $check_if_mail_has_memo = MailTransaction::where('mail_version_id', $mail_version_last->id)->where('type', 'memo')->first();
+
+        if ($check_if_mail_has_memo){
+            return redirect('/');
         }
 
         // === Validation ===
@@ -162,7 +165,6 @@ class TestingController extends Controller
 
             // === UPDATE Mail ===
             $mail->update([
-                'kind' => 'in',
                 'directory_code' => $request->directory_code,
                 'code' => $request->code,
                 'title' => $request->title,
@@ -172,19 +174,18 @@ class TestingController extends Controller
                 'mail_reference_id' => $request->mail_reference_id,
                 'mail_priority_id' => $request->mail_priority_id,
                 'mail_created_at' => $request->mail_created_at,
-                'mail_updated_at' => Carbon::now(),
+            ]);
+
+            // === UPDATE MailVersion ===
+            $mail_version = MailVersion::create([
+                'mail_id' => $mail->id,
+                // 'version' => $mail_version_last->version+1,
             ]);
 
             if (request()->has('file')){
-                // === UPDATE MailVersion ===
-                $mail_version = MailVersion::create([
-                    'mail_id' => $id,
-                    // 'version' => $mail_version_last->version+1,
-                ]);
-
                 // === Create & Store File (Mail File) ===
                 $request->validate([
-                    'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|size:5120',
+                    'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|max:5120',
                 ]);
 
                 $file = $request->file('file');
@@ -195,22 +196,14 @@ class TestingController extends Controller
                     'directory_name' => $file->store('documents'),
                     'type' => $file->getClientOriginalExtension(),
                 ]);
-
-                // === Create MailTransaction ===
-                $users = User::select('id')->withRole('sekretaris')->get();
-                foreach($users as $user){
-                    $mail_transaction = MailTransaction::create([
-                        'mail_version_id' => $mail_version->id,
-                        'user_id' => Auth::user()->id,
-                        'target_user_id' => $user->id,
-                        'type' => 'update',
-                    ]);
-                    MailLog::create([
-                        'mail_transaction_id' => $mail_transaction->id,
-                        'log' => 'delivered',
-                    ]);
-                }
             }
+            $mail_transaction_last = MailTransaction::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+            // Add Corrected Log to Editor
+            MailLog::create([
+                'mail_transaction_id' => $mail_transaction_last->id,
+                'log' => 'corrected'
+            ]);
 
             // - Create Mail Transaction
             // - mail_version_id -> id Created mail version
@@ -219,19 +212,31 @@ class TestingController extends Controller
             // - type -> create
 
             // === Create MailTransaction ===
-            $users = User::select('id')->withRole('sekretaris')->get();
-            foreach($users as $user){
-                $mail_transaction = MailTransaction::create([
-                    'mail_version_id' => $mail_version_last->id,
-                    'user_id' => Auth::user()->id,
-                    'target_user_id' => $user->id,
-                    'type' => 'update',
-                ]);
-                MailLog::create([
-                    'mail_transaction_id' => $mail_transaction->id,
-                    'log' => 'delivered',
-                ]);
-            }
+            $target_user = User::select('id')->withPosition('Sekretaris')->first();
+
+            $mail_transaction = MailTransaction::create([
+                'mail_version_id' => $mail_version->id,
+                'user_id' => $user->id,
+                'target_user_id' => $target_user->id,
+                'type' => 'corrected',
+            ]);
+            MailLog::create([
+                'mail_transaction_id' => $mail_transaction->id,
+                'log' => 'send',
+            ]);
+            // $users = User::select('id')->withRole('sekretaris')->get();
+            // foreach($users as $user){
+            //     $mail_transaction = MailTransaction::create([
+            //         'mail_version_id' => $mail_version_last->id,
+            //         'user_id' => Auth::user()->id,
+            //         'target_user_id' => $user->id,
+            //         'type' => 'corrected',
+            //     ]);
+            //     MailLog::create([
+            //         'mail_transaction_id' => $mail_transaction->id,
+            //         'log' => 'send',
+            //     ]);
+            // }
             return response(200);
 
         } else {
@@ -263,16 +268,37 @@ class TestingController extends Controller
             return response(403);
         }
         $user = Auth::user();
-        $mail_version_last = MailVersion::select('id')->where('mail_id', $id)->get()->last();
-        $mail_transaction = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
-        $mail_log = $mail_transaction->transactionLog->last();
 
-        if ($mail_log->log != 'delivered'){
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $id)->get()->last();
+        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
+        $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
+        $mail_log_last = $mail_transaction_last->transactionLog->last();
+
+        if (($mail_log_last->log != 'send' || $mail_log_last->log != 'read') && !$memo_transaction_is_empty){
             return redirect('/');
         }
 
         $request->validate([
-            'memo' => 'required|min:3|max:50',
+            'memo' => 'required|min:3|max:1000',
+        ]);
+
+        $target_user = User::select('id')->withPosition('Kepala Dinas')->first();
+
+        $mail_transaction = MailTransaction::create([
+            'mail_version_id' => $mail_version_last->id,
+            'user_id' => $user->id,
+            'target_user_id' => $target_user->id,
+            'type' => 'memo',
+        ]);
+
+        MailMemo::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'memo' => $request->memo,
+        ]);
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'log' => 'send',
         ]);
     }
 
@@ -280,14 +306,26 @@ class TestingController extends Controller
 
     public function tes()
     {
-        $mail_version_last = MailVersion::select('id')->where('mail_id', 1)->get()->last();
+        $mail_transaction_last = MailTransaction::where('mail_version_id', 1)->get()->last();
+        dd($mail_transaction_last);
+        $check_if_mail_has_memo = MailTransaction::where('mail_version_id', 1)->where('type', 'memo')->first();
+        if ($check_if_mail_has_memo){
+            dd('false');
+        }
+        dd('success');
+
+        $mail_version_last = Mail::findOrFail(2)->mailVersions->last();
+        $tes = MailVersion::find($mail_version_last->id)->mailTransactions->where('type', 'memo')->isEmpty();
+        $mail_version_last = MailVersion::where('mail_id', 2)->get()->last();
+        dd($mail_version_last);
         $mail_transaction = $mail_version_last->mailTransactions->where('target_user_id', 9)->last();
+        $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
         $mail_log = $mail_transaction->transactionLog->last();
         if ($mail_log->log != 'delivered'){
             dump('false');
         }
 
-        dump($mail_log);
+        dump($memo_transaction_is_empty);
     }
 }
 
