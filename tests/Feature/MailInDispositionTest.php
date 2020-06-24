@@ -33,7 +33,7 @@ class MailInDispositionTest extends TestCase
     {
         $this->seed();
 
-        $user = User::withPosition('Sekretaris')->first();
+        $user = User::withPosition('Kepala Dinas')->first();
         $this->actingAs($user);
 
         $this->withoutExceptionHandling();
@@ -54,11 +54,42 @@ class MailInDispositionTest extends TestCase
     }
 
     /** @test */
+    public function a_mail_cant_create_disposition_if_has_disposition_before()
+    {
+        $this->seed();
+
+        $user = User::withPosition('Kepala Dinas')->first();
+        $this->actingAs($user);
+
+        $this->withoutExceptionHandling();
+
+        $this->storeMailIn();
+
+        $response = $this->post('/test/surat/masuk/11/teruskan', [
+            'memo' => 'Mantul',
+        ]);
+
+        $response->assertOk();
+
+        $response = $this->post('/test/surat/masuk/11/disposisi', [
+            'memo' => 'Perfect',
+        ]);
+
+        $response->assertOk();
+
+        $response = $this->post('/test/surat/masuk/11/disposisi', [
+            'memo' => 'Perfect',
+        ]);
+
+        $response->assertRedirect();
+    }
+
+    /** @test */
     public function a_mail_cant_create_disposition_before_been_forwarded()
     {
         $this->seed();
 
-        $user = User::withPosition('Sekretaris')->first();
+        $user = User::withPosition('Kepala Dinas')->first();
         $this->actingAs($user);
 
         $this->withoutExceptionHandling();
@@ -68,9 +99,6 @@ class MailInDispositionTest extends TestCase
         $response = $this->post('/test/surat/masuk/11/disposisi', [
             'memo' => 'Perfect',
         ]);
-
-        $tes = MailTransaction::all()->last();
-        dd($tes);
 
         $response->assertRedirect();
     }

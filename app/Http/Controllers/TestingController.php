@@ -95,7 +95,7 @@ class TestingController extends Controller
             // === Create & Store File (Mail File) ===
             $file = $request->file('file');
 
-            MailFile::create([
+            $mailFile = MailFile::create([
                 'mail_version_id' => $mail_version->id,
                 'original_name' => $file->getClientOriginalName(),
                 'directory_name' => $file->store('documents'),
@@ -314,7 +314,8 @@ class TestingController extends Controller
         $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'archive')->isEmpty();
         // $mail_log_last = $mail_transaction_last->transactionLog->last();
 
-        if (!$memo_transaction_is_empty && $mail_transaction_last != 'memo'){
+        // dd($mail_transaction_last->type);
+        if (!$memo_transaction_is_empty || $mail_transaction_last == null){
             return redirect('/');
         }
 
@@ -355,9 +356,12 @@ class TestingController extends Controller
     public function tes()
     {
         $mail_version_last = MailVersion::where('mail_id', 2)->get()->last();
-        $mail_transaction = $mail_version_last->mailTransactions->where('target_user_id', 9)->last();
+        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', )->last();
         $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'create')->isEmpty();
-        dd($memo_transaction_is_empty);
+        if (!$memo_transaction_is_empty && $mail_transaction_last->type != 'memo'){
+            dd('false');
+        }
+        dd('true');
     }
 }
 

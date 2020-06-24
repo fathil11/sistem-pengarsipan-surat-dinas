@@ -120,6 +120,37 @@ class MailInForwardTest extends TestCase
         $response->assertRedirect();
     }
 
+    /** @test */
+    public function a_mail_cant_forward_after_has_disposition()
+    {
+        $this->seed();
+
+        $user = User::withPosition('Kepala Dinas')->first();
+        $this->actingAs($user);
+
+        $this->withoutExceptionHandling();
+
+        $this->storeMailIn();
+
+        $response = $this->post('/test/surat/masuk/11/teruskan', [
+            'memo' => 'Mantul',
+        ]);
+
+        $response->assertOk();
+
+        $response = $this->post('/test/surat/masuk/11/disposisi', [
+            'memo' => 'Perfect',
+        ]);
+
+        $response->assertOk();
+
+        $response = $this->post('/test/surat/masuk/11/teruskan', [
+            'memo' => 'Mantul',
+        ]);
+
+        $response->assertRedirect();
+    }
+
     private function storeMailIn(){
         Storage::fake('documents');
         return $this->post('/test/surat/masuk', [
