@@ -258,7 +258,7 @@ class TestingController extends Controller
         }
 
         // === UPDATE Mail ===
-        Mail::find($id)->delete();
+        $mail->delete();
         return response(200);
     }
 
@@ -269,12 +269,12 @@ class TestingController extends Controller
         }
         $user = Auth::user();
 
-        $mail_version_last = MailVersion::select('id')->where('mail_id', $id)->get()->last();
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
         $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
         $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
-        $mail_log_last = $mail_transaction_last->transactionLog->last();
+        // $mail_log_last = $mail_transaction_last->transactionLog->last();
 
-        if (($mail_log_last->log != 'send' || $mail_log_last->log != 'read') && !$memo_transaction_is_empty){
+        if (!$memo_transaction_is_empty){
             return redirect('/');
         }
 
@@ -302,30 +302,62 @@ class TestingController extends Controller
         ]);
     }
 
+    public function dispositionMailIn(Request $request, $id){
+        $mail = Mail::findOrFail($id);
+        if ($mail->kind != 'in'){
+            return response(403);
+        }
+        $user = Auth::user();
+
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
+        $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'archive')->isEmpty();
+        // $mail_log_last = $mail_transaction_last->transactionLog->last();
+
+        if (!$memo_transaction_is_empty && $mail_transaction_last != 'memo'){
+            return redirect('/');
+        }
+
+        $request->validate([
+            'memo' => 'required|min:3|max:1000',
+        ]);
+
+        $target_user = User::select('id')->withPosition('Kepala Bidang')->first();
+
+        $mail_transaction = MailTransaction::create([
+            'mail_version_id' => $mail_version_last->id,
+            'user_id' => $user->id,
+            'target_user_id' => $target_user->id,
+            'type' => 'archive',
+        ]);
+
+        MailMemo::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'memo' => $request->memo,
+        ]);
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'log' => 'send',
+        ]);
+
+
+        //=== Create & Download File Disposisi ===
+
+
+
+
+
+    }
+
 
 
     public function tes()
     {
-        $mail_transaction_last = MailTransaction::where('mail_version_id', 1)->get()->last();
-        dd($mail_transaction_last);
-        $check_if_mail_has_memo = MailTransaction::where('mail_version_id', 1)->where('type', 'memo')->first();
-        if ($check_if_mail_has_memo){
-            dd('false');
-        }
-        dd('success');
-
-        $mail_version_last = Mail::findOrFail(2)->mailVersions->last();
-        $tes = MailVersion::find($mail_version_last->id)->mailTransactions->where('type', 'memo')->isEmpty();
         $mail_version_last = MailVersion::where('mail_id', 2)->get()->last();
-        dd($mail_version_last);
         $mail_transaction = $mail_version_last->mailTransactions->where('target_user_id', 9)->last();
-        $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
-        $mail_log = $mail_transaction->transactionLog->last();
-        if ($mail_log->log != 'delivered'){
-            dump('false');
-        }
-
-        dump($memo_transaction_is_empty);
+        $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'create')->isEmpty();
+        dd($memo_transaction_is_empty);
     }
 }
 

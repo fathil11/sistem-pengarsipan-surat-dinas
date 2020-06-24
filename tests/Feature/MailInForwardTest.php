@@ -89,25 +89,36 @@ class MailInForwardTest extends TestCase
 
         $response->assertRedirect();
     }
+    /** @test */
+    public function a_mail_cant_be_updated_after_forwarded()
+    {
+        $this->seed();
 
-    // /** @test */
-    // public function a_mail_cant_be_forwarded_if_memo_has_less_char()
-    // {
-    //     $this->seed();
+        $user = User::withPosition('Sekretaris')->first();
+        $this->actingAs($user);
 
-    //     $user = User::withPosition('Sekretaris')->first();
-    //     $this->actingAs($user);
+        $this->withoutExceptionHandling();
 
-    //     $this->withoutExceptionHandling();
+        $this->storeMailIn();
 
-    //     $this->storeMailIn();
+        $this->post('/test/surat/masuk/11/teruskan', [
+            'memo' => 'Mantul',
+        ]);
 
-    //     $response = $this->post('/test/surat/masuk/11/teruskan', [
-    //         'memo' => 'a',
-    //     ]);
+        $response = $this->patch('/test/surat/masuk/11', [
+            'directory_code' => 'udg-003',
+            'code' => 'rs-udg-003',
+            'title' => 'undangan seminar kesehatan',
+            'origin' => 'Universitas Melawi',
+            'mail_folder_id' => 1,
+            'mail_type_id' => 1,
+            'mail_reference_id' => 3,
+            'mail_priority_id' => 1,
+            'mail_created_at' => Carbon::now(),
+        ]);
 
-    //     $response->assertRedirect();
-    // }
+        $response->assertRedirect();
+    }
 
     private function storeMailIn(){
         Storage::fake('documents');
