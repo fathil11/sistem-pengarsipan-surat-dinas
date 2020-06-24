@@ -7,15 +7,20 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+
 use Carbon\Carbon;
 
 use App\User;
-use App\UserPosition;
 
 class MailInTest extends TestCase
 {
     use WithFaker;
     use RefreshDatabase;
+
+    public function setUpTraits()
+    {
+        $this->markTestIncomplete('Waiting for andre');
+    }
 
     /** @test */
     public function a_mail_in_can_be_added()

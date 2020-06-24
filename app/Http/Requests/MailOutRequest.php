@@ -25,10 +25,10 @@ class MailOutRequest extends FormRequest
     {
         return [
             'title' => 'required|min:3|max:255',
-            'mail_folder_id' => 'required|numeric|min:1|max:255',
-            'mail_type_id' => 'required|numeric|min:1|max:255',
-            'mail_reference_id' => 'required|numeric|min:1|max:255',
-            'mail_priority_id' => 'required|numeric|min:1|max:255',
+            'mail_folder_id' => 'required|numeric|min:1|max:255|exists:mail_folders,id',
+            'mail_type_id' => 'required|numeric|min:1|max:255|exists:mail_types,id',
+            'mail_reference_id' => 'required|numeric|min:1|max:255|exists:mail_references,id',
+            'mail_priority_id' => 'required|numeric|min:1|max:255|exists:mail_priorities,id',
             'mail_created_at' => 'required|date',
             'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|max:5120',
         ];

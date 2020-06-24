@@ -25,7 +25,7 @@ class MailOutTest extends TestCase
      */
 
     /** @test */
-    public function a_mail_out_can_adeed_by_admin()
+    public function a_mail_out_can_added_by_admin()
     {
         $this->seed();
 
@@ -46,8 +46,7 @@ class MailOutTest extends TestCase
 
         $this->assertDatabaseHas('mail_versions', [
             'id' => MailVersion::all()->last()->id,
-            'mail_id' => 3,
-            'version'=> 0
+            'mail_id' => Mail::all()->last()->id,
         ]);
 
         $this->assertDatabaseHas('mail_transactions', [
@@ -60,13 +59,13 @@ class MailOutTest extends TestCase
 
         $this->assertDatabaseHas('mail_logs', [
             'id' => MailLog::all()->last()->id,
-            'mail_transaction_id' => 7,
-            'log'=> 'sent'
+            'mail_transaction_id' => MailTransaction::all()->last()->id,
+            'log'=> 'send'
         ]);
     }
 
     /** @test */
-    public function a_mail_out_can_adeed_by_kepala_dinas()
+    public function a_mail_out_can_added_by_kepala_dinas()
     {
         $this->seed();
 
@@ -88,7 +87,6 @@ class MailOutTest extends TestCase
         $this->assertDatabaseHas('mail_versions', [
             'id' => MailVersion::all()->last()->id,
             'mail_id' => Mail::all()->last()->id,
-            'version'=> 0
         ]);
 
         $this->assertDatabaseHas('mail_transactions', [
@@ -102,12 +100,12 @@ class MailOutTest extends TestCase
         $this->assertDatabaseHas('mail_logs', [
             'id' => MailLog::all()->last()->id,
             'mail_transaction_id' => MailTransaction::all()->last()->id,
-            'log'=> 'sent'
+            'log'=> 'send'
         ]);
     }
 
     /** @test */
-    public function a_mail_out_can_adeed_by_kepala_bidang()
+    public function a_mail_out_can_added_by_kepala_bidang()
     {
         $this->seed();
 
@@ -129,7 +127,6 @@ class MailOutTest extends TestCase
         $this->assertDatabaseHas('mail_versions', [
             'id' => MailVersion::all()->last()->id,
             'mail_id' => Mail::all()->last()->id,
-            'version'=> 0
         ]);
 
         $this->assertDatabaseHas('mail_transactions', [
@@ -143,12 +140,12 @@ class MailOutTest extends TestCase
         $this->assertDatabaseHas('mail_logs', [
             'id' => MailLog::all()->last()->id,
             'mail_transaction_id' => MailTransaction::all()->last()->id,
-            'log'=> 'sent'
+            'log'=> 'send'
         ]);
     }
 
     /** @test */
-    public function a_mail_out_can_adeed_by_kepala_seksie()
+    public function a_mail_out_can_added_by_kepala_seksie()
     {
         $this->seed();
 
@@ -170,7 +167,6 @@ class MailOutTest extends TestCase
         $this->assertDatabaseHas('mail_versions', [
             'id' => MailVersion::all()->last()->id,
             'mail_id' => Mail::all()->last()->id,
-            'version'=> 0
         ]);
 
         $this->assertDatabaseHas('mail_transactions', [
@@ -184,8 +180,27 @@ class MailOutTest extends TestCase
         $this->assertDatabaseHas('mail_logs', [
             'id' => MailLog::all()->last()->id,
             'mail_transaction_id' => MailTransaction::all()->last()->id,
-            'log'=> 'sent'
+            'log'=> 'send'
         ]);
+    }
+
+    /** @test */
+    public function a_not_complete_form_mail_out_cant_added()
+    {
+        Storage::fake('documents');
+        $response = $this->post('/test/surat/keluar', [
+            // 'directory_code' => 'udg-002',
+            // 'code' => 'rs-udg-002',
+            'title' => 'undangan seminar kesehatan',
+            'mail_folder_id' => 1,
+            'mail_type_id' => null,
+            'mail_reference_id' => 1,
+            'mail_priority_id' => 1,
+            'mail_created_at' => Carbon::now(),
+            'file' => UploadedFile::fake()->image('undangan002.jpg')->size(4000),
+        ]);
+
+        $response->assertSessionHasErrors();
     }
 
     private function createMailOut()

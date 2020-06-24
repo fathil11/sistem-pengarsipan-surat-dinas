@@ -21,7 +21,7 @@ class UserPositionDetailTest extends TestCase
     public function a_position_detail_can_added()
     {
         $response = $this->createUserPositionDetail();
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     /** @test */
@@ -32,7 +32,7 @@ class UserPositionDetailTest extends TestCase
         $response = $this->patch('/test/pengguna/unit-kerja/1', [
             'position_detail' => 'Updated Kepala Bidang IPTEK',
         ]);
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     /** @test */
@@ -40,7 +40,7 @@ class UserPositionDetailTest extends TestCase
     {
         $this->createUserPositionDetail();
         $response = $this->delete('/test/pengguna/unit-kerja/1');
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     /** @test */
@@ -50,7 +50,7 @@ class UserPositionDetailTest extends TestCase
             'position_detail' => 'aa',
         ]);
 
-        $response->assertRedirect();
+        $response->assertSessionHasErrors();
     }
 
     /** @test */
@@ -60,7 +60,7 @@ class UserPositionDetailTest extends TestCase
             'position_detail' => $this->faker->text(200),
         ]);
 
-        $response->assertRedirect();
+        $response->assertSessionHasErrors();
     }
 
     private function createUserPositionDetail()

@@ -21,10 +21,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\MailOutRequest;
+use App\Repository\MailRepository;
 use Illuminate\Database\Eloquent\Builder;
-use App\Http\Requests\UserPositionRequest;
-use App\Http\Requests\UserDepartmentRequest;
-use App\Http\Requests\UserPositionDetailRequest;
 
 class FathilTestingController extends Controller
 {
@@ -32,16 +30,6 @@ class FathilTestingController extends Controller
     {
         // Validate Form
         $request->validated();
-
-        // Check Mail Attribute is exists
-        if (!$this->checkMailAttributeIsExists(
-            $request->mail_folder_id,
-            $request->mail_type_id,
-            $request->mail_reference_id,
-            $request->mail_priority_id
-        )) {
-            return response(404);
-        }
 
         // Create (Mail)
         $mail = Mail::create([
@@ -58,7 +46,6 @@ class FathilTestingController extends Controller
         // Create & Assign (Mail Version)
         $mail_version = MailVersion::create([
             'mail_id' => $mail->id,
-            'version' => 0,
         ]);
 
         // Create & Store File (Mail File)
@@ -129,6 +116,7 @@ class FathilTestingController extends Controller
         if ($mail->kind != 'in') {
             return abort(403);
         }
+
         // Assigning User
         $user = User::find(Auth::user()->id);
         $user_id = $user->id;
@@ -147,16 +135,6 @@ class FathilTestingController extends Controller
             return response(403);
         }
 
-        // Check Mail Attribute is exists
-        if (!$this->checkMailAttributeIsExists(
-            $request->mail_folder_id,
-            $request->mail_type_id,
-            $request->mail_reference_id,
-            $request->mail_priority_id
-        )) {
-            return response(404);
-        }
-
         // Update Mail
         $mail->update([
             'kind' => 'out',
@@ -172,7 +150,6 @@ class FathilTestingController extends Controller
         // Create & Assign (Mail Version)
         $mail_version = MailVersion::create([
             'mail_id' => $mail->id,
-            'version' => 0,
         ]);
 
         // Check File, if exist Create MailFile
@@ -267,8 +244,8 @@ class FathilTestingController extends Controller
 
     public function temp()
     {
-        $types = MailType::all('type');
-        $types = $types->toArray();
-        dd($types);
+        $mail = new MailRepository();
+        $user = $mail->getWithSameStakeholder(4, 'out');
+        dd($user);
     }
 }
