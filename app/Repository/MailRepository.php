@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MailRepository
 {
-    public function getWithSameStakeholder($user_id, $mail_kind)
+    public function getTransactionWithSameStakeholder($user_id, $mail_kind)
     {
         $user = User::find($user_id);
 
