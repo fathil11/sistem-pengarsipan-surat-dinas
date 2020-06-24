@@ -19,7 +19,7 @@ class UserDepartmentTest extends TestCase
     public function a_department_can_added()
     {
         $response = $this->createUserDepartment();
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     /** @test */
@@ -30,7 +30,7 @@ class UserDepartmentTest extends TestCase
             'department' => 'updated department',
             'department_abbreviation' => 'updated department abbreviation'
         ]);
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     /** @test */
@@ -38,7 +38,7 @@ class UserDepartmentTest extends TestCase
     {
         $this->createUserDepartment();
         $response = $this->delete('/test/pengguna/bidang/1');
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     /** @test */
@@ -49,7 +49,7 @@ class UserDepartmentTest extends TestCase
             'department_abbreviation' => 'IPTEK',
         ]);
 
-        $response->assertRedirect();
+        $response->assertSessionHasErrors();
     }
 
     /** @test */
@@ -60,7 +60,7 @@ class UserDepartmentTest extends TestCase
             'department_abbreviation' => 'I',
         ]);
 
-        $response->assertRedirect();
+        $response->assertSessionHasErrors();
     }
 
     private function createUserDepartment()

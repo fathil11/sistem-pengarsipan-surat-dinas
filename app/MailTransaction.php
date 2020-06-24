@@ -26,7 +26,7 @@ class MailTransaction extends Model
 
     public function mailVersion()
     {
-        return $this->belongsToMany(MailVersion::class, 'mail_version_id');
+        return $this->belongsTo(MailVersion::class, 'mail_version_id');
     }
 
     public function transactionLog()

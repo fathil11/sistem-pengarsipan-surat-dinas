@@ -65,7 +65,7 @@ class UserPositionTest extends TestCase
             'role' => 'test'
         ]);
 
-        $response->assertRedirect();
+        $response->assertSessionHasErrors();
     }
 
     /** @test */
@@ -76,7 +76,7 @@ class UserPositionTest extends TestCase
             'role' => 'test'
         ]);
 
-        $response->assertRedirect();
+        $response->assertSessionHasErrors();
     }
 
     /** @test */
@@ -87,7 +87,7 @@ class UserPositionTest extends TestCase
             'role' => 'aa'
         ]);
 
-        $response->assertRedirect();
+        $response->assertSessionHasErrors();
     }
 
     private function createUserPosition()

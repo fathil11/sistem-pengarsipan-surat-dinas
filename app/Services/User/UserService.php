@@ -27,13 +27,20 @@ class UserService
             does't have UserDepartment and UserPositionDetail.
         */
         $user_department_id = null;
-        $user_position_id = null;
+        $user_position_detail_id = null;
 
         if (UserPosition::checkPositionIdHasExtra($request->user_position_id)) {
-            $user_department_id = $request->user_department_id;
-            $user_position_id = $request->user_position_id;
-        }
 
+            // Valudate UserDepartment is empty
+            if ($request->user_department_id == null) {
+                return redirect()->back()->withErrors('Bidang tidak boleh kosong !');
+            } elseif ($request->user_department_id != null && $request->user_position_detail_id == null) {
+                $request->user_position_detail_id = null;
+            }
+
+            $user_department_id = $request->user_department_id;
+            $user_position_detail_id = $request->user_position_detail_id;
+        }
 
         // Create User
         User::create([
@@ -41,7 +48,7 @@ class UserService
             'name' => $request->name,
             'user_position_id' => $request->user_position_id,
             'user_department_id' => $user_department_id,
-            'user_position_detail_id' => $user_position_id,
+            'user_position_detail_id' => $user_position_detail_id,
             'email' => $request->email,
             'phone_number' => $request->phone_number,
             'username' => $request->username,
@@ -72,11 +79,19 @@ class UserService
             does't have UserDepartment and UserPositionDetail.
         */
         $user_department_id = null;
-        $user_position_id = null;
+        $user_position_detail_id = null;
 
         if (UserPosition::checkPositionIdHasExtra($request->user_position_id)) {
+
+            // Valudate UserDepartment is empty
+            if ($request->user_department_id == null) {
+                return redirect()->back()->withErrors('Bidang tidak boleh kosong !');
+            } elseif ($request->user_department_id != null && $request->user_position_detail_id == null) {
+                $request->user_position_detail_id = null;
+            }
+
             $user_department_id = $request->user_department_id;
-            $user_position_id = $request->user_position_id;
+            $user_position_detail_id = $request->user_position_detail_id;
         }
 
         // Update User
@@ -85,7 +100,7 @@ class UserService
             'name' => $request->name,
             'user_position_id' => $request->user_position_id,
             'user_department_id' => $user_department_id,
-            'user_position_detail_id' => $user_position_id,
+            'user_position_detail_id' => $user_position_detail_id,
             'email' => $request->email,
             'phone_number' => $request->phone_number,
             'username' => $request->username,
