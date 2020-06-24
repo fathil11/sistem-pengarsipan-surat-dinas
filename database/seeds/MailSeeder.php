@@ -52,7 +52,6 @@ class MailSeeder extends Seeder
 
             $mail_version = MailVersion::create([
                 'mail_id' => $mail->id,
-                'version' => 'null'
             ]);
 
             MailFile::create([
@@ -99,7 +98,6 @@ class MailSeeder extends Seeder
 
             $mail_version = MailVersion::create([
                 'mail_id' => $mail->id,
-                'version' => 'null'
             ]);
 
             MailFile::create([
