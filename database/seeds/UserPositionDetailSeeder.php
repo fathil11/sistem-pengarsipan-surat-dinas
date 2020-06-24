@@ -13,23 +13,19 @@ class UserPositionDetailSeeder extends Seeder
     public function run()
     {
         DB::table('user_position_details')->insert([
-            'position_detail' => 'Kepala Bidang IPTEK'
+            'position_detail' => 'Unknown'
         ]);
 
         DB::table('user_position_details')->insert([
-            'position_detail' => 'Kepala Bidang INFOKOM'
+            'position_detail' => '1'
         ]);
 
         DB::table('user_position_details')->insert([
-            'position_detail' => 'Kepala Bidang LITBANG'
+            'position_detail' => '2'
         ]);
 
         DB::table('user_position_details')->insert([
-            'position_detail' => 'Kepala Seksie Perkap'
-        ]);
-
-        DB::table('user_position_details')->insert([
-            'position_detail' => 'Kepala Seksie Sistem'
+            'position_detail' => '3'
         ]);
     }
 }

@@ -33,7 +33,17 @@ class UserPositionSeeder extends Seeder
         ]);
 
         DB::table('user_positions')->insert([
+            'position' => 'Asisten Sekretaris',
+            'role' => 'sekretaris'
+        ]);
+
+        DB::table('user_positions')->insert([
             'position' => 'Kepala Bidang',
+            'role' => 'kepala_bidang'
+        ]);
+
+        DB::table('user_positions')->insert([
+            'position' => 'Asisten Kepala Bidang',
             'role' => 'kepala_bidang'
         ]);
 
@@ -43,7 +53,18 @@ class UserPositionSeeder extends Seeder
         ]);
 
         DB::table('user_positions')->insert([
+            'position' => 'Asisten Kepala Seksie',
+            'role' => 'kepala_seksie'
+        ]);
+
+        DB::table('user_positions')->insert([
             'position' => 'Kepala TU',
+            'role' => 'kepala_tu'
+        ]);
+
+
+        DB::table('user_positions')->insert([
+            'position' => 'Asisten Kepala TU',
             'role' => 'kepala_tu'
         ]);
     }

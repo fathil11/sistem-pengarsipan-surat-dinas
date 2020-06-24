@@ -13,19 +13,23 @@ class MailFolderSeeder extends Seeder
     public function run()
     {
         MailFolder::create([
-            'folder' => 'undangan'
+            'folder' => 'keuangan'
         ]);
 
         MailFolder::create([
-            'folder' => 'permohonan'
+            'folder' => 'pengadaan'
         ]);
 
         MailFolder::create([
-            'folder' => 'peminjaman'
+            'folder' => 'laporan perjalanan'
         ]);
 
         MailFolder::create([
-            'folder' => 'pengantar'
+            'folder' => 'pembangunan'
+        ]);
+
+        MailFolder::create([
+            'folder' => 'aspirasi'
         ]);
     }
 }

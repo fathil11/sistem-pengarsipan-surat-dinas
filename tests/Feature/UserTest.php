@@ -49,15 +49,15 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function a_user_can_deleted()
-    {
-        $this->seed();
-        $this->createUser();
+    // /** @test */
+    // public function a_user_can_deleted()
+    // {
+    //     $this->seed();
+    //     $this->createUser();
 
-        $response = $this->delete('/test/pengguna/1');
-        $response->assertStatus(200);
-    }
+    //     $response = $this->delete('/test/pengguna/1');
+    //     $response->assertStatus(200);
+    // }
 
     /** @test */
     public function a_wrong_user_cant_updated()

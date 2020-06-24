@@ -1,8 +1,14 @@
 <?php
 
+use App\UserDepartment;
+use App\UserPosition;
+use App\UserPositionDetail;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+
+// use Faker\Factory;
 
 class UserSeeder extends Seeder
 {
@@ -11,105 +17,139 @@ class UserSeeder extends Seeder
      *
      * @return void
      */
+
     public function run()
     {
+        $faker = Faker\Factory::create('id_ID');
+
+        $position = 'Admin';
         DB::table('users')->insert([
-            'nip' => '00000',
-            'name' => 'Super Admin',
-            'user_position_id' => 1,
+            'nip' => $faker->nik(),
+            'name' => $position,
+            'user_position_id' => UserPosition::getPositionId($position),
             // 'user_position_detail_id => 1,
             // 'user_department_id => 1,
-            'email' => 'admin@gmail.com',
-            'username' => 'admin',
+            'email' => $faker->email(),
+            'username' => $faker->userName(),
+            'phone_number' => $faker->phoneNumber(),
             'password' => Hash::make('123123')
         ]);
 
+        $position = 'Kepala Dinas';
         DB::table('users')->insert([
-            'nip' => '00001',
-            'name' => 'Bambang Sudibyo',
-            'user_position_id' => 2,
-            // 'user_position_detail_id' => 1,
-            // 'user_department_id' => 1,
-            'email' => 'bambang@gmail.com',
-            'username' => 'bambang',
+            'nip' => $faker->nik(),
+            'name' => $position,
+            'user_position_id' => UserPosition::getPositionId($position),
+            // 'user_position_detail_id => 1,
+            // 'user_department_id => 1,
+            'email' => $faker->email(),
+            'username' => $faker->userName(),
+            'phone_number' => $faker->phoneNumber(),
             'password' => Hash::make('123123')
         ]);
 
+        $position = 'Asisten Kepala Dinas';
         DB::table('users')->insert([
-            'nip' => '00002',
-            'name' => 'Wiwik Hanura',
-            'user_position_id' => 3,
-            // 'user_position_detail_id' => 1,
-            // 'user_department_id' => 1,
-            'email' => 'wiwik@gmail.com',
-            'username' => 'wiwik',
+            'nip' => $faker->nik(),
+            'name' => $position,
+            'user_position_id' => UserPosition::getPositionId($position),
+            // 'user_position_detail_id => 1,
+            // 'user_department_id => 1,
+            'email' => $faker->email(),
+            'username' => $faker->userName(),
+            'phone_number' => $faker->phoneNumber(),
             'password' => Hash::make('123123')
         ]);
 
+        $position = 'Sekretaris';
         DB::table('users')->insert([
-            'nip' => '00003',
-            'name' => 'Rini Syahrini',
-            'user_position_id' => 4,
-            // 'user_position_detail_id' => 1,
-            // 'user_department_id' => 1,
-            'email' => 'rini@gmail.com',
-            'username' => 'rini',
+            'nip' => $faker->nik(),
+            'name' => $position,
+            'user_position_id' => UserPosition::getPositionId($position),
+            // 'user_position_detail_id => 1,
+            // 'user_department_id => 1,
+            'email' => $faker->email(),
+            'username' => $faker->userName(),
+            'phone_number' => $faker->phoneNumber(),
             'password' => Hash::make('123123')
         ]);
 
+        $position = 'Asisten Sekretaris';
         DB::table('users')->insert([
-            'nip' => '00004',
-            'name' => 'Jono Setiabudi',
-            'user_position_id' => 5,
-            'user_position_detail_id' => 1,
-            'user_department_id' => 1,
-            'email' => 'jono@gmail.com',
-            'username' => 'jono',
+            'nip' => $faker->nik(),
+            'name' => $position,
+            'user_position_id' => UserPosition::getPositionId($position),
+            // 'user_position_detail_id => 1,
+            // 'user_department_id => 1,
+            'email' => $faker->email(),
+            'username' => $faker->userName(),
+            'phone_number' => $faker->phoneNumber(),
             'password' => Hash::make('123123')
         ]);
 
+        $position = 'Kepala TU';
         DB::table('users')->insert([
-            'nip' => '00005',
-            'name' => 'Arif Budiman',
-            'user_position_id' => 5,
-            'user_position_detail_id' => 2,
-            'user_department_id' => 3,
-            'email' => 'arif@gmail.com',
-            'username' => 'arif',
+            'nip' => $faker->nik(),
+            'name' => $position,
+            'user_position_id' => UserPosition::getPositionId($position),
+            // 'user_position_detail_id => 1,
+            // 'user_department_id => 1,
+            'email' => $faker->email(),
+            'username' => $faker->userName(),
+            'phone_number' => $faker->phoneNumber(),
             'password' => Hash::make('123123')
         ]);
 
+        $position = 'Asisten Kepala TU';
         DB::table('users')->insert([
-            'nip' => '00006',
-            'name' => 'Eka Hermawan',
-            'user_position_id' => 6,
-            'user_position_detail_id' => 4,
-            'user_department_id' => 1,
-            'email' => 'eka@gmail.com',
-            'username' => 'eka',
+            'nip' => $faker->nik(),
+            'name' => $position,
+            'user_position_id' => UserPosition::getPositionId($position),
+            // 'user_position_detail_id => 1,
+            // 'user_department_id => 1,
+            'email' => $faker->email(),
+            'username' => $faker->userName(),
+            'phone_number' => $faker->phoneNumber(),
             'password' => Hash::make('123123')
         ]);
 
-        DB::table('users')->insert([
-            'nip' => '00007',
-            'name' => 'Wily',
-            'user_position_id' => 7,
-            // 'user_position_detail_id' => 4,
-            // 'user_department_id' => 1,
-            'email' => 'wily@gmail.com',
-            'username' => 'wilyeka',
-            'password' => Hash::make('123123')
-        ]);
+        $positions = UserPosition::whereIn('role', ['kepala_bidang', 'kepala_seksie'])->get();
 
-        DB::table('users')->insert([
-            'nip' => '00008',
-            'name' => 'Syahrul Santoro',
-            'user_position_id' => 4,
-            // 'user_position_detail_id' => 1,
-            // 'user_department_id' => 1,
-            'email' => 'syahrul@gmail.com',
-            'username' => 'syahrul',
-            'password' => Hash::make('123123')
-        ]);
+        foreach ($positions as $position) {
+            // $position = $position->position;
+            $departments = UserDepartment::all();
+
+            foreach ($departments as $department) {
+                if ($position->role == 'kepala_bidang') {
+                    DB::table('users')->insert([
+                    'nip' => $faker->nik(),
+                    'name' => $position->position . ' ' . $department->department_abbreviation,
+                    'user_position_id' => UserPosition::getPositionId($position->position),
+                    'user_position_detail_id' => UserPositionDetail::where('position_detail', 'Unknown')->first()->id,
+                    'user_department_id' => $department->id,
+                    'email' => $faker->email(),
+                    'username' => $faker->userName(),
+                    'phone_number' => $faker->phoneNumber(),
+                    'password' => Hash::make('123123'),
+                    'created_at' => Carbon::now(),
+                    ]);
+                } else {
+                    for ($i=1; $i < 4; $i++) {
+                        DB::table('users')->insert([
+                            'nip' => $faker->nik(),
+                            'name' => $position->position . ' ' . $department->department_abbreviation . ' ' . $i,
+                            'user_position_id' => UserPosition::getPositionId($position->position),
+                            'user_position_detail_id' => UserPositionDetail::where('position_detail', $i)->first()->id,
+                            'user_department_id' => $department->id,
+                            'email' => $faker->email(),
+                            'username' => $faker->userName(),
+                            'phone_number' => $faker->phoneNumber(),
+                            'password' => Hash::make('123123'),
+                            'created_at' => Carbon::now(),
+                        ]);
+                    }
+                }
+            }
+        }
     }
 }

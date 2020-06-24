@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class UserPosition extends Model
@@ -62,17 +63,32 @@ class UserPosition extends Model
             return null;
         }
 
-        // Search role index in order
-        $order = array_merge(self::$roles['no_extra'], self::$roles['extra']);
-        $role_position = array_search($role, $order);
-
-        // Assigning itself role when the role is Admin or Kepala Dinas
-        if ($role_position == 0 || $role_position == 1) {
-            $top_role = $role;
-        } else {
-            $top_role = $order[$role_position-1];
+        switch ($role) {
+            case 'admin': case 'kepala_dinas':
+                $top_role = 'kepala_tu';
+                break;
+            case 'kepala_bidang':
+                $top_role = 'sekretaris';
+                break;
+            case 'kepala_seksie':
+                $top_role = 'kepala_bidang';
+                break;
+            default:
+                $top_role = null;
+                break;
         }
 
         return $top_role;
+    }
+
+    public static function getTopPosition($role)
+    {
+        $top_role = self::getTopRole($role);
+        return self::where('role', $top_role)->first()->position;
+    }
+
+    public static function getPositionId($position)
+    {
+        return self::where('position', $position)->first()->id;
     }
 }

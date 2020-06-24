@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 // Route for Testing
 Route::group(['prefix' => 'test'], function () {
     Route::post('/surat/masuk/', 'TestingController@storeMailIn');
+    Route::post('/surat/masuk/{id}/teruskan', 'TestingController@forwardMailIn');
     Route::patch('/surat/masuk/{id}', 'TestingController@updateMailIn');
     Route::delete('/surat/masuk/{id}', 'TestingController@deleteMailIn');
 
@@ -55,4 +56,4 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
-Route::get('/', 'TestingController@tes');
+Route::get('/tes', 'TestingController@tes');

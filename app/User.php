@@ -53,12 +53,12 @@ class User extends Authenticatable
 
     public function outcomingMailTransactions()
     {
-        return $this->belongsToMany(MailVersion::class, 'mail_transactions')->withPivot(['target_user_id', 'type'])->withTimestamps();
+        return $this->hasMany(MailTransaction::class);
     }
 
     public function incomingMailTransaction()
     {
-        return $this->belongsToMany(MailVersion::class, 'mail_transactions', 'target_user_id')->withPivot(['user_id', 'type'])->withTimestamps();
+        return $this->hasMany(MailVersion::class, 'target_user_id');
     }
 
     public function getRole()
@@ -71,10 +71,10 @@ class User extends Authenticatable
         return $this->department->department;
     }
 
-    public function scopeWithDepartment(Builder $query, $department)
+    public function scopeWithPosition(Builder $query, $position)
     {
-        return $query->whereHas('department', function (Builder $query) use ($department) {
-            return $query->where('department', $department);
+        return $query->whereHas('position', function (Builder $query) use ($position) {
+            return $query->where('position', $position);
         });
     }
 
@@ -82,6 +82,13 @@ class User extends Authenticatable
     {
         return $query->whereHas('position', function (Builder $query) use ($role) {
             return $query->where('role', $role);
+        });
+    }
+
+    public function scopeWithDepartment(Builder $query, $department)
+    {
+        return $query->whereHas('department', function (Builder $query) use ($department) {
+            return $query->where('department', $department);
         });
     }
 }

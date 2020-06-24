@@ -9,16 +9,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class MailTransaction extends Model
 {
     use SoftDeletes;
+
+    protected $table = 'mail_transactions';
+
     protected $guarded = [];
 
     public function user()
     {
-        return $this->belongsToMany(User::class)->withPivot(['target_user_id'])->withTimestamps();
+        return $this->belongsTo(User::class);
     }
 
     public function userTarget()
     {
-        return $this->belongsToMany(User::class, 'target_user_id')->withPivot(['user_id'])->withTimestamps();
+        return $this->belongsTo(User::class, 'target_user_id');
     }
 
     public function mailVersion()
