@@ -22,15 +22,10 @@ class MailInTest extends TestCase
     {
         $this->seed('DatabaseSeeder');
 
-        UserPosition::create([
-            'position' => 'Kepala TU',
-            'role' => 'kepala_tu'
-        ]);
-
         $user = User::create([
             'nip' => $this->faker->creditCardNumber(),
             'name' => $this->faker->name(),
-            'user_position_id' => 1,
+            'user_position_id' => 7,
             'user_department_id' => null,
             'user_position_detail_id' => null,
             'email' => $this->faker->email(),
@@ -46,7 +41,7 @@ class MailInTest extends TestCase
         Storage::fake('documents');
 
 
-        $response = $this->post('/test/surat/masuk/buat', [
+        $response = $this->post('/test/surat/masuk', [
             'directory_code' => 'udg-002',
             'code' => 'rs-udg-002',
             'title' => 'undangan seminar kesehatan',
@@ -64,7 +59,7 @@ class MailInTest extends TestCase
     }
 
     /** @test */
-    public function a_mail_in_cant_be_added_if_file_doesnt_exists()
+    public function a_mail_in_cant_be_added_if_mail_components_invalid()
     {
         $this->seed('DatabaseSeeder');
 
@@ -73,7 +68,7 @@ class MailInTest extends TestCase
         Storage::fake('documents');
 
 
-        $response = $this->post('/test/surat/masuk/buat', [
+        $response = $this->post('/test/surat/masuk', [
             'directory_code' => 'udg-002',
             'code' => 'rs-udg-002',
             'title' => 'undangan seminar kesehatan',
@@ -95,9 +90,23 @@ class MailInTest extends TestCase
     {
         $this->seed('DatabaseSeeder');
 
+        $user = User::create([
+            'nip' => $this->faker->creditCardNumber(),
+            'name' => $this->faker->name(),
+            'user_position_id' => 7,
+            'user_department_id' => null,
+            'user_position_detail_id' => null,
+            'email' => $this->faker->email(),
+            'phone_number' => $this->faker->phoneNumber(),
+            'username' => $this->faker->userName(),
+            'password' => '123123',
+        ]);
+
+        $this->actingAs($user);
+
         $this->withoutExceptionHandling();
 
-        $response = $this->patch('/test/surat/masuk/1/update', [
+        $response = $this->patch('/test/surat/masuk/1', [
             'directory_code' => 'udg-002',
             'code' => 'rs-udg-002',
             'title' => 'undangan seminar kesehatan',
@@ -108,6 +117,18 @@ class MailInTest extends TestCase
             'mail_priority_id' => 1,
             'mail_created_at' => Carbon::now(),
         ]);
+
+        $response->assertOk();
+    }
+
+    /** @test */
+    public function a_mail_in_can_be_deleted()
+    {
+        $this->seed('DatabaseSeeder');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->delete('/test/surat/masuk/1');
 
         $response->assertOk();
     }

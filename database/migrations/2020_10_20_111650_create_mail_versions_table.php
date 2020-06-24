@@ -17,7 +17,7 @@ class CreateMailVersionsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('mail_id');
             $table->foreign('mail_id')->references('id')->on('mails');
-            $table->string('version');
+            // $table->string('version');
             $table->softDeletes();
             $table->timestamps();
         });
