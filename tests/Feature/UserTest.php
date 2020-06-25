@@ -128,7 +128,7 @@ class UserTest extends TestCase
         $id = User::all()->last()->id;
         $response = $this->delete('/test/pengguna/' . $id);
 
-        $this->assertDatabaseMissing('users', [
+        $this->assertSoftDeleted('users', [
             'id' => $id
         ]);
 

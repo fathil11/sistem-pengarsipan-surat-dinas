@@ -109,7 +109,7 @@ class TestingController extends Controller
             // - type -> create
 
             // === Create MailTransaction ===
-            $user = User::findOrFail(Auth::user()->id);
+            $user = User::select('id')->findOrFail(Auth::user()->id);
             $target_user = User::select('id')->withPosition('Sekretaris')->first();
 
             $mail_transaction = MailTransaction::create([
@@ -137,11 +137,14 @@ class TestingController extends Controller
         }
 
         $mail_version_last = $mail->mailVersions->last();
-        $user = User::findOrFail(Auth::user()->id);
+        $user = User::select('id')->findOrFail(Auth::user()->id);
 
-        $check_if_mail_has_memo = MailTransaction::where('mail_version_id', $mail_version_last->id)->where('type', 'memo')->first();
+        // $mail_has_memo = MailTransaction::where('mail_version_id', $mail_version_last->id)->where('type', 'memo')->isNotEmpty();
+        // $mail_has_disposition = MailTransaction::where('mail_version_id', $mail_version_last->id)->where('type', 'archive')->isNotEmpty();
+        $last_mail_transaction_is_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isNotEmpty();
+        $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
 
-        if ($check_if_mail_has_memo){
+        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition){
             return redirect('/');
         }
 
@@ -267,14 +270,13 @@ class TestingController extends Controller
         if ($mail->kind != 'in'){
             return response(403);
         }
-        $user = Auth::user();
-
-        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
-        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
-        $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
+        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $mail_version_last = $mail->mailVersions->last();
+        $last_mail_transaction_is_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isNotEmpty();
+        $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
         // $mail_log_last = $mail_transaction_last->transactionLog->last();
 
-        if (!$memo_transaction_is_empty){
+        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition){
             return redirect('/');
         }
 
@@ -307,15 +309,15 @@ class TestingController extends Controller
         if ($mail->kind != 'in'){
             return response(403);
         }
-        $user = Auth::user();
 
-        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $mail_version_last = $mail->mailVersions->last();
         $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
-        $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'archive')->isEmpty();
-        // $mail_log_last = $mail_transaction_last->transactionLog->last();
+        $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
+        $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
 
         // dd($mail_transaction_last->type);
-        if (!$memo_transaction_is_empty || $mail_transaction_last == null){
+        if ($last_mail_transaction_isnt_memo || $mail_has_disposition){
             return redirect('/');
         }
 
@@ -359,9 +361,9 @@ class TestingController extends Controller
         $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', )->last();
         $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'create')->isEmpty();
         if (!$memo_transaction_is_empty && $mail_transaction_last->type != 'memo'){
-            dd('false');
+            dump('false');
         }
-        dd('true');
+        dump('true');
     }
 }
 
