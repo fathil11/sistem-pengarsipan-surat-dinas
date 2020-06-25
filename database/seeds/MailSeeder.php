@@ -118,6 +118,18 @@ class MailSeeder extends Seeder
                 'mail_transaction_id' => $mail_transaction->id,
                 'log' => 'send'
             ]);
+
+            $mail_transaction = MailTransaction::create([
+                'mail_version_id' => $mail_version->id,
+                'user_id' => User::withPosition($target_positions[$index])->first()->id,
+                'target_user_id' => User::withPosition($positions[$index])->first()->id,
+                'type' => 'correction'
+            ]);
+
+            MailLog::create([
+                'mail_transaction_id' => $mail_transaction->id,
+                'log' => 'send'
+            ]);
         }
     }
 }
