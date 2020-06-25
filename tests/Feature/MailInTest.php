@@ -22,11 +22,6 @@ class MailInTest extends TestCase
     use WithFaker;
     use RefreshDatabase;
 
-    public function setUpTraits()
-    {
-        $this->markTestIncomplete('Waiting for andre');
-    }
-
     /** @test */
     public function a_mail_in_can_be_added()
     {
