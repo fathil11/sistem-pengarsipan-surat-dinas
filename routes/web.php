@@ -36,6 +36,13 @@ Route::group(['prefix' => 'test'], function () {
     Route::post('/pengguna/surat/prioritas', 'MailSettingController@storeMailPriority');
     Route::patch('/pengguna/surat/prioritas/{id}', 'MailSettingController@updateMailPriority');
     Route::delete('/pengguna/surat/prioritas/{id}', 'MailSettingController@deleteMailPriority');
+    Route::post('/pengguna/surat/berkas', 'MailSettingController@storeMailFolder');
+    Route::patch('/pengguna/surat/berkas/{id}', 'MailSettingController@updateMailFolder');
+    Route::delete('/pengguna/surat/berkas/{id}', 'MailSettingController@deleteMailFolder');
+
+    Route::post('/pengguna/surat/tipe-koreksi', 'MailSettingController@storeMailCorrectionType');
+    Route::patch('/pengguna/surat/tipe-koreksi/{id}', 'MailSettingController@updateMailCorrectionType');
+    Route::delete('/pengguna/surat/tipe-koreksi/{id}', 'MailSettingController@deleteMailCorrectionType');
 
     // Mail Out
     Route::post('/surat/keluar', 'MailController@storeMailOut');

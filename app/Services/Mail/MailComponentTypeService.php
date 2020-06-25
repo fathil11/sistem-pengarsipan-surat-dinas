@@ -7,13 +7,13 @@ use App\Http\Requests\MailComponentsRequest;
 
 class MailComponentTypeService
 {
-    /** Store User Department */
+    /** Store Mail Type */
     public static function store(MailComponentsRequest $request)
     {
         // Validate Form
         $request->validated();
 
-        // Create UserDepartment
+        // Create Mail Type
         MailType::create([
             'type' => $request->type,
             'code' => $request->code,
@@ -23,16 +23,16 @@ class MailComponentTypeService
         return response(200);
     }
 
-    /** Update User Department */
+    /** Update Mail Type */
     public static function update(MailComponentsRequest $request, $id)
     {
         // Validate Form
         $request->validated();
 
-        // Check UserDepartment is Exists
+        // Check Mail Type is Exists
         $mail_type = MailType::findOrFail($id);
 
-        // Update UserDepartment
+        // Update Mail Type
         $mail_type->update([
             'type' => $request->type,
             'code' => $request->code,
@@ -42,10 +42,10 @@ class MailComponentTypeService
         return response(200);
     }
 
-    /** Delete User Department */
+    /** Delete Mail Type */
     public static function delete($id)
     {
-        // Check UserDepartment is Exists
+        // Check Mail Type is Exists
         $mail_type = MailType::findOrFail($id);
         $mail_type->delete();
         return response(200);

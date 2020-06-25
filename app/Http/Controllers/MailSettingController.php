@@ -8,6 +8,12 @@ use App\Services\Mail\MailComponentPriorityService;
 use App\Services\Mail\MailComponentReferenceService;
 use App\Services\Mail\MailComponentTypeService;
 
+use App\Http\Requests\MailCompFolderRequest;
+use App\Services\Mail\MailCompFolderService;
+
+use App\Http\Requests\MailCorrectionTypeRequest;
+use App\Services\Mail\MailCorrectionTypeService;
+
 class MailSettingController extends Controller
 {
     //=== CRUD FOR MAIL TYPE ===
@@ -58,5 +64,37 @@ class MailSettingController extends Controller
     public function deleteMailReference($id)
     {
         return MailComponentReferenceService::delete($id);
+    }
+
+    //=== CRUD FOR MAIL FOLDER ===
+    public function storeMailFolder(MailCompFolderRequest $request)
+    {
+        return MailCompFolderService::store($request);
+    }
+
+    public function updateMailFolder(MailCompFolderRequest $request, $id)
+    {
+        return MailCompFolderService::update($request, $id);
+    }
+
+    public function deleteMailFolder($id)
+    {
+        return MailCompFolderService::delete($id);
+    }
+
+    //=== CRUD FOR MAIL CORRECTION TYPE ===
+    public function storeMailCorrectionType(MailCorrectionTypeRequest $request)
+    {
+        return MailCorrectionTypeService::store($request);
+    }
+
+    public function updateMailCorrectionType(MailCorrectionTypeRequest $request, $id)
+    {
+        return MailCorrectionTypeService::update($request, $id);
+    }
+
+    public function deleteMailCorrectionType($id)
+    {
+        return MailCorrectionTypeService::delete($id);
     }
 }

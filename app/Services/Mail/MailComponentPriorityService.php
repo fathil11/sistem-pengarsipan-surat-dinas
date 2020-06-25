@@ -7,13 +7,13 @@ use App\Http\Requests\MailComponentsRequest;
 
 class MailComponentPriorityService
 {
-    /** Store User Department */
+    /** Store Mail Priority */
     public static function store(MailComponentsRequest $request)
     {
         // Validate Form
         $request->validated();
 
-        // Create UserDepartment
+        // Create Mail Priority
         MailPriority::create([
             'type' => $request->type,
             'code' => $request->code,
@@ -23,16 +23,16 @@ class MailComponentPriorityService
         return response(200);
     }
 
-    /** Update User Department */
+    /** Update Mail Priority */
     public static function update(MailComponentsRequest $request, $id)
     {
         // Validate Form
         $request->validated();
 
-        // Check UserDepartment is Exists
+        // Check Mail Priority is Exists
         $mail_priority = MailPriority::findOrFail($id);
 
-        // Update UserDepartment
+        // Update Mail Priority
         $mail_priority->update([
             'type' => $request->type,
             'code' => $request->code,
@@ -42,10 +42,10 @@ class MailComponentPriorityService
         return response(200);
     }
 
-    /** Delete User Department */
+    /** Delete Mail Priority */
     public static function delete($id)
     {
-        // Check UserDepartment is Exists
+        // Check Mail Priority is Exists
         $mail_priority = MailPriority::findOrFail($id);
         $mail_priority->delete();
         return response(200);
