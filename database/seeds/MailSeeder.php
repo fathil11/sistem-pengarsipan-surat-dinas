@@ -70,7 +70,8 @@ class MailSeeder extends Seeder
 
             MailLog::create([
                 'mail_transaction_id' => $mail_transaction->id,
-                'log' => 'send'
+                'log' => 'send',
+                'user_id' => $mail_transaction->user_id
             ]);
         }
 
@@ -116,7 +117,8 @@ class MailSeeder extends Seeder
 
             MailLog::create([
                 'mail_transaction_id' => $mail_transaction->id,
-                'log' => 'send'
+                'log' => 'send',
+                'user_id' => $mail_transaction->user_id
             ]);
 
             $mail_transaction = MailTransaction::create([
@@ -128,7 +130,8 @@ class MailSeeder extends Seeder
 
             MailLog::create([
                 'mail_transaction_id' => $mail_transaction->id,
-                'log' => 'send'
+                'log' => 'send',
+                'user_id' =>$mail_transaction->user_id
             ]);
         }
     }

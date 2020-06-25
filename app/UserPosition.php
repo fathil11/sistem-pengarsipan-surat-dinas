@@ -55,11 +55,6 @@ class UserPosition extends Model
         return true;
     }
 
-    public static function checkPositionIdHasExtra($position_id)
-    {
-        return self::checkRoleHasExtra(self::find($position_id)->role);
-    }
-
     public static function getTopRole($role)
     {
         if (!self::checkRoleIsExists($role)) {
@@ -82,16 +77,5 @@ class UserPosition extends Model
         }
 
         return $top_role;
-    }
-
-    public static function getTopPosition($role)
-    {
-        $top_role = self::getTopRole($role);
-        return self::where('role', $top_role)->first()->position;
-    }
-
-    public static function getPositionId($position)
-    {
-        return self::where('position', $position)->first()->id;
     }
 }

@@ -18,6 +18,7 @@ class CreateMailLogsTable extends Migration
             $table->unsignedBigInteger('mail_transaction_id');
             $table->foreign('mail_transaction_id')->references('id')->on('mail_transactions');
             $table->string('log');
+            $table->foreignId('user_id')->constrained('users');
             $table->softDeletes();
             $table->timestamps();
         });

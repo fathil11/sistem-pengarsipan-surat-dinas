@@ -16,6 +16,13 @@ class MailRepository
             return $query->whereHas('mailTransactions', function (Builder $query) use ($user_id, $mail_kind) {
                 return $query->withSameStakeHolder($user_id, $mail_kind);
             });
+        })->get()
+        ->map(function ($mail) {
+            $mail->type = $mail->type->type;
+
+
+            $mail->date_in = '21 Okt';
+            return $mail;
         });
 
         return $mails;
