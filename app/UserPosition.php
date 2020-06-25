@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserPosition extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
 
     private static $roles = [
