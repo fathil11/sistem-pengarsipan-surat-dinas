@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\Route;
 // Route for Testing
 Route::group(['prefix' => 'test'], function () {
     // Mail In === CRUD ===
-    Route::post('/surat/masuk/', 'TestingController@storeMailIn');
-    Route::patch('/surat/masuk/{id}', 'TestingController@updateMailIn');
-    Route::delete('/surat/masuk/{id}', 'TestingController@deleteMailIn');
+    Route::post('/surat/masuk/', 'MailController@storeMailIn');
+    Route::patch('/surat/masuk/{id}', 'MailController@updateMailIn');
+    Route::delete('/surat/masuk/{id}', 'MailController@deleteMailIn');
 
     //Mail In === Process ===
-    Route::post('/surat/masuk/{id}/teruskan', 'TestingController@forwardMailIn');
+    Route::post('/surat/masuk/{id}/teruskan', 'MailController@forwardMailIn');
     Route::post('/surat/masuk/{id}/disposisi', 'TestingController@dispositionMailIn');
 
 

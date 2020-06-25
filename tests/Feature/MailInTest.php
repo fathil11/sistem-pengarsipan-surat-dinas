@@ -66,35 +66,6 @@ class MailInTest extends TestCase
     }
 
     /** @test */
-    public function a_mail_in_cant_be_added_if_mail_components_invalid()
-    {
-        $this->seed();
-
-        $user = User::withPosition('Kepala TU')->first();
-        $this->actingAs($user);
-
-        $this->withoutExceptionHandling();
-
-        Storage::fake('documents');
-
-        $response = $this->post('/test/surat/masuk', [
-            'directory_code' => 'udg-002',
-            'code' => 'rs-udg-002',
-            'title' => 'undangan seminar kesehatan',
-            'origin' => 'Universitas Melawi',
-            'mail_folder_id' => 1,
-            'mail_type_id' => 11,
-            'mail_reference_id' => 2,
-            'mail_priority_id' => 1,
-            'mail_created_at' => Carbon::now(),
-
-            'file' => UploadedFile::fake()->image('undangan002.jpg')->size(3000),
-        ]);
-
-        $response->assertRedirect();
-    }
-
-    /** @test */
     public function a_mail_in_can_be_updated()
     {
         $this->seed();
@@ -140,7 +111,7 @@ class MailInTest extends TestCase
             'mail_version_id' => MailVersion::all()->last()->id,
             'user_id' => User::withPosition('Kepala TU')->first()->id,
             'target_user_id' => User::withPosition('Sekretaris')->first()->id,
-            'type'=> 'corrected'
+            'type'=> 'create'
         ]);
 
         $this->assertDatabaseHas('mail_logs', [
@@ -198,7 +169,7 @@ class MailInTest extends TestCase
             'mail_version_id' => MailVersion::all()->last()->id,
             'user_id' => User::withPosition('Kepala TU')->first()->id,
             'target_user_id' => User::withPosition('Sekretaris')->first()->id,
-            'type'=> 'corrected'
+            'type'=> 'create'
         ]);
 
         $this->assertDatabaseHas('mail_logs', [
