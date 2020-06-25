@@ -31,7 +31,7 @@ class MailTransaction extends Model
         return $this->belongsTo(MailVersion::class, 'mail_version_id');
     }
 
-    public function transactionLog()
+    public function transactionLogs()
     {
         return $this->hasMany(MailLog::class);
     }
@@ -46,7 +46,7 @@ class MailTransaction extends Model
         return $this->hasOne(MailMemo::class);
     }
 
-    public function scopeWithSameStakeholder(Builder $query, $user_id, $mail_kind)
+    public function scopeWithSameStakeholder(Builder $query, $user_id, $mail_kind, $incoming=true)
     {
         $user = User::find($user_id);
 
@@ -58,6 +58,12 @@ class MailTransaction extends Model
             return abort(503, 'mail_kind is not valid. It must be \'in\' or \'out\'');
         }
 
+        if ($incoming) {
+            $user_as = 'userTarget';
+        } else {
+            $user_as = 'user';
+        }
+
         $role = $user->getRole();
         if (UserPosition::checkRoleHasExtra($role)) {
             $department = $user->getDepartment();
@@ -65,7 +71,7 @@ class MailTransaction extends Model
                 return $query->whereHas('mail', function (Builder $query) use ($mail_kind) {
                     return $query->where('kind', $mail_kind);
                 });
-            })->whereHas('userTarget', function (Builder $query) use ($role, $department) {
+            })->whereHas($user_as, function (Builder $query) use ($role, $department) {
                 return $query->withRole($role)->withDepartment($department);
             });
         } else {
@@ -73,7 +79,7 @@ class MailTransaction extends Model
                 return $query->whereHas('mail', function (Builder $query) use ($mail_kind) {
                     return $query->where('kind', $mail_kind);
                 });
-            })->whereHas('userTarget', function (Builder $query) use ($role) {
+            })->whereHas($user_as, function (Builder $query) use ($role) {
                 return $query->withRole($role);
             });
         }

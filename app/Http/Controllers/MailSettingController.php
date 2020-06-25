@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\MailFolder;
 use App\MailPriority;
 use App\MailReference;
 use App\MailType;
@@ -76,6 +75,6 @@ class MailSettingController extends Controller
             'type' => 'required|min:3|max:50',
             'code' => 'required|min:2|max:50',
             'color' => 'required|min:3|max:50',
-            ]);
+        ]);
     }
 }

@@ -3,24 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Mail;
-use App\User;
-use App\MailLog;
-use App\MailFile;
-use Carbon\Carbon;
-use App\MailVersion;
-use App\UserPosition;
-use App\MailTransaction;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\MailOutRequest;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Database\Eloquent\Builder;
+use App\Repository\MailRepository;
 
 class FathilTestingController extends Controller
 {
-    public function temp()
+    public function showDashboard()
     {
+        return view('app.dashboard');
+    }
+
+    public function showMailOutList(MailRepository $mail_repository)
+    {
+        $mails = $mail_repository->getMailWithSameStakeHolder(8, 'out');
+        return view('app.mails.mail-out-list', compact('mails'));
+    }
+
+    public function test()
+    {
+        // return Mail::find(10)->getStatus();
     }
 }

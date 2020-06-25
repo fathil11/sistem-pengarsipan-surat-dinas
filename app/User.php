@@ -91,4 +91,19 @@ class User extends Authenticatable
             return $query->where('department', $department);
         });
     }
+
+    public function getTopPosition(Builder $query)
+    {
+        $user_role = $this->getRole();
+
+        if ($user_role == 'kepala_seksie') {
+            $user_department = $this->getDepartment();
+
+            $target_user = $query->withRole(UserPosition::getTopRole($user_role))->withDepartment($user_department)->first();
+        } else {
+            $target_user = $query->withRole(UserPosition::getTopRole($user_role))->first();
+        }
+
+        return $target_user;
+    }
 }

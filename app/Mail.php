@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -34,5 +35,13 @@ class Mail extends Model
     public function priority()
     {
         return $this->belongsTo(MailPriority::class, 'mail_priority_id');
+    }
+
+    public function getStatus($type='out', $user_as_performer=true)
+    {
+        // Get mail last transaction type
+        $user = User::find(Auth::id());
+        $last_transaction = $this->mailVersions->last()
+        ->mailTransactions->withSameStakeHolder()->last();
     }
 }

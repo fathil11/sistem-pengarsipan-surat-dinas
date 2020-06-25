@@ -63,5 +63,7 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
-Route::get('/', 'FathilTestingController@temp');
-Route::get('/tes', 'TestingController@tes');
+Route::get('/', 'FathilTestingController@showDashboard');
+Route::get('/surat/keluar', 'FathilTestingController@showMailOutList');
+
+Route::get('/test', 'FathilTestingController@test');
