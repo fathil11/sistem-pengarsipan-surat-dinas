@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 
+use Illuminate\Support\Facades\Storage;
+
 use App\User;
 use App\UserPosition;
 
@@ -103,42 +105,91 @@ class TestingController extends Controller
 
 
         //=== Create & Download File Disposisi ===
-        // $secretary_memo = $mail_transaction_last->transactionMemo->memo;
-        // $kepala_dinas_memo = $request->memo;
-        // dd($mail->title);
-        // dump($kepala_dinas_memo);
-        // dd($secretary_memo);
+        $secretary_memo = $mail_transaction_last->transactionMemo->memo;
+        $hod_memo = $request->memo;
 
+        $memo = new Collection();
+        $memo->secretary = $secretary_memo;
+        $memo->hod = $hod_memo;
 
+        $mail_attribute = new Collection();
+        $mail_attribute->mail = $mail;
+        $mail_attribute->memo = $memo;
 
-
+        $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        return $pdf->download('pdf-example.pdf');
     }
 
+    public function showMail($id)
+    {
+        $mail = Mail::findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
 
+        return response(200);
+    }
+
+    public function downloadMail($id)
+    {
+        $mail = Mail::select('id')->findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        // return Storage::download($mail_file->directory_name);
+        return response(200);
+    }
+
+    public function downloadDispositionMailIn($id)
+    {
+        $mail = Mail::select('id')->findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_memo_id = MailTransaction::select('id')->where([
+            ['mail_version_id', $mail_version_last->id],
+            ['type', 'memo'],
+            ])->first();
+        $mail_disposition_id = MailTransaction::select('id')->where([
+            ['mail_version_id', $mail_version_last->id],
+            ['type', 'archive'],
+            ])->first();
+
+        //=== Create & Download File Disposisi ===
+        $secretary_memo = MailMemo::select('memo')->where('mail_transaction_id', $mail_memo_id->id)->first();
+        $hod_memo = MailMemo::select('memo')->where('mail_transaction_id', $mail_disposition_id->id)->first();
+
+        $memo = new Collection();
+        $memo->secretary = $secretary_memo;
+        $memo->hod = $hod_memo;
+
+        $mail_attribute = new Collection();
+        $mail_attribute->mail = $mail;
+        $mail_attribute->memo = $memo;
+
+        // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        // return $pdf->download('pdf-example.pdf');
+
+        return response(200);
+    }
 
     public function tes()
     {
-        $mail_attribute = Mail::findOrFail(1);
+        $mail = Mail::findOrFail(1);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        dump($mail);
+        dump($mail_file);
+        // $mail = Mail::findOrFail(1);
         // $secretary_memo = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, eos aut atque dolor laudantium perferendis. Vero tempore vel explicabo optio fugit, unde ex inventore cum necessitatibus tempora at nulla maxime.';
         // $hod_memo = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, eos aut atque dolor laudantium perferendis. Vero tempore vel explicabo optio fugit, unde ex inventore cum necessitatibus tempora at nulla maxime.';
 
         // $memo = new Collection();
         // $memo->secretary = $secretary_memo;
         // $memo->hod = $hod_memo;
-        // $mail = new Collection();
-        // $mail->mail = $mail_attribute;
-        // $mail->memo = $memo;
-        // $data['title'] = $mail_attribute->title;
-        // // return view('disposition')->with(compact('mail'));
-        // view()->share('mail_attribute',$mail_attribute);
-        // $pdf = PDF::loadView('disposition', $mail_attribute)->setPaper('A4','potrait');
-        // return $pdf->stream();
-        // return $pdf->download('disposition.pdf');
-        // dump($kepala_dinas_memo);
-        // dd($secretary_memo);
-        // return view('welcome');
-        $pdf = PDF::loadView('tes')->setPaper('A4','potrait');
-        return $pdf->download('tes.pdf');
+        // $mail_attribute = new Collection();
+        // $mail_attribute->mail = $mail;
+        // $mail_attribute->memo = $memo;
+        // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        // return $pdf->download('pdf-example.pdf');
     }
 }
 

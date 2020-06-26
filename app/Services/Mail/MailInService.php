@@ -13,6 +13,9 @@ use App\MailTransaction;
 use App\MailLog;
 use App\MailMemo;
 
+use Illuminate\Database\Eloquent\Collection;
+use PDF;
+
 use App\Http\Requests\MailInRequest;
 use App\Http\Requests\MailMemoRequest;
 
@@ -218,5 +221,71 @@ class MailInService
             'mail_transaction_id' => $mail_transaction->id,
             'log' => 'send',
         ]);
+    }
+
+    public static function disposition(MailMemoRequest $request, $id){
+        // Validate Form
+        $request->validated();
+
+        //Check if Mail Exists and Mail kind is 'in'
+        $mail = Mail::findOrFail($id);
+        if ($mail->kind != 'in'){
+            return response(403);
+        }
+
+        //Get Last Mail Version
+        $mail_version_last = $mail->mailVersions->last();
+
+        //Check if Last Mail Transaction type has 'memo' or 'archive'
+        $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
+        $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
+
+        //Redirect if Last Mail Transaction type isn't 'memo' or mail has disposition before
+        if ($last_mail_transaction_isnt_memo || $mail_has_disposition){
+            return redirect('/');
+        }
+
+        $user = User::select('id')->findOrFail(Auth::user()->id);
+
+        //Get Last Mail Transaction
+        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
+
+        $target_user = User::select('id')->withPosition('Kepala Bidang')->first();
+
+        //Create Mail Transaction Archive
+        $mail_transaction = MailTransaction::create([
+            'mail_version_id' => $mail_version_last->id,
+            'user_id' => $user->id,
+            'target_user_id' => $target_user->id,
+            'type' => 'archive',
+        ]);
+
+        //Store Memo
+        MailMemo::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'memo' => $request->memo,
+        ]);
+
+        //Create Mail Log
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'log' => 'send',
+        ]);
+
+
+        //=== Create & Download Disposition File ===
+        $secretary_memo = $mail_transaction_last->transactionMemo->memo;
+        $hod_memo = $request->memo;
+
+        $memo = new Collection();
+        $memo->secretary = $secretary_memo;
+        $memo->hod = $hod_memo;
+
+        $mail_attribute = new Collection();
+        $mail_attribute->mail = $mail;
+        $mail_attribute->memo = $memo;
+
+        $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        return $pdf->download('pdf-example.pdf');
     }
 }

@@ -52,4 +52,9 @@ class MailController extends Controller
     {
         return MailInService::forward($request, $id);
     }
+
+    public function dispositionMailIn(MailMemoRequest $request, $id)
+    {
+        return MailInService::disposition($request, $id);
+    }
 }
