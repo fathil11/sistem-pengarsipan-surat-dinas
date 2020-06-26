@@ -126,6 +126,15 @@ class TestingController extends Controller
         $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
         $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
 
+        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction_last->id,
+            'user_id' => $user->id,
+            'log' => 'read',
+        ]);
+
         return response(200);
     }
 

@@ -69,6 +69,7 @@ class MailInService
         //Create Log
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
+            'user_id' => $user->id,
             'log' => 'send',
         ]);
 
@@ -136,17 +137,17 @@ class MailInService
 
         $mail_transaction_last = MailTransaction::select('id')->where('mail_version_id', $mail_version_last->id)->get()->last();
 
+        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $target_user = User::select('id')->withPosition('Sekretaris')->first();
+
         // Add Corrected Log to Editor
         MailLog::create([
             'mail_transaction_id' => $mail_transaction_last->id,
+            'user_id' => $user->id,
             'log' => 'corrected'
         ]);
 
-        $user = User::select('id')->findOrFail(Auth::user()->id);
-
         // === Create MailTransaction ===
-        $target_user = User::select('id')->withPosition('Sekretaris')->first();
-
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version->id,
             'user_id' => $user->id,
@@ -156,6 +157,7 @@ class MailInService
 
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
+            'user_id' => $user->id,
             'log' => 'send',
         ]);
 
@@ -219,6 +221,7 @@ class MailInService
         //Create Mail Log
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
+            'user_id' => $user->id,
             'log' => 'send',
         ]);
     }
@@ -269,6 +272,7 @@ class MailInService
         //Create Mail Log
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
+            'user_id' => $user->id,
             'log' => 'send',
         ]);
 
