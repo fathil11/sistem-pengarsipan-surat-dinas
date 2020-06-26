@@ -143,6 +143,7 @@ class TestingController extends Controller
     {
         $mail = Mail::select('id')->findOrFail($id);
         $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+
         $mail_memo_id = MailTransaction::select('id')->where([
             ['mail_version_id', $mail_version_last->id],
             ['type', 'memo'],
@@ -151,6 +152,12 @@ class TestingController extends Controller
             ['mail_version_id', $mail_version_last->id],
             ['type', 'archive'],
             ])->first();
+
+        if ($mail_memo_id == null || $mail_disposition_id == null)
+        {
+            return redirect('/');
+        }
+
 
         //=== Create & Download File Disposisi ===
         $secretary_memo = MailMemo::select('memo')->where('mail_transaction_id', $mail_memo_id->id)->first();
