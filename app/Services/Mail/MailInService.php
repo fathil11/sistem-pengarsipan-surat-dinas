@@ -251,7 +251,8 @@ class MailInService
         $user = User::select('id')->findOrFail(Auth::user()->id);
 
         //Get Last Mail Transaction
-        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
+        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+        // $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->position->id)->last();
 
         $target_user = User::select('id')->withPosition('Kepala Bidang')->first();
 

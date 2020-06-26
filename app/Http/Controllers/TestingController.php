@@ -72,7 +72,8 @@ class TestingController extends Controller
 
         $user = User::select('id')->findOrFail(Auth::user()->id);
         $mail_version_last = $mail->mailVersions->last();
-        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
+        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+        // $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->position->id)->last();
         $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
         $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
 
