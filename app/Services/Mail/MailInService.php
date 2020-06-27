@@ -113,7 +113,7 @@ class MailInService
 
         //Check if Last Mail Transaction type isn't 'memo' or 'archive'
         $last_mail_transaction_is_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isNotEmpty();
-        $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
+        $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
 
         //Redirect if Last Mail Transaction type is 'memo' or 'archive'
         if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition){
@@ -234,7 +234,7 @@ class MailInService
 
         //Check if Last Mail Transaction type is 'memo' or 'archive'
         $last_mail_transaction_is_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isNotEmpty();
-        $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
+        $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
 
         //Redirect if Last Mail Transaction type is 'memo' or 'archive'
         if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition){
@@ -351,7 +351,7 @@ class MailInService
             ])->first();
         $mail_disposition_id = MailTransaction::select('id')->where([
             ['mail_version_id', $mail_version_last->id],
-            ['type', 'archive'],
+            ['type', 'disposition'],
             ])->first();
 
         if ($mail_memo_id == null || $mail_disposition_id == null)
