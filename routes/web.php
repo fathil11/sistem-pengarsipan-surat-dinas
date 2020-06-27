@@ -74,7 +74,9 @@ Route::group(['prefix' => 'test'], function () {
 Route::group(['prefix' => 'pengguna'], function() {
     // User
     Route::get('/lihat', 'UserSettingController@showUsers');
+    Route::get('/', 'UserSettingController@createUser');
     Route::post('/', 'UserSettingController@storeUser');
+    Route::get('/{id}', 'UserSettingController@editUser');
     Route::patch('/{id}', 'UserSettingController@updateUser');
     Route::delete('/{id}', 'UserSettingController@deleteUser');
 
@@ -102,6 +104,51 @@ Route::group(['prefix' => 'pengguna'], function() {
             Route::get('/{id}', 'UserSettingController@editUserDepartment');
             Route::patch('/{id}', 'UserSettingController@updateUserDepartment');
             Route::delete('/{id}', 'UserSettingController@deleteUserDepartment');
+        });
+    });
+});
+
+Route::group(['prefix' => 'surat'], function() {
+    Route::group(['prefix' => 'pengaturan'], function() {
+        Route::group(['prefix' => 'jenis-surat'], function() {
+            Route::get('/', 'MailSettingController@showMailsType');
+            Route::get('/tambah', 'MailSettingController@createMailType');
+            Route::post('/tambah', 'MailSettingController@storeMailType');
+            Route::get('/{id}', 'MailSettingController@editMailType');
+            Route::patch('/{id}', 'MailSettingController@updateMailType');
+            Route::delete('/{id}', 'MailSettingController@deleteMailType');
+        });
+        Route::group(['prefix' => 'sifat-surat'], function() {
+            Route::get('/', 'MailSettingController@showMailsReference');
+            Route::get('/tambah', 'MailSettingController@createMailReference');
+            Route::post('/tambah', 'MailSettingController@storeMailReference');
+            Route::get('/{id}', 'MailSettingController@editMailReference');
+            Route::patch('/{id}', 'MailSettingController@updateMailReference');
+            Route::delete('/{id}', 'MailSettingController@deleteMailReference');
+        });
+        Route::group(['prefix' => 'prioritas-surat'], function() {
+            Route::get('/', 'MailSettingController@showMailsPriority');
+            Route::get('/tambah', 'MailSettingController@createMailPriority');
+            Route::post('/tambah', 'MailSettingController@storeMailPriority');
+            Route::get('/{id}', 'MailSettingController@editMailPriority');
+            Route::patch('/{id}', 'MailSettingController@updateMailPriority');
+            Route::delete('/{id}', 'MailSettingController@deleteMailPriority');
+        });
+        Route::group(['prefix' => 'folder-surat'], function() {
+            Route::get('/', 'MailSettingController@showMailsFolder');
+            Route::get('/tambah', 'MailSettingController@createMailFolder');
+            Route::post('/tambah', 'MailSettingController@storeMailFolder');
+            Route::get('/{id}', 'MailSettingController@editMailFolder');
+            Route::patch('/{id}', 'MailSettingController@updateMailFolder');
+            Route::delete('/{id}', 'MailSettingController@deleteMailFolder');
+        });
+        Route::group(['prefix' => 'tipe-koreksi'], function() {
+            Route::get('/', 'MailSettingController@showMailsCorrectionType');
+            Route::get('/tambah', 'MailSettingController@createMailCorrectionType');
+            Route::post('/tambah', 'MailSettingController@storeMailCorrectionType');
+            Route::get('/{id}', 'MailSettingController@editMailCorrectionType');
+            Route::patch('/{id}', 'MailSettingController@updateMailCorrectionType');
+            Route::delete('/{id}', 'MailSettingController@deleteMailCorrectionType');
         });
     });
 });

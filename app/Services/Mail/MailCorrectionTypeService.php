@@ -7,6 +7,19 @@ use App\Http\Requests\MailCorrectionTypeRequest;
 
 class MailCorrectionTypeService
 {
+    /** Show Mail Correction Type List */
+    public static function shows()
+    {
+        $mail_correction_types = MailCorrectionType::all();
+        return view('app.mails.settings.correction-type.correction-type-list', compact('mail_correction_types'));
+    }
+
+    /** Create Mail Correction Type */
+    public static function create()
+    {
+        return view('app.mails.settings.correction-type.correction-type-add');
+    }
+
     /** Store Mail Correction Type */
     public static function store(MailCorrectionTypeRequest $request)
     {
@@ -18,7 +31,14 @@ class MailCorrectionTypeService
             'type' => $request->type,
         ]);
 
-        return response(200);
+        return redirect('/surat/pengaturan/tipe-koreksi');
+    }
+
+    /** Edit Mail Correction Type */
+    public static function edit($id)
+    {
+        $mail_correction_type = MailCorrectionType::findOrFail($id);
+        return view('app.mails.settings.correction-type.correction-type-edit', compact('mail_correction_type'));
     }
 
     /** Update Mail Correction Type */
@@ -35,7 +55,7 @@ class MailCorrectionTypeService
             'type' => $request->type,
         ]);
 
-        return response(200);
+        return redirect('/surat/pengaturan/tipe-koreksi');
     }
 
     /** Delete Mail Correction Type */
@@ -44,6 +64,6 @@ class MailCorrectionTypeService
         // Check Mail Correction Type is Exists
         $mail_correction_type = MailCorrectionType::findOrFail($id);
         $mail_correction_type->delete();
-        return response(200);
+        return redirect('/surat/pengaturan/tipe-koreksi');
     }
 }

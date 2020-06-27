@@ -14,18 +14,16 @@
                     @method('post')
                     <div class="row">
                         <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="position">Jabatan</label>
-                            <input type="text" class="form-control" name="position" id="position"  value="{{ old('position') }}" placeholder="Jabatan">
+                            <div class="form-group">
+                                <label for="position">Jabatan</label>
+                                <input type="text" class="form-control @error('position') is-invalid @enderror" name="position" id="position"  value="{{ old('position') }}" placeholder="Jabatan">
+                            </div>
                         </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="role">peran</label>
-                            <input type="text" class="form-control" name="role" id="role"  value="{{ old('role') }}" placeholder="peran">
-                        </div>
+                            <div class="form-group">
+                                <label for="role">peran</label>
+                                <input type="text" class="form-control @error('role') is-invalid @enderror" name="role" id="role"  value="{{ old('role') }}" placeholder="peran">
+                            </div>
                         </div>
                     </div>
                     <div class="form-group mt-4">

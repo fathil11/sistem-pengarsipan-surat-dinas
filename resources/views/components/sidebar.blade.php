@@ -55,7 +55,7 @@
                     <h6 class="font-weight-normal mb-3 text-center"><b>Super Admin Menu</b></h6>
                 </div>
                 <button class="btn btn-block btn-lg btn-gradient-primary mt-4"
-                    onclick="window.location.href='lihat-user-tambah.php'"><span
+                    onclick="window.location.href='{{ url('pengguna') }}'"><span
                         class="mdi mdi-account-plus menu-icon"></span> Tambah User</button>
             </span>
         </li>
@@ -65,7 +65,7 @@
                 <i class="mdi mdi-account-multiple menu-icon"></i>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ Request::is('pengguna/pengaturan/*') ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#jabatan" aria-expanded="false" aria-controls="jabatan">
                 <span class="menu-title">Pengaturan Jabatan</span>
                 <i class="menu-arrow"></i>
@@ -73,18 +73,18 @@
             </a>
             <div class="collapse" id="jabatan">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item {{ Request::is('pengguna/pengaturan/jabatan') ? 'active' : '' }}"> <a
-                            class="nav-link" href="{{ url('pengguna/pengaturan/jabatan') }}">Jabatan</a></li>
-                    <li class="nav-item {{ Request::is('pengguna/pengaturan/unit-kerja') ? 'active' : '' }}"> <a
-                            class="nav-link" href="{{ url('pengguna/pengaturan/unit-kerja') }}">Unit Kerja</a>
+                    <li class="nav-item"> <a
+                            class="nav-link {{ Request::is('pengguna/pengaturan/jabatan') ? 'active' : '' }}" href="{{ url('pengguna/pengaturan/jabatan') }}">Jabatan</a></li>
+                    <li class="nav-item"> <a
+                            class="nav-link {{ Request::is('pengguna/pengaturan/unit-kerja') ? 'active' : '' }}" href="{{ url('pengguna/pengaturan/unit-kerja') }}">Unit Kerja</a>
                     </li>
-                    <li class="nav-item {{ Request::is('pengguna/pengaturan/bidang') ? 'active' : '' }}"> <a
-                            class="nav-link" href="{{ url('pengguna/pengaturan/bidang') }}">Departemen</a>
+                    <li class="nav-item"> <a
+                            class="nav-link {{ Request::is('pengguna/pengaturan/bidang') ? 'active' : '' }}" href="{{ url('pengguna/pengaturan/bidang') }}">Departemen</a>
                     </li>
                 </ul>
             </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ Request::is('surat/pengaturan/*') ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#letter_setting" aria-expanded="false"
                 aria-controls="letter_setting">
                 <span class="menu-title">Pengaturan Surat</span>
@@ -93,17 +93,22 @@
             </a>
             <div class="collapse" id="letter_setting">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item {{ Request::is('surat/pengaturan/jenis-surat') ? 'active' : '' }}"> <a
-                            class="nav-link" href="/surat/pengaturan/jenis-surat">Jenis Surat</a>
+                    <li class="nav-item"> <a
+                            class="nav-link {{ Request::is('surat/pengaturan/jenis-surat') ? 'active' : '' }}" href="{{ url('surat/pengaturan/jenis-surat') }}">Jenis Surat</a>
                     </li>
-                    <li class="nav-item {{ Request::is('surat/pengaturan/sifat-surat') ? 'active' : '' }}"> <a
-                            class="nav-link" href="/surat/pengaturan/sifat-surat">Sifat Surat</a>
+                    <li class="nav-item"> <a
+                            class="nav-link {{ Request::is('surat/pengaturan/sifat-surat') ? 'active' : '' }}" href="{{ url('surat/pengaturan/sifat-surat') }}">Sifat Surat</a>
                     </li>
-                    <li class="nav-item {{ Request::is('surat/pengaturan/prioritas-surat') ? 'active' : '' }}"> <a
-                            class="nav-link" href="/surat/pengaturan/prioritas-surat">Prioritas
+                    <li class="nav-item"> <a
+                            class="nav-link{{ Request::is('surat/pengaturan/prioritas-surat') ? 'active' : '' }}" href="{{ url('surat/pengaturan/prioritas-surat') }}">Prioritas
                             Surat</a></li>
-                    <li class="nav-item {{ Request::is('surat/pengaturan/folder-arsip') ? 'active' : '' }}"> <a
-                            class="nav-link" href="/surat/pengaturan/folder-arsip">Folder Arsip
+                    <div class="dropdown-divider"></div>
+                    <li class="nav-item"> <a
+                            class="nav-link {{ Request::is('surat/pengaturan/folder-surat') ? 'active' : '' }}" href="{{ url('surat/pengaturan/folder-surat') }}">Folder Arsip
+                            Surat</a></li>
+                    <div class="dropdown-divider"></div>
+                    <li class="nav-item"> <a
+                            class="nav-link {{ Request::is('surat/pengaturan/tipe-koreksi') ? 'active' : '' }}" href="{{ url('surat/pengaturan/tipe-koreksi') }}">Tipe Koreksi
                             Surat</a></li>
                 </ul>
             </div>

@@ -15,19 +15,19 @@ class MailTypeSeeder extends Seeder
         MailType::create([
             "type" => 'undangan',
             "code" => 'udg',
-            "color" => 'kuning',
+            "color" => '#ffd500',
         ]);
 
         MailType::create([
             "type" => 'permohonan',
             "code" => 'mhn',
-            "color" => 'hijau',
+            "color" => '#1bcfb4',
         ]);
 
         MailType::create([
             "type" => 'pengantar',
             "code" => 'atr',
-            "color" => 'abu-abu',
+            "color" => '#c3bdbd',
         ]);
     }
 }

@@ -20,9 +20,19 @@ class UserSettingController extends Controller
         return UserService::shows();
     }
 
+    public function createUser()
+    {
+        return UserService::create();
+    }
+
     public function storeUser(UserRequest $request)
     {
         return UserService::store($request);
+    }
+
+    public function editUser($id)
+    {
+        return UserService::edit($id);
     }
 
     public function updateUser(UserRequest $request, $id)

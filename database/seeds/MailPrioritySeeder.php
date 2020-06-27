@@ -15,19 +15,19 @@ class MailPrioritySeeder extends Seeder
         MailPriority::create([
             "type" => 'cepat',
             "code" => 'cpt',
-            "color" => 'hijau',
+            "color" => '#1bcfb4',
         ]);
 
         MailPriority::create([
             "type" => 'segera',
             "code" => 'sgr',
-            "color" => 'kuning',
+            "color" => '#ffd500',
         ]);
 
         MailPriority::create([
             "type" => 'sangat segera',
             "code" => 'ssgr',
-            "color" => 'merah',
+            "color" => '#fe5678',
         ]);
     }
 }

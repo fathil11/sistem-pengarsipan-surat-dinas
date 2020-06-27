@@ -53,6 +53,8 @@
     <script src="{{ asset('js/data.js') }}"></script>
     <script src="{{ asset('js/todolist.js') }}"></script>
 
+    @yield('script')
+
 </body>
 
 </html>

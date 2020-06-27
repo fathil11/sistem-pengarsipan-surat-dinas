@@ -7,6 +7,19 @@ use App\Http\Requests\MailComponentsRequest;
 
 class MailComponentTypeService
 {
+    /** Show Mail Type List */
+    public static function shows()
+    {
+        $mail_types = MailType::all();
+        return view('app.mails.settings.type.type-list', compact('mail_types'));
+    }
+
+    /** Create Mail Type */
+    public static function create()
+    {
+        return view('app.mails.settings.type.type-add');
+    }
+
     /** Store Mail Type */
     public static function store(MailComponentsRequest $request)
     {
@@ -20,7 +33,14 @@ class MailComponentTypeService
             'color' => $request->color,
         ]);
 
-        return response(200);
+        return redirect('/surat/pengaturan/jenis-surat');
+    }
+
+    /** Edit Mail Type */
+    public static function edit($id)
+    {
+        $mail_type = MailType::findOrFail($id);
+        return view('app.mails.settings.type.type-edit', compact('mail_type'));
     }
 
     /** Update Mail Type */
@@ -39,7 +59,7 @@ class MailComponentTypeService
             'color' => $request->color,
         ]);
 
-        return response(200);
+        return redirect('/surat/pengaturan/jenis-surat');
     }
 
     /** Delete Mail Type */
@@ -48,6 +68,6 @@ class MailComponentTypeService
         // Check Mail Type is Exists
         $mail_type = MailType::findOrFail($id);
         $mail_type->delete();
-        return response(200);
+        return redirect('/surat/pengaturan/jenis-surat');
     }
 }
