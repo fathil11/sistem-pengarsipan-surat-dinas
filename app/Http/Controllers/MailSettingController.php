@@ -19,7 +19,7 @@ class MailSettingController extends Controller
     //=== CRUD FOR MAIL TYPE ===
     public function storeMailType(MailComponentsRequest $request)
     {
-        return MailComponentTypeService::store($request);
+        MailComponentTypeService::store($request);
     }
 
     public function updateMailType(MailComponentsRequest $request, $id)

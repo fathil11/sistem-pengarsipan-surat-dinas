@@ -109,21 +109,22 @@ class TestingController extends Controller
             // - type -> create
 
             // === Create MailTransaction ===
-            $user = User::select('id')->findOrFail(Auth::user()->id);
+            $user_id = Auth::id();
             $target_user = User::select('id')->withPosition('Sekretaris')->first();
 
             $mail_transaction = MailTransaction::create([
                 'mail_version_id' => $mail_version->id,
-                'user_id' => $user->id,
+                'user_id' => $user_id,
                 'target_user_id' => $target_user->id,
                 'type' => 'create',
             ]);
+
             MailLog::create([
                 'mail_transaction_id' => $mail_transaction->id,
                 'log' => 'send',
+                'user_id' => $user_id
             ]);
             return response(200);
-
         } else {
             return redirect('/');
         }
@@ -132,19 +133,20 @@ class TestingController extends Controller
     public function updateMailIn(Request $request, $id)
     {
         $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'in'){
-            return response(403);
+
+        if ($mail->kind != 'in') {
+            return abort(403, 'The mail kind is supposed to be \'in\'');
         }
 
         $mail_version_last = $mail->mailVersions->last();
-        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $user_id = Auth::id();
 
         // $mail_has_memo = MailTransaction::where('mail_version_id', $mail_version_last->id)->where('type', 'memo')->isNotEmpty();
         // $mail_has_disposition = MailTransaction::where('mail_version_id', $mail_version_last->id)->where('type', 'archive')->isNotEmpty();
         $last_mail_transaction_is_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isNotEmpty();
         $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
 
-        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition){
+        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition) {
             return redirect('/');
         }
 
@@ -185,7 +187,7 @@ class TestingController extends Controller
                 // 'version' => $mail_version_last->version+1,
             ]);
 
-            if (request()->has('file')){
+            if (request()->has('file')) {
                 // === Create & Store File (Mail File) ===
                 $request->validate([
                     'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|max:5120',
@@ -205,7 +207,8 @@ class TestingController extends Controller
             // Add Corrected Log to Editor
             MailLog::create([
                 'mail_transaction_id' => $mail_transaction_last->id,
-                'log' => 'corrected'
+                'log' => 'corrected',
+                'user_id' => $user_id
             ]);
 
             // - Create Mail Transaction
@@ -219,13 +222,15 @@ class TestingController extends Controller
 
             $mail_transaction = MailTransaction::create([
                 'mail_version_id' => $mail_version->id,
-                'user_id' => $user->id,
+                'user_id' => $user_id,
                 'target_user_id' => $target_user->id,
                 'type' => 'corrected',
             ]);
+
             MailLog::create([
                 'mail_transaction_id' => $mail_transaction->id,
                 'log' => 'send',
+                'user_id' => $user_id
             ]);
             // $users = User::select('id')->withRole('sekretaris')->get();
             // foreach($users as $user){
@@ -241,13 +246,13 @@ class TestingController extends Controller
             //     ]);
             // }
             return response(200);
-
         } else {
             return redirect('/');
         }
     }
 
-    public function deleteMailIn($id){
+    public function deleteMailIn($id)
+    {
 
         // $mail_version_last = Mail::find($id)->mailVersions->last();
         // $tes = MailVersion::find($mail_version_last->id)->mailTransactions->where('type', 'memo');
@@ -256,7 +261,7 @@ class TestingController extends Controller
         // }
 
         $mail = Mail::find($id);
-        if ($mail->kind != 'in'){
+        if ($mail->kind != 'in') {
             return response(403);
         }
 
@@ -265,18 +270,21 @@ class TestingController extends Controller
         return response(200);
     }
 
-    public function forwardMailIn(Request $request, $id){
+    public function forwardMailIn(Request $request, $id)
+    {
         $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'in'){
-            return response(403);
+
+        if ($mail->kind != 'in') {
+            return abort(403, 'The mail kind is supposed to be \'in\'');
         }
-        $user = User::select('id')->findOrFail(Auth::user()->id);
+
+        $user_id = Auth::id();
         $mail_version_last = $mail->mailVersions->last();
         $last_mail_transaction_is_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isNotEmpty();
         $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
         // $mail_log_last = $mail_transaction_last->transactionLog->last();
 
-        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition){
+        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition) {
             return redirect('/');
         }
 
@@ -288,7 +296,7 @@ class TestingController extends Controller
 
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version_last->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'target_user_id' => $target_user->id,
             'type' => 'memo',
         ]);
@@ -301,23 +309,25 @@ class TestingController extends Controller
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
             'log' => 'send',
+            'user_id' => $user_id
         ]);
     }
 
-    public function dispositionMailIn(Request $request, $id){
+    public function dispositionMailIn(Request $request, $id)
+    {
         $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'in'){
-            return response(403);
+        if ($mail->kind != 'in') {
+            return response(403, 'The mail kind is supposed to be \'in\'');
         }
 
-        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $user_id = Auth::id();
         $mail_version_last = $mail->mailVersions->last();
-        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->id)->last();
+        $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user_id)->last();
         $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
         $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
 
         // dd($mail_transaction_last->type);
-        if ($last_mail_transaction_isnt_memo || $mail_has_disposition){
+        if ($last_mail_transaction_isnt_memo || $mail_has_disposition) {
             return redirect('/');
         }
 
@@ -329,7 +339,7 @@ class TestingController extends Controller
 
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version_last->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'target_user_id' => $target_user->id,
             'type' => 'archive',
         ]);
@@ -342,15 +352,11 @@ class TestingController extends Controller
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
             'log' => 'send',
+            'user_id' => $user_id
         ]);
 
 
         //=== Create & Download File Disposisi ===
-
-
-
-
-
     }
 
 
@@ -360,10 +366,9 @@ class TestingController extends Controller
         $mail_version_last = MailVersion::where('mail_id', 2)->get()->last();
         $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', )->last();
         $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'create')->isEmpty();
-        if (!$memo_transaction_is_empty && $mail_transaction_last->type != 'memo'){
+        if (!$memo_transaction_is_empty && $mail_transaction_last->type != 'memo') {
             dump('false');
         }
         dump('true');
     }
 }
-

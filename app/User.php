@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -95,18 +94,29 @@ class User extends Authenticatable
         });
     }
 
-    public function getTopPosition(Builder $query)
+    public function getTopPosition()
     {
         $user_role = $this->getRole();
 
         if ($user_role == 'kepala_seksie') {
             $user_department = $this->getDepartment();
 
-            $target_user = $query->withRole(UserPosition::getTopRole($user_role))->withDepartment($user_department)->first();
+            $target_user = $this->withRole(UserPosition::getTopRole($user_role))->withDepartment($user_department)->first();
         } else {
-            $target_user = $query->withRole(UserPosition::getTopRole($user_role))->first();
+            $target_user = $this->withRole(UserPosition::getTopRole($user_role))->first();
         }
 
         return $target_user;
+    }
+
+    public function scopeWithSameStakeholder()
+    {
+        $users = User::withRole($this->getRole());
+
+        if ($this->position->checkRoleHasExtra()) {
+            $users = $users->withDepartment($this->getDepartment());
+        }
+
+        return $users;
     }
 }

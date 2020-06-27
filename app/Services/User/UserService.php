@@ -16,9 +16,7 @@ class UserService
         $request->validated();
 
         // Validate UserPosition is exist
-        if (!UserPosition::checkPositionIdIsExists($request->user_position_id)) {
-            return redirect()->back()->withErrors('Format jabatan tidak sesuai !');
-        }
+        $position = UserPosition::findOrFail($request->user_position_id);
 
         // Process UserDepartment & UserPositionDetails
         /*
@@ -28,10 +26,8 @@ class UserService
         */
         $user_department_id = null;
         $user_position_detail_id = null;
-
-        if (UserPosition::checkPositionIdHasExtra($request->user_position_id)) {
-
-            // Valudate UserDepartment is empty
+        if ($position->checkRoleHasExtra()) {
+            // Validate UserDepartment is empty
             if ($request->user_department_id == null) {
                 return redirect()->back()->withErrors('Bidang tidak boleh kosong !');
             } elseif ($request->user_department_id != null && $request->user_position_detail_id == null) {
@@ -54,7 +50,6 @@ class UserService
             'username' => $request->username,
             'password' => Hash::make($request->password),
         ]);
-
         return response(200);
     }
 
@@ -67,10 +62,8 @@ class UserService
         // Check User is exists
         $user = User::findOrFail($id);
 
-        // Validate UserPosition is exist
-        if (!UserPosition::checkPositionIdIsExists($request->user_position_id)) {
-            return redirect()->back()->withErrors('Format jabatan tidak sesuai !');
-        }
+        // Validate UserPosition id is exist
+        $position = UserPosition::findOrFail($request->user_position_id);
 
         // Process UserDepartment & UserPositionDetails
         /*
@@ -81,8 +74,7 @@ class UserService
         $user_department_id = null;
         $user_position_detail_id = null;
 
-        if (UserPosition::checkPositionIdHasExtra($request->user_position_id)) {
-
+        if ($position->checkRoleHasExtra()) {
             // Valudate UserDepartment is empty
             if ($request->user_department_id == null) {
                 return redirect()->back()->withErrors('Bidang tidak boleh kosong !');

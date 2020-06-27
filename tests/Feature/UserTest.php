@@ -27,12 +27,18 @@ class UserTest extends TestCase
 
         $response = $this->createUser('Admin');
 
+        // $session = $response->dumpSession();
+        // foreach ($session['baseResponse'] as $key=>$value) {
+        //     dump($key);
+        // }
+
+        // dd();
+
+        $response->assertStatus(200);
         $this->assertDatabaseHas('users', [
             'id' => User::all()->last()->id,
             'user_position_id' => UserPosition::getPositionId('Admin')
         ]);
-
-        $response->assertStatus(200);
     }
 
     /** @test */

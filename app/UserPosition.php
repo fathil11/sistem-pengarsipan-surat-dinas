@@ -28,16 +28,6 @@ class UserPosition extends Model
         return $this->hasMany(User::class);
     }
 
-    public static function checkPositionIdIsExists($position_id)
-    {
-        $role = self::find($position_id);
-
-        if ($role == null) {
-            return false;
-        }
-        return true;
-    }
-
     public static function checkRoleIsExists($role)
     {
         if (!in_array($role, self::$roles['no_extra']) &&
@@ -47,9 +37,9 @@ class UserPosition extends Model
         return true;
     }
 
-    public static function checkRoleHasExtra($role)
+    public function checkRoleHasExtra()
     {
-        if (in_array($role, self::$roles['no_extra'])) {
+        if (in_array($this->role, self::$roles['no_extra'])) {
             return false;
         }
         return true;
@@ -77,5 +67,16 @@ class UserPosition extends Model
         }
 
         return $top_role;
+    }
+
+    public static function getPositionId($position, $index=0)
+    {
+        if ($index == 1) {
+            $id = self::where('position', $position)->first()->id;
+        } else {
+            $id = self::where('position', $position)->get()[$index]->id;
+        }
+
+        return $id;
     }
 }

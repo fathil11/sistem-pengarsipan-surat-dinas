@@ -130,7 +130,6 @@ class MailInForwardTest extends TestCase
         $this->actingAs($user);
 
         $this->withoutExceptionHandling();
-
         $this->storeMailIn();
 
         $response = $this->patch('/test/surat/masuk/11', [
@@ -185,7 +184,8 @@ class MailInForwardTest extends TestCase
         $response->assertRedirect();
     }
 
-    private function storeMailIn(){
+    private function storeMailIn()
+    {
         Storage::fake('documents');
         return $this->post('/test/surat/masuk', [
             'directory_code' => 'udg-002',

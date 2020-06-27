@@ -28,11 +28,11 @@ class MailOutTest extends TestCase
     public function a_mail_out_can_added_by_admin()
     {
         $this->seed();
-
         $user = User::withPosition('Admin')->first();
         $this->actingAs($user);
 
         $response = $this->createMailOut();
+
         $response->assertOk();
 
         $this->assertDatabaseHas('mails', [

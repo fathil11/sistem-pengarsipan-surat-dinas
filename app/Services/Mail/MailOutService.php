@@ -11,6 +11,8 @@ use App\UserPosition;
 use App\MailTransaction;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\MailOutRequest;
+use App\Repository\MailRepository;
+use Illuminate\Database\Eloquent\Builder;
 
 class MailOutService
 {
@@ -48,9 +50,9 @@ class MailOutService
         ]);
 
         // Assign authenticated user
-        $user = User::find(Auth::id());
+        /** @var App\User $user */
+        $user = Auth::user();
         $target_user = $user->getTopPosition();
-
         // Create & Process (Mail Transaction)
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version->id,
@@ -61,7 +63,8 @@ class MailOutService
 
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
-            'log' => 'send'
+            'log' => 'send',
+            'user_id' => $user->id
         ]);
 
         return response(200);
@@ -79,19 +82,13 @@ class MailOutService
             return abort(403);
         }
 
-        // Get latest MailVersion id
-        $last_mail_version_id = $mail->mailVersions->last()->id;
-
         // Check user is authorized for updating EmailOut
-        $update_transaction_request = MailTransaction::withSameStakeholder(Auth::id(), 'out')
-            ->where([
-            ['mail_version_id', $last_mail_version_id],
-            ['type', 'correction'],
-            ])->first();
+        $update_mail_request = (new MailRepository)->withSameStakeHolder('out')->count();
 
-        if ($update_transaction_request == null) {
+        if ($update_mail_request == 0) {
             return abort(403);
         }
+
         // Update Mail
         $mail->update([
             'kind' => 'out',
@@ -103,7 +100,6 @@ class MailOutService
             'mail_priority_id' => $request->mail_priority_id,
             'mail_created_at' => $request->mail_created_at
         ]);
-
         // Create & Assign (Mail Version)
         $mail_version = MailVersion::create([
             'mail_id' => $mail->id,
@@ -127,14 +123,9 @@ class MailOutService
         }
 
         // Assign authenticated user and target user
-        $user = User::find(Auth::id());
+        /** @var App\User $user  */
+        $user = Auth::user();
         $target_user = $user->getTopPosition();
-
-        // Add Corrected Log to "current" Transaction
-        MailLog::create([
-            'mail_transaction_id' => $update_transaction_request->id,
-            'log' => 'corrected'
-        ]);
 
         // Create & Process (Mail Transaction)
         $mail_transaction = MailTransaction::create([
@@ -144,11 +135,18 @@ class MailOutService
             'type' => 'send'
         ]);
 
+        // Add Corrected Log to "current" Transaction
+        MailLog::create([
+            'mail_transaction_id' => ($mail_transaction->id - 1),
+            'log' => 'corrected',
+            'user_id' => $user->id
+        ]);
 
         // Add Delivered Log to new Transaction
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
-            'log' => 'send'
+            'log' => 'send',
+            'user_id' => $user->id
         ]);
 
         return response(200);

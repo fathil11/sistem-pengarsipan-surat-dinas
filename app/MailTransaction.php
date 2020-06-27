@@ -46,44 +46,44 @@ class MailTransaction extends Model
         return $this->hasOne(MailMemo::class);
     }
 
-    public function scopeWithSameStakeholder(Builder $query, $user_id, $mail_kind, $incoming=true)
-    {
-        $user = User::find($user_id);
+    // public function scopeWithSameStakeholder(Builder $query, $user_id, $mail_kind, $incoming=true)
+    // {
+    //     $user = User::find($user_id);
 
-        if ($user == null) {
-            return abort(503, 'user_id not found');
-        }
+    //     if ($user == null) {
+    //         return abort(503, 'user_id not found');
+    //     }
 
-        if ($mail_kind != 'in' && $mail_kind != 'out') {
-            return abort(503, 'mail_kind is not valid. It must be \'in\' or \'out\'');
-        }
+    //     if ($mail_kind != 'in' && $mail_kind != 'out') {
+    //         return abort(503, 'mail_kind is not valid. It must be \'in\' or \'out\'');
+    //     }
 
-        if ($incoming) {
-            $user_as = 'userTarget';
-        } else {
-            $user_as = 'user';
-        }
+    //     if ($incoming) {
+    //         $user_as = 'userTarget';
+    //     } else {
+    //         $user_as = 'user';
+    //     }
 
-        $role = $user->getRole();
-        if (UserPosition::checkRoleHasExtra($role)) {
-            $department = $user->getDepartment();
-            $transactions = $query->whereHas('mailVersion', function (Builder $query) use ($mail_kind) {
-                return $query->whereHas('mail', function (Builder $query) use ($mail_kind) {
-                    return $query->where('kind', $mail_kind);
-                });
-            })->whereHas($user_as, function (Builder $query) use ($role, $department) {
-                return $query->withRole($role)->withDepartment($department);
-            });
-        } else {
-            $transactions = $query->whereHas('mailVersion', function (Builder $query) use ($mail_kind) {
-                return $query->whereHas('mail', function (Builder $query) use ($mail_kind) {
-                    return $query->where('kind', $mail_kind);
-                });
-            })->whereHas($user_as, function (Builder $query) use ($role) {
-                return $query->withRole($role);
-            });
-        }
+    //     $role = $user->getRole();
+    //     if (UserPosition::checkRoleHasExtra($role)) {
+    //         $department = $user->getDepartment();
+    //         $transactions = $query->whereHas('mailVersion', function (Builder $query) use ($mail_kind) {
+    //             return $query->whereHas('mail', function (Builder $query) use ($mail_kind) {
+    //                 return $query->where('kind', $mail_kind);
+    //             });
+    //         })->whereHas($user_as, function (Builder $query) use ($role, $department) {
+    //             return $query->withRole($role)->withDepartment($department);
+    //         });
+    //     } else {
+    //         $transactions = $query->whereHas('mailVersion', function (Builder $query) use ($mail_kind) {
+    //             return $query->whereHas('mail', function (Builder $query) use ($mail_kind) {
+    //                 return $query->where('kind', $mail_kind);
+    //             });
+    //         })->whereHas($user_as, function (Builder $query) use ($role) {
+    //             return $query->withRole($role);
+    //         });
+    //     }
 
-        return $transactions;
-    }
+    //     return $transactions;
+    // }
 }

@@ -37,7 +37,6 @@ class MailInDispositionTest extends TestCase
         $this->actingAs($user);
 
         $this->withoutExceptionHandling();
-
         $this->storeMailIn();
 
         $response = $this->post('/test/surat/masuk/11/teruskan', [
@@ -64,7 +63,6 @@ class MailInDispositionTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->storeMailIn();
-
         $response = $this->post('/test/surat/masuk/11/teruskan', [
             'memo' => 'Mantul',
         ]);
@@ -142,7 +140,8 @@ class MailInDispositionTest extends TestCase
         $response->assertRedirect();
     }
 
-    private function storeMailIn(){
+    private function storeMailIn()
+    {
         Storage::fake('documents');
         return $this->post('/test/surat/masuk', [
             'directory_code' => 'udg-002',
