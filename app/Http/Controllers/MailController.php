@@ -3,23 +3,58 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+//Mail Out Privileges
 use App\Http\Requests\MailOutRequest;
 use App\Services\Mail\MailOutService;
 
+//Mail In Privileges
+use App\Http\Requests\MailInRequest;
+use App\Services\Mail\MailInService;
+use App\Http\Requests\MailMemoRequest;
+
 class MailController extends Controller
 {
+    //Mail Out Privileges
     public function storeMailOut(MailOutRequest $request)
     {
-        MailOutService::store($request);
+        return MailOutService::store($request);
     }
 
     public function updateMailOut(MailOutRequest $request, $id)
     {
-        MailOutService::update($request, $id);
+        return MailOutService::update($request, $id);
     }
 
     public function deleteMailOut($id)
     {
-        MailOutService::delete($id);
+        return MailOutService::delete($id);
+    }
+
+
+    //Mail In Privileges
+    public function storeMailIn(MailInRequest $request)
+    {
+        return MailInService::store($request);
+    }
+
+    public function updateMailIn(MailInRequest $request, $id)
+    {
+        return MailInService::update($request, $id);
+    }
+
+    public function deleteMailIn($id)
+    {
+        return MailInService::delete($id);
+    }
+
+    public function forwardMailIn(MailMemoRequest $request, $id)
+    {
+        return MailInService::forward($request, $id);
+    }
+
+    public function dispositionMailIn(MailMemoRequest $request, $id)
+    {
+        return MailInService::disposition($request, $id);
     }
 }

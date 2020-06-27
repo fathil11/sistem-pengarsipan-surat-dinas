@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 
+use Illuminate\Support\Facades\Storage;
+
 use App\User;
 use App\UserPosition;
 
@@ -17,12 +19,9 @@ use App\MailTransaction;
 use App\MailLog;
 use App\MailMemo;
 
-use App\MailFolder;
-use App\MailPriority;
-use App\MailReference;
-use App\MailType;
-
 use Carbon\Carbon;
+
+use PDF;
 
 class TestingController extends Controller
 {
@@ -322,12 +321,21 @@ class TestingController extends Controller
 
         $user_id = Auth::id();
         $mail_version_last = $mail->mailVersions->last();
+<<<<<<< HEAD
         $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user_id)->last();
         $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
         $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
 
         // dd($mail_transaction_last->type);
         if ($last_mail_transaction_isnt_memo || $mail_has_disposition) {
+=======
+        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+        // $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->position->id)->last();
+        $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
+        $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
+
+        if ($last_mail_transaction_isnt_memo || $mail_has_disposition){
+>>>>>>> 7131c4d3a1dfac1c8cb5f4a3ac9f84fdb0962de3
             return redirect('/');
         }
 
@@ -357,18 +365,117 @@ class TestingController extends Controller
 
 
         //=== Create & Download File Disposisi ===
+<<<<<<< HEAD
+=======
+        $secretary_memo = $mail_transaction_last->transactionMemo->memo;
+        $hod_memo = $request->memo;
+
+        $memo = new Collection();
+        $memo->secretary = $secretary_memo;
+        $memo->hod = $hod_memo;
+
+        $mail_attribute = new Collection();
+        $mail_attribute->mail = $mail;
+        $mail_attribute->memo = $memo;
+
+        $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        return $pdf->download('pdf-example.pdf');
     }
 
-
-
-    public function tes()
+    public function showMail($id)
     {
+        $mail = Mail::findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction_last->id,
+            'user_id' => $user->id,
+            'log' => 'read',
+        ]);
+
+        return response(200);
+>>>>>>> 7131c4d3a1dfac1c8cb5f4a3ac9f84fdb0962de3
+    }
+
+    public function downloadMail($id)
+    {
+        $mail = Mail::select('id')->findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        // return Storage::download($mail_file->directory_name);
+        return response(200);
+    }
+
+    public function downloadDispositionMailIn($id)
+    {
+<<<<<<< HEAD
         $mail_version_last = MailVersion::where('mail_id', 2)->get()->last();
         $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', )->last();
         $memo_transaction_is_empty = $mail_version_last->mailTransactions->where('type', 'create')->isEmpty();
         if (!$memo_transaction_is_empty && $mail_transaction_last->type != 'memo') {
             dump('false');
+=======
+        $mail = Mail::select('id')->findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+
+        $mail_memo_id = MailTransaction::select('id')->where([
+            ['mail_version_id', $mail_version_last->id],
+            ['type', 'memo'],
+            ])->first();
+        $mail_disposition_id = MailTransaction::select('id')->where([
+            ['mail_version_id', $mail_version_last->id],
+            ['type', 'archive'],
+            ])->first();
+
+        if ($mail_memo_id == null || $mail_disposition_id == null)
+        {
+            return redirect('/');
+>>>>>>> 7131c4d3a1dfac1c8cb5f4a3ac9f84fdb0962de3
         }
-        dump('true');
+
+
+        //=== Create & Download File Disposisi ===
+        $secretary_memo = MailMemo::select('memo')->where('mail_transaction_id', $mail_memo_id->id)->first();
+        $hod_memo = MailMemo::select('memo')->where('mail_transaction_id', $mail_disposition_id->id)->first();
+
+        $memo = new Collection();
+        $memo->secretary = $secretary_memo;
+        $memo->hod = $hod_memo;
+
+        $mail_attribute = new Collection();
+        $mail_attribute->mail = $mail;
+        $mail_attribute->memo = $memo;
+
+        // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        // return $pdf->download('pdf-example.pdf');
+
+        return response(200);
+    }
+
+    public function tes()
+    {
+        $mail = Mail::findOrFail(1);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        dump($mail);
+        dump($mail_file);
+        // $mail = Mail::findOrFail(1);
+        // $secretary_memo = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, eos aut atque dolor laudantium perferendis. Vero tempore vel explicabo optio fugit, unde ex inventore cum necessitatibus tempora at nulla maxime.';
+        // $hod_memo = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, eos aut atque dolor laudantium perferendis. Vero tempore vel explicabo optio fugit, unde ex inventore cum necessitatibus tempora at nulla maxime.';
+
+        // $memo = new Collection();
+        // $memo->secretary = $secretary_memo;
+        // $memo->hod = $hod_memo;
+        // $mail_attribute = new Collection();
+        // $mail_attribute->mail = $mail;
+        // $mail_attribute->memo = $memo;
+        // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        // return $pdf->download('pdf-example.pdf');
     }
 }
