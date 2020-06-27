@@ -33,6 +33,11 @@ class MailController extends Controller
 
 
     //Mail In Privileges
+    public function showMailIn($id)
+    {
+        return MailInService::show($id);
+    }
+
     public function storeMailIn(MailInRequest $request)
     {
         return MailInService::store($request);
@@ -48,6 +53,11 @@ class MailController extends Controller
         return MailInService::delete($id);
     }
 
+    public function downloadMailIn($id)
+    {
+        return MailInService::download($id);
+    }
+
     public function forwardMailIn(MailMemoRequest $request, $id)
     {
         return MailInService::forward($request, $id);
@@ -56,5 +66,10 @@ class MailController extends Controller
     public function dispositionMailIn(MailMemoRequest $request, $id)
     {
         return MailInService::disposition($request, $id);
+    }
+
+    public function downloadDispositionMailIn($id)
+    {
+        return MailInService::downloadDisposition($id);
     }
 }

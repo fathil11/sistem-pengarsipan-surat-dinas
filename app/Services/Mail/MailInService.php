@@ -21,6 +21,26 @@ use App\Http\Requests\MailMemoRequest;
 
 class MailInService
 {
+    // Read/Show Mail
+    public static function show($id)
+    {
+        $mail = Mail::findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        $user_id = Auth::id();
+        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction_last->id,
+            'user_id' => $user_id,
+            'log' => 'read',
+        ]);
+
+        // return view('')->compact('mail', 'mail_file');
+        return response(200);
+    }
+
     // Store Mail In
     public static function store(MailInRequest $request)
     {
@@ -56,12 +76,12 @@ class MailInService
         ]);
 
         //Initialize Mail Transaction to Secretary
-        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $user_id = Auth::id();
         $target_user = User::select('id')->withPosition('Sekretaris')->first();
 
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'target_user_id' => $target_user->id,
             'type' => 'create',
         ]);
@@ -69,7 +89,7 @@ class MailInService
         //Create Log
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'log' => 'send',
         ]);
 
@@ -137,27 +157,27 @@ class MailInService
 
         $mail_transaction_last = MailTransaction::select('id')->where('mail_version_id', $mail_version_last->id)->get()->last();
 
-        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $user_id = Auth::id();
         $target_user = User::select('id')->withPosition('Sekretaris')->first();
 
         // Add Corrected Log to Editor
         MailLog::create([
             'mail_transaction_id' => $mail_transaction_last->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'log' => 'corrected'
         ]);
 
         // === Create MailTransaction ===
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'target_user_id' => $target_user->id,
             'type' => 'create',
         ]);
 
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'log' => 'send',
         ]);
 
@@ -174,6 +194,27 @@ class MailInService
 
         $mail->delete();
 
+        return response(200);
+    }
+
+    //Download Mail
+    public static function download($id)
+    {
+        $mail = Mail::select('id')->findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        // Create Log
+        $user_id = Auth::id();
+        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction_last->id,
+            'user_id' => $user_id,
+            'log' => 'download mail',
+        ]);
+
+        // return Storage::download($mail_file->directory_name);
         return response(200);
     }
 
@@ -201,13 +242,13 @@ class MailInService
         }
 
 
-        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $user_id = Auth::id();
         $target_user = User::select('id')->withPosition('Kepala Dinas')->first();
 
         //Create Mail Transaction Memo
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version_last->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'target_user_id' => $target_user->id,
             'type' => 'memo',
         ]);
@@ -221,9 +262,11 @@ class MailInService
         //Create Mail Log
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'log' => 'send',
         ]);
+
+        return response(200);
     }
 
     public static function disposition(MailMemoRequest $request, $id){
@@ -241,14 +284,14 @@ class MailInService
 
         //Check if Last Mail Transaction type has 'memo' or 'archive'
         $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
-        $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'archive')->isNotEmpty();
+        $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
 
         //Redirect if Last Mail Transaction type isn't 'memo' or mail has disposition before
         if ($last_mail_transaction_isnt_memo || $mail_has_disposition){
             return redirect('/');
         }
 
-        $user = User::select('id')->findOrFail(Auth::user()->id);
+        $user_id = Auth::id();
 
         //Get Last Mail Transaction
         $mail_transaction_last = $mail_version_last->mailTransactions->last();
@@ -259,9 +302,9 @@ class MailInService
         //Create Mail Transaction Archive
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version_last->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'target_user_id' => $target_user->id,
-            'type' => 'archive',
+            'type' => 'disposition',
         ]);
 
         //Store Memo
@@ -273,7 +316,7 @@ class MailInService
         //Create Mail Log
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'log' => 'send',
         ]);
 
@@ -290,7 +333,57 @@ class MailInService
         $mail_attribute->mail = $mail;
         $mail_attribute->memo = $memo;
 
-        $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
-        return $pdf->download('pdf-example.pdf');
+        // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        // return $pdf->download('pdf-example.pdf');
+
+        return response(200);
+    }
+
+    //Download Mail In Disposition
+    public static function downloadDisposition($id)
+    {
+        $mail = Mail::select('id')->findOrFail($id);
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+
+        $mail_memo_id = MailTransaction::select('id')->where([
+            ['mail_version_id', $mail_version_last->id],
+            ['type', 'memo'],
+            ])->first();
+        $mail_disposition_id = MailTransaction::select('id')->where([
+            ['mail_version_id', $mail_version_last->id],
+            ['type', 'archive'],
+            ])->first();
+
+        if ($mail_memo_id == null || $mail_disposition_id == null)
+        {
+            return redirect('/');
+        }
+
+        // Create Log
+        $user_id = Auth::id();
+        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction_last->id,
+            'user_id' => $user_id,
+            'log' => 'download disposition',
+        ]);
+
+        //=== Create & Download File Disposisi ===
+        $secretary_memo = MailMemo::select('memo')->where('mail_transaction_id', $mail_memo_id->id)->first();
+        $hod_memo = MailMemo::select('memo')->where('mail_transaction_id', $mail_disposition_id->id)->first();
+
+        $memo = new Collection();
+        $memo->secretary = $secretary_memo;
+        $memo->hod = $hod_memo;
+
+        $mail_attribute = new Collection();
+        $mail_attribute->mail = $mail;
+        $mail_attribute->memo = $memo;
+
+        // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        // return $pdf->download('pdf-example.pdf');
+
+        return response(200);
     }
 }
