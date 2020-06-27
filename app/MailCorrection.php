@@ -13,7 +13,7 @@ class MailCorrection extends Model
 
     public function mailTransaction()
     {
-        return $this->belongsTo(MailTransaction::class, );
+        return $this->belongsTo(MailTransaction::class, 'mail_transaction_id');
     }
 
     public function mailCorrectionType()

@@ -12,6 +12,7 @@ class Mail extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+    protected $dates = ['mail_created_at'];
 
     public function mailVersions()
     {

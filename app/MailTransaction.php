@@ -38,7 +38,7 @@ class MailTransaction extends Model
 
     public function transactionCorrection()
     {
-        return $this->hasOne(MailCorrection::class);
+        return $this->hasOne(MailCorrection::class, 'mail_transaction_id');
     }
 
     public function transactionMemo()
