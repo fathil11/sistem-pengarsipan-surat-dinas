@@ -21,16 +21,27 @@ class FathilTestingController extends Controller
     public function showMailOutList()
     {
         $mail_repository = new MailRepository();
-        Auth::login(User::find(6));
-        $mails = $mail_repository->getMailData('in');
+        Auth::login(User::find(7));
+        $mails = $mail_repository->getMailData('out');
         return view('app.mails.mail-out-list', compact('mails'));
     }
 
-    public function test(MailRepository $trans)
+    public function showMailInList()
     {
-        Auth::login(User::find(8));
-        $test = $trans->withSameStakeholder('out');
-        // dd($test);
+        $mail_repository = new MailRepository();
+        Auth::login(User::find(7));
+        $mails = $mail_repository->getMailData('in');
+        return view('app.mails.mail-in-list', compact('mails'));
+    }
+
+    public function test()
+    {
+        $transactions = MailTransaction::whereHas('mailVersion', function (Builder $query) {
+            $query->whereHas('mail', function (Builder $query) {
+                $query->where('kind', 'out');
+            });
+        });
+        dd($transactions->get()->last());
         // dd($test[6]->where('user_id', 8));
         // dd(UserDepartment::getDepartmentId('INFOKOM'));
 

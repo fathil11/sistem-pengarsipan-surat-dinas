@@ -70,8 +70,9 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
-// Route::get('/', 'FathilTestingController@test');
-Route::get('/', 'FathilTestingController@showDashboard');
+Route::get('/', 'FathilTestingController@test');
+// Route::get('/', 'FathilTestingController@showDashboard');
+Route::get('/surat/masuk', 'FathilTestingController@showMailInList');
 Route::get('/surat/keluar', 'FathilTestingController@showMailOutList');
 Route::get('/test', 'FathilTestingController@test');
 Route::get('/tes', 'TestingController@tes');

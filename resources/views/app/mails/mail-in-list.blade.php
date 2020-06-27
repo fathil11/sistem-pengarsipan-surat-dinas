@@ -10,11 +10,11 @@
                     <table id="dataTable" class="table table-hover">
                         <thead>
                             <tr>
-                                <th> Surat </th>
-                                {{-- <th> Instansi </th> --}}
-                                <th class="text-center"> Status Surat </th>
-                                <th class="text-center"> Surat Diterima </th>
-                                <th class="text-center"> Aksi </th>
+                                <th>Surat Masuk</th>
+                                <th>Instansi </th>
+                                <th class="text-center">Status Surat </th>
+                                <th class="text-center">Surat Diterima </th>
+                                <th class="text-center">Aksi </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -28,14 +28,13 @@
                                         <div>{{ $mail->number ?? 'No belum tersedia' }}</div>
                                     </a>
                                     <label class="badge mt-2"
-                                        style="background: {{ $mail->type->color }};">{{ Str::upper($mail->type->type) }}</label>
+                                        style="background: {{ $mail->type->color }};">{{ Str::upper($mail->type->code) }}</label>
                                     <label class="badge mt-2"
-                                        style="background: {{ $mail->reference->color }};">{{ Str::upper($mail->reference->type) }}</label>
+                                        style="background: {{ $mail->reference->color }};">{{ Str::upper($mail->reference->code) }}</label>
                                     <label class="badge mt-2"
-                                        style="background: {{ $mail->priority->color }};">{{ Str::upper($mail->priority->type) }}</label>
-
+                                        style="background: {{ $mail->priority->color }};">{{ Str::upper($mail->priority->code) }}</label>
                                 </td>
-                                {{-- <td class="text-wrap"> {{ $mail->origin }} </td> --}}
+                                <td class="text-wrap"> {{ $mail->origin }} </td>
                                 <td class="text-center">
                                     <label class="badge badge-{{ $mail->status_color }}">{{ $mail->status }}</label>
                                 </td>
