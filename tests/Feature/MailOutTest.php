@@ -228,7 +228,7 @@ class MailOutTest extends TestCase
             'mail_version_id' => MailVersion::all()->last()->id,
             'user_id' => $user_id,
             'target_user_id' => User::withPosition('Kepala Bidang')->first()->id,
-            'type'=> 'send'
+            'type'=> 'corrected'
         ]);
 
         $this->assertDatabaseHas('mail_logs', [

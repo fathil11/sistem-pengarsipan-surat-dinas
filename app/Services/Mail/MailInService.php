@@ -26,18 +26,26 @@ class MailInService
     {
         $mail = Mail::findOrFail($id);
         $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
-        $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        $mail_memo = MailTransaction::where([
+            ['mail_version_id', $mail_version_last->id],
+            ['type', 'memo'],
+            ])->first();
+        $mail_disposition = MailTransaction::where([
+            ['mail_version_id', $mail_version_last->id],
+            ['type', 'disposition'],
+            ])->first();
 
         $user_id = Auth::id();
         $last_mail_transaction = $mail_version_last->mailTransactions->get()->last();
 
-        MailLog::create([
+        MailLog::firstOrCreate([
             'mail_transaction_id' => $last_mail_transaction->id,
             'user_id' => $user_id,
             'log' => 'read',
         ]);
 
-        // return view('')->compact('mail', 'mail_file', 'last_mail_transaction');
+        // return view('')->compact('mail', 'mail_memo', 'mail_disposition');
         return response(200);
     }
 
@@ -172,7 +180,7 @@ class MailInService
             'mail_version_id' => $mail_version->id,
             'user_id' => $user_id,
             'target_user_id' => $target_user->id,
-            'type' => 'create',
+            'type' => 'corrected',
         ]);
 
         MailLog::create([
@@ -221,7 +229,7 @@ class MailInService
         $user_id = Auth::id();
         $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
 
-        MailLog::create([
+        MailLog::firstOrCreate([
             'mail_transaction_id' => $mail_transaction_last->id,
             'user_id' => $user_id,
             'log' => 'download mail',
@@ -327,7 +335,7 @@ class MailInService
         ]);
 
         //Create Mail Log
-        MailLog::create([
+        MailLog::firstOrCreate([
             'mail_transaction_id' => $mail_transaction->id,
             'user_id' => $user_id,
             'log' => 'send',

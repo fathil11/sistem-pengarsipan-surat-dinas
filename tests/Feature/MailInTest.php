@@ -111,7 +111,7 @@ class MailInTest extends TestCase
             'mail_version_id' => MailVersion::all()->last()->id,
             'user_id' => User::withPosition('Kepala TU')->first()->id,
             'target_user_id' => User::withPosition('Sekretaris')->first()->id,
-            'type'=> 'create'
+            'type'=> 'corrected'
         ]);
 
         $this->assertDatabaseHas('mail_logs', [
@@ -156,7 +156,7 @@ class MailInTest extends TestCase
             'mail_folder_id' => 1,
             'mail_type_id' => 1,
             'mail_reference_id' => 3,
-            'mail_priority_id' => 1
+            'mail_priority_id' => 1,
         ]);
 
         $this->assertDatabaseHas('mail_versions', [
@@ -169,7 +169,7 @@ class MailInTest extends TestCase
             'mail_version_id' => MailVersion::all()->last()->id,
             'user_id' => User::withPosition('Kepala TU')->first()->id,
             'target_user_id' => User::withPosition('Sekretaris')->first()->id,
-            'type'=> 'create'
+            'type'=> 'corrected'
         ]);
 
         $this->assertDatabaseHas('mail_logs', [
@@ -183,6 +183,9 @@ class MailInTest extends TestCase
     public function a_mail_in_can_be_deleted()
     {
         $this->seed('DatabaseSeeder');
+
+        $user = User::withPosition('Kepala TU')->first();
+        $this->actingAs($user);
 
         $this->withoutExceptionHandling();
 

@@ -50,6 +50,11 @@ class MailInDispositionTest extends TestCase
         ]);
 
         $response->assertOk();
+
+        $this->assertDatabaseHas('mails', [
+            'id' => Mail::all()->last()->id,
+            'status' => 'archive',
+        ]);
     }
 
     /** @test */

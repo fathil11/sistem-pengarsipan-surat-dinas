@@ -132,7 +132,7 @@ class MailOutService
             'mail_version_id' => $mail_version->id,
             'user_id' => $user->id,
             'target_user_id' => $target_user->id,
-            'type' => 'send'
+            'type' => 'corrected'
         ]);
 
         // Add Corrected Log to "current" Transaction
@@ -159,6 +159,49 @@ class MailOutService
             return abort(404);
         }
         $mail->delete();
+
+        return response(200);
+    }
+
+    // Forward Mail Out
+    public static function forward($id)
+    {
+        //Check if Mail Exists and Mail kind is 'out'
+        $mail = Mail::findOrFail($id);
+        if ($mail->kind != 'out'){
+            return abort(403);
+        }
+
+        //Get Last Mail Version
+        $mail_version_last = $mail->mailVersions->last();
+
+        //Check if Last Mail Transaction type isn't 'corrected' or 'create' or 'forward'
+        $last_mail_transaction_isnt_corrected = $mail_version_last->mailTransactions->where('type', 'corrected')->isEmpty();
+        $last_mail_transaction_isnt_create = $mail_version_last->mailTransactions->where('type', 'create')->isEmpty();
+        $last_mail_transaction_isnt_forward = $mail_version_last->mailTransactions->where('type', 'forward')->isEmpty();
+
+        //Redirect if Last Mail Transaction type isn't 'corrected' or 'create'
+        if ($last_mail_transaction_isnt_corrected || $last_mail_transaction_isnt_create || $last_mail_transaction_isnt_forward){
+            return redirect('/');
+        }
+
+        // Assign authenticated user
+        /** @var App\User $user */
+        $user = Auth::user();
+        $target_user = $user->getTopPosition();
+        // Create & Process (Mail Transaction)
+        $mail_transaction = MailTransaction::create([
+            'mail_version_id' => $mail_version_last->id,
+            'user_id' => $user->id,
+            'target_user_id' => $target_user->id,
+            'type' => 'forward'
+        ]);
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'log' => 'send',
+            'user_id' => $user->id
+        ]);
 
         return response(200);
     }
