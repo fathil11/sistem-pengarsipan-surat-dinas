@@ -25,7 +25,7 @@
                                         <div class="text-wrap">
                                             <h6>{{ $mail->title }}</h6>
                                         </div>
-                                        <div>{{ $mail->number ?? 'No belum tersedia' }}</div>
+                                        <div>{{ $mail->directory_code ?? 'No belum tersedia' }}</div>
                                     </a>
                                     <label class="badge mt-2"
                                         style="background: {{ $mail->type->color }};">{{ Str::upper($mail->type->code) }}</label>

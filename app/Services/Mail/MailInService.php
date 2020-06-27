@@ -187,10 +187,23 @@ class MailInService
     //Delete Mail In
     public static function delete($id)
     {
+        $user_id = Auth::id();
+
         $mail = Mail::findOrFail($id);
+
         if ($mail->kind != 'in'){
             return response(403);
         }
+
+        //Get Last Mail Version
+        $mail_version_last = $mail->mailVersions->last();
+        $mail_transaction_last = MailTransaction::select('id')->where('mail_version_id', $mail_version_last->id)->get()->last();
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction_last->id,
+            'user_id' => $user_id,
+            'log' => 'delete',
+        ]);
 
         $mail->delete();
 

@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
+    /**Show User List */
+    public static function shows()
+    {
+        $users = User::all();
+        return view('app.users.user-list', compact('users'));
+    }
+
     /** Store User */
     public static function store(UserRequest $request)
     {

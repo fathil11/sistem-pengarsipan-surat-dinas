@@ -29,7 +29,7 @@ class FathilTestingController extends Controller
     public function showMailInList()
     {
         $mail_repository = new MailRepository();
-        Auth::login(User::find(7));
+        Auth::login(User::find(6));
         $mails = $mail_repository->getMailData('in');
         return view('app.mails.mail-in-list', compact('mails'));
     }

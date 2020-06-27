@@ -31,6 +31,7 @@
                             <span class="page-title-icon bg-gradient-primary text-white mr-2">
                                 <i class="mdi mdi-home"></i>
                             </span> @yield('title') </h3>
+                            @yield('add')
                     </div>
                     @yield('content')
                 </div>

@@ -50,6 +50,7 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/surat/keluar/{id}', 'MailController@deleteMailOut');
 
     // User
+    Route::get('/lihat-pengguna', 'UserSettingController@showsUser');
     Route::post('/pengguna', 'UserSettingController@storeUser');
     Route::patch('/pengguna/{id}', 'UserSettingController@updateUser');
     Route::delete('/pengguna/{id}', 'UserSettingController@deleteUser');
@@ -70,8 +71,43 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
-Route::get('/', 'FathilTestingController@test');
-// Route::get('/', 'FathilTestingController@showDashboard');
+Route::group(['prefix' => 'pengguna'], function() {
+    // User
+    Route::get('/lihat', 'UserSettingController@showUsers');
+    Route::post('/', 'UserSettingController@storeUser');
+    Route::patch('/{id}', 'UserSettingController@updateUser');
+    Route::delete('/{id}', 'UserSettingController@deleteUser');
+
+    Route::group(['prefix' => 'pengaturan'], function() {
+        Route::group(['prefix' => 'jabatan'], function() {
+            Route::get('/', 'UserSettingController@showUsersPosition');
+            Route::get('/tambah', 'UserSettingController@createUserPosition');
+            Route::post('/tambah', 'UserSettingController@storeUserPosition');
+            Route::get('/{id}', 'UserSettingController@editUserPosition');
+            Route::patch('/{id}', 'UserSettingController@updateUserPosition');
+            Route::delete('/{id}', 'UserSettingController@deleteUserPosition');
+        });
+        Route::group(['prefix' => 'unit-kerja'], function() {
+            Route::get('/', 'UserSettingController@showUsersPositionDetail');
+            Route::get('/tambah', 'UserSettingController@createUserPositionDetail');
+            Route::post('/tambah', 'UserSettingController@storeUserPositionDetail');
+            Route::get('/{id}', 'UserSettingController@editUserPositionDetail');
+            Route::patch('/{id}', 'UserSettingController@updateUserPositionDetail');
+            Route::delete('/{id}', 'UserSettingController@deleteUserPositionDetail');
+        });
+        Route::group(['prefix' => 'bidang'], function() {
+            Route::get('/', 'UserSettingController@showUsersDepartment');
+            Route::get('/tambah', 'UserSettingController@createUserDepartment');
+            Route::post('/tambah', 'UserSettingController@storeUserDepartment');
+            Route::get('/{id}', 'UserSettingController@editUserDepartment');
+            Route::patch('/{id}', 'UserSettingController@updateUserDepartment');
+            Route::delete('/{id}', 'UserSettingController@deleteUserDepartment');
+        });
+    });
+});
+
+// Route::get('/', 'FathilTestingController@test');
+Route::get('/', 'FathilTestingController@showDashboard');
 Route::get('/surat/masuk', 'FathilTestingController@showMailInList');
 Route::get('/surat/keluar', 'FathilTestingController@showMailOutList');
 Route::get('/test', 'FathilTestingController@test');

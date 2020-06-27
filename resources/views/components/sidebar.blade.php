@@ -59,8 +59,8 @@
                         class="mdi mdi-account-plus menu-icon"></span> Tambah User</button>
             </span>
         </li>
-        <li class="nav-item {{ Request::is('pengguna') ? 'active' : '' }}">
-            <a class="nav-link" href="/pengguna">
+        <li class="nav-item {{ Request::is('pengguna/lihat') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('pengguna/lihat') }}">
                 <span class="menu-title">Lihat Pengguna</span>
                 <i class="mdi mdi-account-multiple menu-icon"></i>
             </a>
@@ -74,12 +74,12 @@
             <div class="collapse" id="jabatan">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item {{ Request::is('pengguna/pengaturan/jabatan') ? 'active' : '' }}"> <a
-                            class="nav-link" href="/pengguna/pengaturan/jabatan">Jabatan</a></li>
+                            class="nav-link" href="{{ url('pengguna/pengaturan/jabatan') }}">Jabatan</a></li>
                     <li class="nav-item {{ Request::is('pengguna/pengaturan/unit-kerja') ? 'active' : '' }}"> <a
-                            class="nav-link" href="/pengguna/pengaturan/unit-kerja">Unit Kerja</a>
+                            class="nav-link" href="{{ url('pengguna/pengaturan/unit-kerja') }}">Unit Kerja</a>
                     </li>
                     <li class="nav-item {{ Request::is('pengguna/pengaturan/bidang') ? 'active' : '' }}"> <a
-                            class="nav-link" href="/pengguna/pengaturan/bidang">Departemen</a>
+                            class="nav-link" href="{{ url('pengguna/pengaturan/bidang') }}">Departemen</a>
                     </li>
                 </ul>
             </div>
