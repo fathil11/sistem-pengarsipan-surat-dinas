@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\MailTransaction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class MailRepository
 {
@@ -13,10 +14,12 @@ class MailRepository
         $user = Auth::user();
         $userids = $user->withSameStakeholder()->pluck('id')->toArray();
 
-        $transactions = MailTransaction::whereIn('user_id', $userids)
-        ->orWhereIn('target_user_id', $userids)
-        ->whereHas('mailVersion', function ($query) use ($mail_kind) {
-            return $query->whereHas('mail', function ($query) use ($mail_kind) {
+        $transactions = MailTransaction::where(function ($query) use ($userids) {
+            $query->whereIn('user_id', $userids)
+            ->orWhereIn('target_user_id', $userids);
+        })
+        ->whereHas('mailVersion', function (Builder $query) use ($mail_kind) {
+            $query->whereHas('mail', function (Builder $query) use ($mail_kind) {
                 return $query->where('kind', $mail_kind);
             });
         });
@@ -26,7 +29,15 @@ class MailRepository
 
     public function getMailData($mail_kind)
     {
-        $mails = $this->withSameStakeholder($mail_kind)->with(['mailVersion', 'mailVersion.mail', 'mailVersion.mail.type', 'mailVersion.mailFile'])
+        $mails = $this->withSameStakeholder($mail_kind)
+        ->with([
+        'mailVersion',
+        'mailVersion.mail',
+        'mailVersion.mail.reference',
+        'mailVersion.mail.priority',
+        'mailVersion.mail.type',
+        'mailVersion.mailFile'
+        ])
         ->orderBy('id', 'DESC')->get()->unique('mail_version_id')
         ->map(function ($transaction) {
             $transaction->mail_id = $transaction->mailVersion->mail_id;
@@ -63,7 +74,7 @@ class MailRepository
             $mail->status = $transaction->status;
             $mail->status_color = $transaction->status_color;
             $mail->file = $transaction->mailVersion->first()->mailFile->original_name;
-            $mail->type = $mail->type->type;
+
             return $mail;
         });
 
