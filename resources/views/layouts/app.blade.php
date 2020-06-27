@@ -31,6 +31,7 @@
                             <span class="page-title-icon bg-gradient-primary text-white mr-2">
                                 <i class="mdi mdi-home"></i>
                             </span> @yield('title') </h3>
+                            @yield('add')
                     </div>
                     @yield('content')
                 </div>
@@ -51,6 +52,8 @@
     <script src="{{ asset('js/hoverable-collapse.js') }}"></script>
     <script src="{{ asset('js/data.js') }}"></script>
     <script src="{{ asset('js/todolist.js') }}"></script>
+
+    @yield('script')
 
 </body>
 

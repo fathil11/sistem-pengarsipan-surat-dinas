@@ -7,6 +7,19 @@ use App\Http\Requests\MailComponentsRequest;
 
 class MailComponentReferenceService
 {
+    /** Show Mail Reference List */
+    public static function shows()
+    {
+        $mail_references = MailReference::all();
+        return view('app.mails.settings.reference.reference-list', compact('mail_references'));
+    }
+
+    /** Create Mail Reference */
+    public static function create()
+    {
+        return view('app.mails.settings.reference.reference-add');
+    }
+
     /** Store Mail Reference */
     public static function store(MailComponentsRequest $request)
     {
@@ -20,7 +33,14 @@ class MailComponentReferenceService
             'color' => $request->color,
         ]);
 
-        return response(200);
+        return redirect('/surat/pengaturan/sifat-surat');
+    }
+
+    /** Edit Mail Reference */
+    public static function edit($id)
+    {
+        $mail_reference = MailReference::findOrFail($id);
+        return view('app.mails.settings.reference.reference-edit', compact('mail_reference'));
     }
 
     /** Update Mail Reference */
@@ -39,7 +59,7 @@ class MailComponentReferenceService
             'color' => $request->color,
         ]);
 
-        return response(200);
+        return redirect('/surat/pengaturan/sifat-surat');
     }
 
     /** Delete Mail Reference */
@@ -48,6 +68,6 @@ class MailComponentReferenceService
         // Check Mail Reference is Exists
         $mail_reference = MailReference::findOrFail($id);
         $mail_reference->delete();
-        return response(200);
+        return redirect('/surat/pengaturan/sifat-surat');
     }
 }

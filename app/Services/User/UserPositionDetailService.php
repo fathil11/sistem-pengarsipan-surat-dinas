@@ -7,6 +7,19 @@ use App\Http\Requests\UserPositionDetailRequest;
 
 class UserPositionDetailService
 {
+    /** Show User Position Detail List */
+    public static function shows()
+    {
+        $user_position_details = UserPositionDetail::all();
+        return view('app.users.settings.position-detail.position-detail-list', compact('user_position_details'));
+    }
+
+    /** Create User Position Detail */
+    public static function create()
+    {
+        return view('app.users.settings.position-detail.position-detail-add');
+    }
+
     /** Store User Position Detail */
     public static function store(UserPositionDetailRequest $request)
     {
@@ -18,7 +31,14 @@ class UserPositionDetailService
             'position_detail' => $request->position_detail,
         ]);
 
-        return response(200);
+        return redirect('/pengguna/pengaturan/unit-kerja');
+    }
+
+    /** Edit User Position Detail */
+    public static function edit($id)
+    {
+        $user_position_detail = UserPositionDetail::findOrFail($id);
+        return view('app.users.settings.position-detail.position-detail-edit', compact('user_position_detail'));
     }
 
     /** Update User Position Detail */
@@ -35,7 +55,7 @@ class UserPositionDetailService
             'position_detail' => $request->position_detail,
         ]);
 
-        return response(200);
+        return redirect('/pengguna/pengaturan/unit-kerja');
     }
 
     /** Delete User Position Detail */
@@ -44,6 +64,6 @@ class UserPositionDetailService
         // Check UserPositionDetail is Exists
         $user_position_detail = UserPositionDetail::findOrFail($id);
         $user_position_detail->delete();
-        return response(200);
+        return redirect('/pengguna/pengaturan/unit-kerja');
     }
 }

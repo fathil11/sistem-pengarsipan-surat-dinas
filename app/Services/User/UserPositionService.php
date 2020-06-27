@@ -7,6 +7,19 @@ use App\Http\Requests\UserPositionRequest;
 
 class UserPositionService
 {
+    /**Show User List */
+    public static function shows()
+    {
+        $user_positions = UserPosition::all();
+        return view('app.users.settings.position.position-list', compact('user_positions'));
+    }
+
+    /** Create User Position */
+    public static function create()
+    {
+        return view('app.users.settings.position.position-add');
+    }
+
     /** Store User Position */
     public static function store(UserPositionRequest $request)
     {
@@ -24,7 +37,14 @@ class UserPositionService
             'role' => $request->role
         ]);
 
-        return response(200);
+        return redirect('/pengguna/pengaturan/jabatan');
+    }
+
+    /** Edit User Position */
+    public static function edit($id)
+    {
+        $user_position = UserPosition::findOrFail($id);
+        return view('app.users.settings.position.position-edit', compact('user_position'));
     }
 
     /** Update User Position */
@@ -47,7 +67,7 @@ class UserPositionService
             'role' => $request->role
         ]);
 
-        return response(200);
+        return redirect('/pengguna/pengaturan/jabatan');
     }
 
     /** Delete User Position */
@@ -56,6 +76,6 @@ class UserPositionService
         // Check UserPosition is Exists
         $user_position = UserPosition::findOrFail($id);
         $user_position->delete();
-        return response(200);
+        return redirect('/pengguna/pengaturan/jabatan');
     }
 }

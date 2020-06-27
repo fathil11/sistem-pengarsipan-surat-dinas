@@ -15,19 +15,19 @@ class MailReferenceSeeder extends Seeder
         MailReference::create([
             "type" => 'rahasia',
             "code" => 'rhs',
-            "color" => 'merah',
+            "color" => '#fe5678',
         ]);
 
         MailReference::create([
             "type" => 'resmi',
             "code" => 'rsm',
-            "color" => 'kuning',
+            "color" => '#ffd500',
         ]);
 
         MailReference::create([
             "type" => 'penting',
             "code" => 'ptg',
-            "color" => 'hijau',
+            "color" => '#1bcfb4',
         ]);
     }
 }

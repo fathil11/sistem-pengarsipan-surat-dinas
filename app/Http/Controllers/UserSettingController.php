@@ -15,9 +15,24 @@ use App\Services\User\UserPositionDetailService;
 class UserSettingController extends Controller
 {
     // User
+    public function showUsers()
+    {
+        return UserService::shows();
+    }
+
+    public function createUser()
+    {
+        return UserService::create();
+    }
+
     public function storeUser(UserRequest $request)
     {
         return UserService::store($request);
+    }
+
+    public function editUser($id)
+    {
+        return UserService::edit($id);
     }
 
     public function updateUser(UserRequest $request, $id)
@@ -32,9 +47,24 @@ class UserSettingController extends Controller
 
 
     // User Position
+    public function showUsersPosition()
+    {
+        return UserPositionService::shows();
+    }
+
+    public function createUserPosition()
+    {
+        return UserPositionService::create();
+    }
+
     public function storeUserPosition(UserPositionRequest $request)
     {
         return UserPositionService::store($request);
+    }
+
+    public function editUserPosition($id)
+    {
+        return UserPositionService::edit($id);
     }
 
     public function updateUserPosition(UserPositionRequest $request, $id)
@@ -49,9 +79,24 @@ class UserSettingController extends Controller
 
 
     // User Department
+    public function showUsersDepartment()
+    {
+        return UserDepartmentService::shows();
+    }
+
+    public function createUserDepartment()
+    {
+        return UserDepartmentService::create();
+    }
+
     public function storeUserDepartment(UserDepartmentRequest $request)
     {
         return UserDepartmentService::store($request);
+    }
+
+    public function editUserDepartment($id)
+    {
+        return UserDepartmentService::edit($id);
     }
 
     public function updateUserDepartment(UserDepartmentRequest $request, $id)
@@ -66,9 +111,24 @@ class UserSettingController extends Controller
 
 
     // User Department
+    public function showUsersPositionDetail()
+    {
+        return UserPositionDetailService::shows();
+    }
+
+    public function createUserPositionDetail()
+    {
+        return UserPositionDetailService::create();
+    }
+
     public function storeUserPositionDetail(UserPositionDetailRequest $request)
     {
         return UserPositionDetailService::store($request);
+    }
+
+    public function editUserPositionDetail($id)
+    {
+        return UserPositionDetailService::edit($id);
     }
 
     public function updateUserPositionDetail(UserPositionDetailRequest $request, $id)

@@ -4,11 +4,29 @@ namespace App\Services\User;
 
 use App\User;
 use App\UserPosition;
+use App\UserPositionDetail;
+use App\UserDepartment;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
+    /**Show User List */
+    public static function shows()
+    {
+        $users = User::with(['position', 'department', 'positionDetail'])->get();
+        return view('app.users.user-list', compact('users'));
+    }
+
+    /** Create User */
+    public static function create()
+    {
+        $positions = UserPosition::get();
+        $position_details = UserPositionDetail::get();
+        $departments = UserDepartment::get();
+        return view('app.users.user-add')->with(compact('positions', 'position_details', 'departments'));
+    }
+
     /** Store User */
     public static function store(UserRequest $request)
     {
@@ -50,7 +68,18 @@ class UserService
             'username' => $request->username,
             'password' => Hash::make($request->password),
         ]);
-        return response(200);
+
+        return redirect('/pengguna/lihat');
+    }
+
+    /** Edit User Position Detail */
+    public static function edit($id)
+    {
+        $user = User::findOrFail($id);
+        $positions = UserPosition::get();
+        $position_details = UserPositionDetail::get();
+        $departments = UserDepartment::get();
+        return view('app.users.user-edit')->with(compact('user','positions', 'position_details', 'departments'));;
     }
 
     /** Update User */
@@ -99,7 +128,7 @@ class UserService
             'password' => Hash::make($request->password),
         ]);
 
-        return response(200);
+        return redirect('/pengguna/lihat');
     }
 
     /** Delete User */
@@ -109,6 +138,6 @@ class UserService
         $user = User::findOrFail($id);
 
         $user->delete();
-        return response(200);
+        return redirect('/pengguna/lihat');
     }
 }

@@ -31,6 +31,11 @@ class MailController extends Controller
         return MailOutService::delete($id);
     }
 
+    public function forwardMailOut($id)
+    {
+        return MailOutService::forward($id);
+    }
+
 
     //Mail In Privileges
     public function showMailIn($id)

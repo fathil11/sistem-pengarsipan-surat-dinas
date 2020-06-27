@@ -7,6 +7,19 @@ use App\Http\Requests\MailComponentsRequest;
 
 class MailComponentPriorityService
 {
+    /** Show Mail Priority List */
+    public static function shows()
+    {
+        $mail_priorities = MailPriority::all();
+        return view('app.mails.settings.priority.priority-list', compact('mail_priorities'));
+    }
+
+    /** Create Mail Priority */
+    public static function create()
+    {
+        return view('app.mails.settings.priority.priority-add');
+    }
+
     /** Store Mail Priority */
     public static function store(MailComponentsRequest $request)
     {
@@ -20,7 +33,14 @@ class MailComponentPriorityService
             'color' => $request->color,
         ]);
 
-        return response(200);
+        return redirect('/surat/pengaturan/prioritas-surat');
+    }
+
+    /** Edit Mail Priority */
+    public static function edit($id)
+    {
+        $mail_priority = MailPriority::findOrFail($id);
+        return view('app.mails.settings.priority.priority-edit', compact('mail_priority'));
     }
 
     /** Update Mail Priority */
@@ -39,7 +59,7 @@ class MailComponentPriorityService
             'color' => $request->color,
         ]);
 
-        return response(200);
+        return redirect('/surat/pengaturan/prioritas-surat');
     }
 
     /** Delete Mail Priority */
@@ -48,6 +68,6 @@ class MailComponentPriorityService
         // Check Mail Priority is Exists
         $mail_priority = MailPriority::findOrFail($id);
         $mail_priority->delete();
-        return response(200);
+        return redirect('/surat/pengaturan/prioritas-surat');
     }
 }
