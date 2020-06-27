@@ -24,7 +24,7 @@ Route::group(['prefix' => 'test'], function () {
 
     //Mail In === Process ===
     Route::post('/surat/masuk/{id}/teruskan', 'MailController@forwardMailIn');
-    Route::post('/surat/masuk/{id}/disposisi', 'TestingController@dispositionMailIn');
+    Route::post('/surat/masuk/{id}/disposisi', 'MailController@dispositionMailIn');
 
 
     Route::post('/pengguna/surat/jenis', 'MailSettingController@storeMailType');
@@ -70,8 +70,8 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
-Route::get('/', 'FathilTestingController@test');
-// Route::get('/', 'FathilTestingController@showDashboard');
+// Route::get('/', 'FathilTestingController@test');
+Route::get('/', 'FathilTestingController@showDashboard');
 Route::get('/surat/keluar', 'FathilTestingController@showMailOutList');
 Route::get('/test', 'FathilTestingController@test');
 Route::get('/tes', 'TestingController@tes');
