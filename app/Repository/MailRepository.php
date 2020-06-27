@@ -7,19 +7,14 @@ use Illuminate\Support\Facades\Auth;
 
 class MailRepository
 {
-    public function withSameStakeholder($mail_kind, $incoming_mail=true)
+    public function withSameStakeholder($mail_kind)
     {
         /** @var App\User $user */
         $user = Auth::user();
         $userids = $user->withSameStakeholder()->pluck('id')->toArray();
 
-        if ($incoming_mail) {
-            $user_id_column = 'target_user_id';
-        } else {
-            $user_id_column = 'user_id';
-        }
-
-        $transactions = MailTransaction::whereIn($user_id_column, $userids)
+        $transactions = MailTransaction::whereIn('user_id', $userids)
+        ->orWhereIn('target_user_id', $userids)
         ->whereHas('mailVersion', function ($query) use ($mail_kind) {
             return $query->whereHas('mail', function ($query) use ($mail_kind) {
                 return $query->where('kind', $mail_kind);
@@ -29,27 +24,46 @@ class MailRepository
         return $transactions;
     }
 
-    public function getMailData($mail_kind, $incoming_mail=true)
+    public function getMailData($mail_kind)
     {
-        $mails = $this->withSameStakeholder($mail_kind, $incoming_mail)->get()
+        $mails = $this->withSameStakeholder($mail_kind)->with(['mailVersion', 'mailVersion.mail', 'mailVersion.mail.type', 'mailVersion.mailFile'])
+        ->orderBy('id', 'DESC')->get()->unique('mail_version_id')
         ->map(function ($transaction) {
-            $mail = $transaction->mailVersion->mail;
+            $transaction->mail_id = $transaction->mailVersion->mail_id;
+            return $transaction;
+        })->unique('mail_id')
+        ->map(function ($transaction) {
+            /** @var App\User $user */
+            $user = Auth::user();
+            $userids = $user->withSameStakeholder()->pluck('id')->toArray();
+            $status_option = [
+                'income'=>[
+                    'create' => ['Perlu Tanggapan', 'warning'],
+                    'correction' => ['Perlu Dikoreksi', 'warning'],
+                    'corrected' => ['Perlu Tanggapan', 'warning'],
+                    'memo' => ['Perlu Didisposisikan', 'warning'],
+                    'disposition' => ['Disposisi', 'success']
+                ],'outcome'=>[
+                    'create' => ['Telah Dikirimkan', 'success'],
+                    'correction' => ['Menunggu Koreksi', 'primary'],
+                    'corrected' => ['Telah Dikoreksi', 'success'],
+                    'memo' => ['Menunggu Didisposisikan', 'primary'],
+                    'disposition' => ['Telah Didisposisikan', 'success'],
+            ]];
 
-            // Assign Status
-            $mail->status = $transaction->type;
-            switch ($mail->status) {
-                case 'create':
-                    $mail->status = 'Telah dikirim';
-                    break;
-                case 'correction':
-                    $mail->status = 'Perlu Dikoreksi';
-                    break;
-                case 'corrected':
-                    $mail->status = 'Telah diperbaiki';
-                    break;
+            if (in_array($transaction->user_id, $userids)) {
+                $transaction->status = $status_option['outcome'][$transaction->type][0];
+                $transaction->status_color = $status_option['outcome'][$transaction->type][1];
+            } else {
+                $transaction->status = $status_option['income'][$transaction->type][0];
+                $transaction->status_color = $status_option['income'][$transaction->type][1];
             }
+
+            $mail = $transaction->mailVersion->mail;
+            $mail->status = $transaction->status;
+            $mail->status_color = $transaction->status_color;
+            $mail->file = $transaction->mailVersion->first()->mailFile->original_name;
             $mail->type = $mail->type->type;
-            $mail->file = $transaction->mailVersion->mailFile->directory_name;
             return $mail;
         });
 

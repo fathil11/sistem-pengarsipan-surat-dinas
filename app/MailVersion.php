@@ -23,6 +23,6 @@ class MailVersion extends Model
 
     public function mailFile()
     {
-        return $this->hasOne(MailFile::class);
+        return $this->hasOne(MailFile::class, 'mail_version_id');
     }
 }
