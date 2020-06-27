@@ -21,8 +21,8 @@ class FathilTestingController extends Controller
     public function showMailOutList()
     {
         $mail_repository = new MailRepository();
-        Auth::login(User::find(14));
-        $mails = $mail_repository->getMailData('out');
+        Auth::login(User::find(6));
+        $mails = $mail_repository->getMailData('in');
         return view('app.mails.mail-out-list', compact('mails'));
     }
 

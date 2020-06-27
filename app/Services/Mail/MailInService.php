@@ -29,15 +29,15 @@ class MailInService
         $mail_file = MailFile::where('mail_version_id', $mail_version_last->id)->get()->last();
 
         $user_id = Auth::id();
-        $mail_transaction_last = $mail_version_last->mailTransactions->get()->last();
+        $last_mail_transaction = $mail_version_last->mailTransactions->get()->last();
 
         MailLog::create([
-            'mail_transaction_id' => $mail_transaction_last->id,
+            'mail_transaction_id' => $last_mail_transaction->id,
             'user_id' => $user_id,
             'log' => 'read',
         ]);
 
-        // return view('')->compact('mail', 'mail_file');
+        // return view('')->compact('mail', 'mail_file', 'last_mail_transaction');
         return response(200);
     }
 
@@ -318,6 +318,10 @@ class MailInService
             'mail_transaction_id' => $mail_transaction->id,
             'user_id' => $user_id,
             'log' => 'send',
+        ]);
+
+        $mail->update([
+            'status' => 'archive',
         ]);
 
 

@@ -30,6 +30,7 @@ class CreateMailsTable extends Migration
             $table->foreign('mail_priority_id')->references('id')->on('mail_priorities');
             $table->dateTimeTz('mail_created_at')->nullable();
             // $table->dateTimeTz('mail_updated_at')->nullable();
+            $table->string('status')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
