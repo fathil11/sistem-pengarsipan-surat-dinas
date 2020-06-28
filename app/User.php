@@ -118,4 +118,24 @@ class User extends Authenticatable
 
         return $users;
     }
+
+    public function isAdmin()
+    {
+        return $this->getRole() == 'admin';
+    }
+
+    public function isKepalaDinas()
+    {
+        return $this->getRole() == 'kepala_dinas';
+    }
+
+    public function isSekretaris()
+    {
+        return $this->getRole() == 'sekretaris';
+    }
+
+    public function isTU()
+    {
+        return $this->getRole() == 'kepala_tu';
+    }
 }
