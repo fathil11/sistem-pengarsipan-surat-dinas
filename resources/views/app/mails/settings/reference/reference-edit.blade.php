@@ -7,22 +7,26 @@
             <div class="card-body">
                 <h2>Pengaturan Sifat Surat</h2>
                 @if ($errors->any())
-                    <p class="text-danger">{{ $errors->first() }}</p>
+                <p class="text-danger">{{ $errors->first() }}</p>
                 @endif
-                <form action="{{ url('surat/pengaturan/sifat-surat/'.$mail_reference->id) }}" class="forms-sample mt-4" method="post">
+                <form action="{{ url('surat/pengaturan/sifat-surat/'.$mail_reference->id) }}" class="forms-sample mt-4"
+                    method="post">
                     @csrf
                     @method('patch')
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="type">Jenis Surat</label>
-                                <input type="text" class="form-control @error('type') is-invalid @enderror" name="type" id="type" value="{{ old('type', $mail_reference->type) }}" placeholder="Jenis Surat">
+                                <input type="text" class="form-control @error('type') is-invalid @enderror" name="type"
+                                    id="type" value="{{ old('type', $mail_reference->type) }}"
+                                    placeholder="Jenis Surat">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="code">Kode Label</label>
-                                <input type="text" class="form-control @error('code') is-invalid @enderror" name="code" id="code" value="{{ old('code', $mail_reference->code) }}" placeholder="Kode Label">
+                                <input type="text" class="form-control @error('code') is-invalid @enderror" name="code"
+                                    id="code" value="{{ old('code', $mail_reference->code) }}" placeholder="Kode Label">
                             </div>
                         </div>
                     </div>
@@ -30,7 +34,9 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="color">Warna Label</label>
-                                <input type="color" class="form-control @error('color') is-invalid @enderror p-0" name="color" id="color" value="{{ old('color', $mail_reference->color) }}" name="color">
+                                <input type="color" class="form-control @error('color') is-invalid @enderror p-0"
+                                    name="color" id="color" value="{{ old('color', $mail_reference->color) }}"
+                                    name="color">
                             </div>
                         </div>
                         <div class="col-md-8">
@@ -51,9 +57,9 @@
 </div>
 @endsection
 
-@section('script')
-    <script>
-        $(document).ready(function() {
+@section('js')
+<script>
+    $(document).ready(function() {
             bgcolor = $('#color').val();
             kode = $('#code').val();
             $('#preview').css("background-color",bgcolor);
@@ -67,5 +73,5 @@
             kode = $('#code').val();
             $('#preview').html(kode)
         });
-    </script>
+</script>
 @endsection

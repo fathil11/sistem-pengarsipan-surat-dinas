@@ -111,12 +111,73 @@ Detail Surat
 @endif
 
 @if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi')
-
+@if (Auth::user()->isTU())
 <div class="row">
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h2 class="mb-3 text-primary text-center text-md-left">Masukan Koreksi Surat</h2>
+                <h2 class="mb-3 text-primary text-center text-md-left">Nomor Surat Keluar</h2>
+                <form action="/surat/keluar/{{ $mail->id }}/buat-nomor" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="row">
+                        @if ($mail->code != null)
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Nomor Surat</label>
+                                <input class="form-control" type="text" name="code" value="{{ $mail->code }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Nomor Agenda</label>
+                                <input class="form-control" type="text" name="directory_code"
+                                    value="{{ $mail->directory_code }}">
+                            </div>
+                        </div>
+                        @else
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Nomor Surat</label>
+                                <input class="form-control" placeholder="Nomor surat ..." type="text" name="code"
+                                    value="{{ old('code') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Nomor Agenda</label>
+                                <input class="form-control" placeholder="Nomor agenda ..." type="text"
+                                    name="directory_code" value="{{ old('directory_code') }}">
+                            </div>
+                        </div>
+
+                        @endif
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="submit"
+                                class="btn btn-block btn-gradient-primary">{{ ($mail->code != null) ? 'Ubah' : 'Masukan' }}
+                                Nomor</button>
+                        </div>
+                        @if ($mail->code != null)
+                        <div class="col-md-6" id="archive">
+                            <a class="btn btn-block btn-gradient-warning" href="/surat/keluar/{{ $mail->id }}/arsip">
+                                Arsipkan Surat
+                            </a>
+                        </div>
+                        @endif
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> @else
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="mb-3 text-primary text-center text-md-left">Masukan Koreksi
+                    Surat</h2>
                 <form action="/surat/keluar/{{ $mail->transaction_id }}/buat-koreksi" method="POST">
                     @csrf
                     @method('PATCH')
@@ -149,6 +210,7 @@ Detail Surat
         </div>
     </div>
 </div>
+@endif
 @endif
 
 <div class="row">

@@ -14,24 +14,22 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="btn btn-block btn-gradient-primary mt-4" data-toggle="collapse" href="#add" aria-expanded="false"
-                aria-controls="add">
+            <a class="btn btn-block btn-gradient-primary mt-4"
+                href="@if (Auth::user()->isTU()) /surat/masuk/buat @else /surat/keluar/buat @endif">
                 <span class="menu-title"><span class="mdi mdi-file-plus menu-icon"></span> Buat Surat</span>
                 <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="add">
+            {{-- <div class="collapse" id="add">
                 <ul class="nav flex-column sub-menu">
-                    @if (Auth::user()->isSekretaris())
-                    <li class="nav-item {{ Request::is('surat/masuk/buat') ? 'active' : '' }}"> <a class="nav-link"
-                            href="/surat/masuk/buat">Buat Surat
+                    @if (Auth::user()->isTU())
+                    <li class="nav-item"> <a class="nav-link" href="/surat/masuk/buat">Buat Surat
                             Masuk</a></li>
                     @else
-                    <li class="nav-item {{ Request::is('surat/keluar/buat') ? 'active' : '' }}"> <a class="nav-link"
-                            href="/surat/keluar/buat">Buat Surat
+                    <li class="nav-item"> <a class="nav-link" href="/surat/keluar/buat">Buat Surat
                             Keluar</a></li>
                     @endif
                 </ul>
-            </div>
+            </div> --}}
         </li>
         <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
             <a class="nav-link" href="/">
@@ -57,24 +55,24 @@
         Auth::user()->isSekretaris() ||
         Auth::user()->isTU())
 
-        <li class="nav-item {{ Request::is('surat/arsip') ? 'active' : '' }} mt-4">
+        <li class="nav-item mt-4">
             <div class="border-bottom">
                 <h6 class="font-weight-normal mb-3"><b>Seluruh Surat</b></h6>
             </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ Request::is('surat/semua/masuk') ? 'active' : '' }}">
             <a class="nav-link" href="/surat/semua/masuk">
                 <span class="menu-title">Surat Masuk</span>
                 <i class="mdi mdi-archive menu-icon"></i>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ Request::is('surat/semua/keluar') ? 'active' : '' }}">
             <a class="nav-link" href="/surat/semua/keluar">
                 <span class="menu-title">Surat Keluar</span>
                 <i class="mdi mdi-archive menu-icon"></i>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ Request::is('surat/semua/arsip/*') ? 'active' : '' }}">
             <a class="nav-link" href="/surat/semua/arsip">
                 <span class="menu-title">Arsip Surat</span>
                 <i class="mdi mdi-archive menu-icon"></i>

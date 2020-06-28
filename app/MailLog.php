@@ -43,6 +43,9 @@ class MailLog extends Model
             case 'download':
                 $log = 'Diunduh';
                 break;
+            case 'archived':
+                $log = 'Diarsipkan';
+                break;
             default:
                 # code...
                 break;

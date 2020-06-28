@@ -11,6 +11,7 @@ use App\MailLog;
 //Mail In Privileges
 use App\MailType;
 use App\MailFolder;
+use App\MailVersion;
 use App\MailPriority;
 use App\MailReference;
 use App\MailCorrection;
@@ -30,77 +31,78 @@ class MailController extends Controller
     // === Mail Out Privileges ===
 
     // Show Mail Out List
-    public function showMailOutList()
+    public function showMailOutList(MailRepository $mail_repository)
     {
-        //== Auth For Testing
-        // /** @var App\User $user */
-        // Auth::login(User::find(6));
-
-        $mail_repository = new MailRepository();
         $mail_kind = 'out';
         $mails = $mail_repository->getMailData($mail_kind);
 
         return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
     }
 
-    // Show Mail Out
-    public function showMailOut($id)
+    public function storeNumber(Request $request, $id)
     {
-        //== Auth For Testing
-        // /** @var App\User $user */
-        // Auth::login(User::find(6));
+        if (!Auth::user()->isTU()) {
+            return abort(403, 'Anda tidak punya akses');
+        }
 
         $mail = Mail::findOrFail($id);
+        $mail->code = $request->code;
+        $mail->directory_code = $request->directory_code;
+        $mail->save();
+        return redirect('/surat/keluar')->with('success', 'Berhasil menambahkan nomor pada surat');
+    }
+
+    // Show Mail Out
+    public function showMailOut(MailRepository $mail_repository, $id)
+    {
+        $mail = Mail::findOrFail($id);
+
         // Check user is authorized for updating EmailOut
-        $mail = (new MailRepository)->getMailData('out', false, $id)->first();
+        $mail = $mail_repository->getMailData('out', false, $id)->first();
+
         if ($mail == null) {
             return abort(403, 'Anda tidak punya akses');
         }
 
-        $mail_extra = null;
-        if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi') {
-            $mail_extra['correction_type'] = MailCorrectionType::all();
-        }
+        $mail_extra = $this->getMailExtra($mail);
+
         return view('app.mails.mail-view', compact(['mail', 'mail_extra']));
     }
 
     // View Store Mail Out
     public function showCreateMailOut()
     {
-        //== Auth For Testing
-        // /** @var App\User $user */
-        // Auth::login(User::find(6));
 
         /** @var App\User $Auth */
         if (Auth::user()->isTU()) {
             return abort(403, 'Anda tidak memiliki akses');
         }
 
+        $mail_kind = 'keluar';
+
         $mail_extra['type'] = MailType::all();
         $mail_extra['reference'] = MailReference::all();
         $mail_extra['priority'] = MailPriority::all();
         $mail_extra['folder'] = MailFolder::all();
-        $mail_kind = 'keluar';
+
         return view('app.mails.mail-create', compact(['mail_extra', 'mail_kind']));
     }
 
     // View Store Mail In
     public function showCreateMailIn()
     {
-        //== Auth For Testing
-        // /** @var App\User $user */
-        // Auth::login(User::find(6));
 
         /** @var App\User $Auth */
         if (!Auth::user()->isTU()) {
             return abort(403, 'Anda tidak memiliki akses');
         }
 
+        $mail_kind = 'masuk';
+
         $mail_extra['type'] = MailType::all();
         $mail_extra['reference'] = MailReference::all();
         $mail_extra['priority'] = MailPriority::all();
         $mail_extra['folder'] = MailFolder::all();
-        $mail_kind = 'masuk';
 
         return view('app.mails.mail-create', compact(['mail_extra', 'mail_kind']));
     }
@@ -108,14 +110,22 @@ class MailController extends Controller
     // Store Mail Out
     public function storeMailOut(MailOutRequest $request)
     {
-        return MailOutService::store($request);
+        // Validate Form
+        $request->validated();
+
+        if (!MailOutService::store($request)) {
+            return redirect('/surat/keluar')->with('errors', 'Gagal menambahkan surat masuk.');
+        }
+
+        return redirect('/surat/keluar')->with('success', 'Berhasil menambahkan surat masuk.');
     }
 
     // Show Update Mail Out
-    public function showUpdateMailOut($id)
+    public function showUpdateMailOut(MailRepository $mail_repository, $id)
     {
         $mail = Mail::findOrFail($id);
-        $mail = (new MailRepository)->getMailData('out', false, $id)->first();
+
+        $mail = $mail_repository->getMailData('out', false, $id)->first();
 
         if ($mail->transaction != 'income' || $mail->status['action'] != 'koreksi') {
             return abort(403, 'Anda tidak punya akses');
@@ -132,16 +142,25 @@ class MailController extends Controller
     // Forward Mail Out
     public function forwardMailOut($id)
     {
-        if (MailOutService::forward($id) == true) {
-            return redirect('/surat/keluar')->with('success', 'Berhasil meneruskan surat.');
+        // Check if Mail Exists and Mail kind is 'out'
+        $mail = Mail::findOrFail($id);
+
+        if ($mail->kind != 'out') {
+            return abort(403, 'Anda tidak punya akses.');
         }
-        return abort(403, 'Anda tidak punya akses.');
+
+        if (!MailOutService::forward($id)) {
+            return abort(403, 'Anda tidak punya akses.');
+        }
+
+        return redirect('/surat/keluar')->with('success', 'Berhasil meneruskan surat.');
     }
 
     // Create Correction Mail Out
     public function createCorrection(Request $request, $transaction_id)
     {
         $transaction = MailTransaction::findOrFail($transaction_id);
+
         $current_transaction = MailTransaction::create([
             'mail_version_id' => $transaction->mail_version_id,
             'user_id' => Auth::id(),
@@ -196,9 +215,11 @@ class MailController extends Controller
     }
 
     // Delete Mail Out
-    public function deleteMailOut($id)
+    public function deleteMail($id)
     {
-        return MailOutService::delete($id);
+        $mail = Mail::findOrFail($id);
+        $mail->delete();
+        return redirect()->back()->with('success', 'Berhasil menghapus data');
     }
 
 
@@ -206,10 +227,6 @@ class MailController extends Controller
     // === Mail In Privileges ===
     public function showMailInList()
     {
-        //== Auth For Testing
-        // /** @var App\User $user */
-        // Auth::login(User::find(2));
-
         $mail_repository = new MailRepository();
 
         $mail_kind = 'in';
@@ -220,7 +237,7 @@ class MailController extends Controller
     public function showMailIn($id)
     {
         // /** @var App\User $user */
-        // Auth::login(User::find(6));
+        // Auth::login(User::find(1));
         $mail = Mail::findOrFail($id);
 
         // Check user is authorized for updating EmailOut
@@ -234,6 +251,8 @@ class MailController extends Controller
 
     public function storeMailIn(MailInRequest $request)
     {
+        // Validate Form
+        $request->validated();
         return MailInService::store($request);
     }
 
@@ -272,14 +291,36 @@ class MailController extends Controller
         return MailInService::downloadDisposition($id);
     }
 
-    public function showAddCodeMailOut($id)
+    public function archiveMailOut($id)
     {
-        $mail = Mail::findOrFail($id);
-
         if (!Auth::user()->isTU()) {
-            return abort(404);
+            return abort(403, 'Anda tidak memiliki akses');
         }
 
-        return view('');
+        $mail = Mail::findOrFail($id);
+        $mail->status = 'archive';
+
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $transaction = MailTransaction::select('id')->where([
+            ['mail_version_id', $mail_version_last->id],
+        ])->first();
+
+        MailLog::create([
+            'mail_transaction_id' => $transaction->id,
+            'log' => 'archived',
+            'user_id' => Auth::id()
+        ]);
+
+        if ($mail->save()) {
+            return redirect('/surat/keluar')->with('success', 'Berhasil mengarsipkan surat');
+        }
+    }
+
+    private function getMailExtra($mail)
+    {
+        if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi') {
+            return $mail_extra['correction_type'] = MailCorrectionType::all();
+        }
+        return null;
     }
 }

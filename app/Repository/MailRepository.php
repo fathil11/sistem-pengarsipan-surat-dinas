@@ -21,7 +21,7 @@ class MailRepository
         })
         ->whereHas('mailVersion', function (Builder $query) use ($mail_kind) {
             $query->select('mail_id')->whereHas('mail', function (Builder $query) use ($mail_kind) {
-                return $query->select('kind')->where('kind', $mail_kind);
+                return $query->select('kind')->whereNull('status')->where('kind', $mail_kind);
             });
         });
 

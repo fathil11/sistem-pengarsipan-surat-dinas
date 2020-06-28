@@ -42,12 +42,11 @@ Daftar Surat {{ Request::is('surat/semua/masuk') ? 'Masuk' : 'Keluar' }}
                                         <button type="submit" class="btn btn-secondary p-2"><i
                                                 class="mdi mdi-download menu-icon"></i></button>
                                     </form>
-                                    <a href="/surat/semua/{{ ($mail->kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}" class="btn btn-info p-2"><i class="mdi mdi-border-color menu-icon"></i></a>
-                                    </form>
-                                    <form action="/surat/semua/{{ ($mail->kind=='out') ? 'keluar' : 'masuk' }}/{{ $mail->id }}" class="d-inline" method="post">
+                                    <form action="/surat/{{ $mail->id }}" class="d-inline" method="post">
                                         @csrf
                                         @method('delete')
-                                        <button type="submit" class="btn btn-danger p-2" type="submit"><i class="mdi mdi-delete menu-icon"></i></button>
+                                        <button type="submit" class="btn btn-danger p-2" type="submit"><i
+                                                class="mdi mdi-delete menu-icon"></i></button>
                                     </form>
                                 </td>
                             </tr>

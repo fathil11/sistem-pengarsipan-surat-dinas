@@ -15128,6 +15128,7 @@ code {
     height: 6px;
 }
 
+
 .bg-gradient-primary {
     background: rgb(2, 153, 156);
     background: -moz-linear-gradient(148deg, rgba(2, 153, 156, 1) 0%, rgba(37, 175, 178, 1) 50%, rgba(85, 220, 222, 1) 100%);

@@ -54,6 +54,8 @@
     <script src="{{ asset('js/data.js') }}"></script>
     <script src="{{ asset('js/todolist.js') }}"></script>
 
+    @include('components.swal')
+
     @yield('js')
 
 </body>

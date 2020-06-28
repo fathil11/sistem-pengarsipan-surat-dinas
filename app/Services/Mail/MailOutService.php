@@ -17,11 +17,8 @@ use Illuminate\Database\Eloquent\Builder;
 class MailOutService
 {
     // Store Mail Out
-    public static function store(MailOutRequest $request)
+    public static function store($request)
     {
-
-        // Validate Form
-        $request->validated();
 
         // Create (Mail)
         $mail = Mail::create([
@@ -85,14 +82,14 @@ class MailOutService
         // Check Mail is exists and kind of mail out
         $mail = Mail::findOrFail($id);
         if ($mail->kind != 'out') {
-            return abort(403);
+            return abort(403, 'Anda tidak punya akses.');
         }
 
         // Check user is authorized for updating EmailOut
         $update_mail_request = (new MailRepository)->withSameStakeHolder('out')->count();
 
         if ($update_mail_request == 0) {
-            return abort(403);
+            return abort(403, 'Anda tidak punya akses.');
         }
 
         // Update Mail
@@ -155,34 +152,31 @@ class MailOutService
             'user_id' => $user->id
         ]);
 
-        return response(200);
+        return true;
     }
 
     public static function delete($id)
     {
         $mail = Mail::findOrFail($id);
+
         if ($mail->kind != 'out') {
             return abort(404);
         }
+
         $mail->delete();
 
-        return response(200);
+        return true;
     }
 
     // Forward Mail Out
     public static function forward($id)
     {
-        //Check if Mail Exists and Mail kind is 'out'
-        $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'out'){
-            return abort(403);
-        }
-
         // Assign authenticated user
         /** @var App\User $user */
         $user = Auth::user();
         $target_user = $user->getTopPosition();
 
+        $mail = Mail::findOrFail($id);
         //Get Last Mail Version
         $mail_version_last = $mail->mailVersions->last();
 
@@ -195,7 +189,7 @@ class MailOutService
 
         //Redirect if Last Mail Transaction type isn't 'corrected' or 'create'
         if ($update_mail_request == null && $update_mail_request->target_user_id != $user->id) {
-            return abort(403, 'Anda tidak punya akses !');
+            return redirect()('Anda tidak punya akses !');
         }
 
         // Create & Process (Mail Transaction)

@@ -2,6 +2,25 @@
 @section('title', 'Dashboard')
 @section('content')
 <div class="row">
+    <div class="col-12">
+        <div class="stretch-card grid-margin">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="px-6">Selamat datang di Dashboard Sistem Peneglolaan <br>Surat Dinas Kesehatan
+                                Melawi.</h3>
+                            <h5 class="my-3">Jika ada kesulitan, silahkan hubungi admin. Gunakan aplikasi ini sebijak
+                                mungkin</h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-4 stretch-card grid-margin">
         <div class="card bg-gradient-danger card-img-holder text-white">
             <div class="card-body">
@@ -9,7 +28,7 @@
                 <h4 class="font-weight-normal mb-3">Surat Masuk <i
                         class="mdi mdi-call-received mdi-24px float-right"></i>
                 </h4>
-                <h2 class="mb-5">78 <span>surat</span></h2>
+                <h2 class="mb-5">{{ $stat['mail_in'] }} <span>surat</span></h2>
             </div>
         </div>
     </div>
@@ -19,7 +38,7 @@
                 <img src="{{ asset('images/svg/circle.svg') }}" class="card-img-absolute" alt="circle-image" />
                 <h4 class="font-weight-normal mb-3">Surat Keluar <i class="mdi mdi-call-made mdi-24px float-right"></i>
                 </h4>
-                <h2 class="mb-5">54 <span>surat</span></h2>
+                <h2 class="mb-5">{{ $stat['mail_out'] }} <span>surat</span></h2>
             </div>
         </div>
     </div>
@@ -27,14 +46,15 @@
         <div class="card bg-gradient-success card-img-holder text-white">
             <div class="card-body">
                 <img src="{{ asset('images/svg/circle.svg') }}" class="card-img-absolute" alt="circle-image" />
-                <h4 class="font-weight-normal mb-3">Draft Surat <i class="mdi mdi-application mdi-24px float-right"></i>
+                <h4 class="font-weight-normal mb-3">Seluruh Surat <i
+                        class="mdi mdi-application mdi-24px float-right"></i>
                 </h4>
-                <h2 class="mb-5">32 <span>surat</span></h2>
+                <h2 class="mb-5">{{ $stat['mail_total'] }} <span>surat</span></h2>
             </div>
         </div>
     </div>
 </div>
-<div class="row">
+{{-- <div class="row">
     <div class="col-md-7 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -119,5 +139,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection

@@ -38,8 +38,15 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                 </td>
                                 <td class="text-wrap"> {{ $mail->origin }} </td>
                                 <td class="text-center">
+                                    @if ($mail_kind == 'out' && $mail->code != null && Auth::user()->isTU())
+                                    <label class="badge badge-{{ $mail->status['color'] }}">Menunggu diarsipkan
+                                    </label>
+                                    @else
                                     <label
-                                        class="badge badge-{{ $mail->status['color'] }}">{{ $mail->status['status'] }}</label><br>
+                                        class="badge badge-{{ $mail->status['color'] }}">{{ $mail->status['status'] }}
+                                    </label>
+                                    @endif
+                                    <br>
                                     <span class="text-muted font-weight-lighter badge">
                                         @if ($mail->transaction == 'out')
                                         Dikirim
@@ -78,12 +85,17 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                         <i class="mdi mdi-border-color menu-icon"></i></button>
                                     @endif
                                     @if ($mail_kind == 'in')
-                                        <a href="/surat/{{ ($mail_kind=='in') ? 'masuk' : 'keluar'}}/{{ $mail->id }}/{{ ($mail_kind=='in' && \App\User::with('position')->where('id', Auth::id())->first()->getRole() == 'kepala_dinas') ? 'disposisi' : 'teruskan' }}" class="btn btn-success p-2 {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}"><i
+                                    <a href="/surat/{{ ($mail_kind=='in') ? 'masuk' : 'keluar'}}/{{ $mail->id }}/{{ ($mail_kind=='in' && \App\User::with('position')->where('id', Auth::id())->first()->getRole() == 'kepala_dinas') ? 'disposisi' : 'teruskan' }}"
+                                        class="btn btn-success p-2 {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}"><i
                                             class="mdi mdi-check menu-icon"></i></a>
                                     @endif
-                                    <button type="button" class="btn btn-danger p-2"
-                                        {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
-                                            class="mdi mdi-delete menu-icon"></i></button>
+                                    <form action="/surat/{{ $mail->id }}" class="d-inline" method="POST">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="type" class="btn btn-danger p-2"
+                                            {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
+                                                class="mdi mdi-delete menu-icon"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                             @empty

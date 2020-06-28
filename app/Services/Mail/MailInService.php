@@ -36,10 +36,9 @@ class MailInService
     }
 
     // Store Mail In
-    public static function store(MailInRequest $request)
+    public static function store($request)
     {
-        // Validate Form
-        $request->validated();
+
 
         //Create Mail
         $mail = Mail::create([
@@ -104,7 +103,7 @@ class MailInService
 
         //Check if Mail Exists and Mail kind is 'in'
         $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'in'){
+        if ($mail->kind != 'in') {
             return abort(403);
         }
 
@@ -116,7 +115,7 @@ class MailInService
         $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
 
         //Redirect if Last Mail Transaction type is 'memo' or 'archive'
-        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition){
+        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition) {
             return redirect('/');
         }
 
@@ -139,7 +138,7 @@ class MailInService
         ]);
 
         // Check File, if exist Create MailFile
-        if (request()->has('file')){
+        if (request()->has('file')) {
             // Create & Store File (Mail File)
             $request->validate([
                 'file' => 'required|file|mimes:pdf,doc,docx,jpeg,jpg,png|max:5120',
@@ -191,7 +190,7 @@ class MailInService
 
         $mail = Mail::findOrFail($id);
 
-        if ($mail->kind != 'in'){
+        if ($mail->kind != 'in') {
             return response(403);
         }
 
@@ -242,25 +241,23 @@ class MailInService
         }
 
         $user = User::with('position')->where('id', Auth::id())->first();
-        if($user->getRole() == 'sekretaris')
-        {
+        if ($user->getRole() == 'sekretaris') {
             return view('app.mails.mail-in.forward')->with(compact('mail', 'user_departments'));
-        }
-        else if($user->getRole() == 'kepala_dinas')
-        {
+        } elseif ($user->getRole() == 'kepala_dinas') {
             return view('app.mails.mail-in.disposition')->with(compact('mail', 'user_departments'));
         }
         return redirect('/surat/masuk');
     }
 
     //Forward Mail In
-    public static function forward(MailMemoRequest $request, $id){
+    public static function forward(MailMemoRequest $request, $id)
+    {
         // Validate Form
         $request->validated();
 
         //Check if Mail Exists and Mail kind is 'in'
         $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'in'){
+        if ($mail->kind != 'in') {
             return abort(403);
         }
 
@@ -272,7 +269,7 @@ class MailInService
         $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
 
         //Redirect if Last Mail Transaction type is 'memo' or 'archive'
-        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition){
+        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition) {
             return redirect('/');
         }
 
@@ -310,13 +307,14 @@ class MailInService
         return redirect('/surat/masuk');
     }
 
-    public static function disposition(MailMemoRequest $request, $id){
+    public static function disposition(MailMemoRequest $request, $id)
+    {
         // Validate Form
         $request->validated();
 
         //Check if Mail Exists and Mail kind is 'in'
         $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'in'){
+        if ($mail->kind != 'in') {
             return response(403);
         }
 
@@ -328,7 +326,7 @@ class MailInService
         $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
 
         //Redirect if Last Mail Transaction type isn't 'memo' or mail has disposition before
-        if ($last_mail_transaction_isnt_memo || $mail_has_disposition){
+        if ($last_mail_transaction_isnt_memo || $mail_has_disposition) {
             return redirect('/');
         }
 
@@ -341,8 +339,7 @@ class MailInService
         // $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->position->id)->last();
 
         $target_users = $request->target_user;
-        foreach($target_users as $target_department_abbreviation)
-        {
+        foreach ($target_users as $target_department_abbreviation) {
             $user_department = UserDepartment::where('department_abbreviation', $target_department_abbreviation)->first();
 
             $target_user = User::withRole('kepala_bidang')->withDepartment($user_department->department)->first();
@@ -396,7 +393,6 @@ class MailInService
 
         // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
         // return $pdf->download('disposisi.pdf');
-
     }
 
     //Download Mail In Disposition
@@ -414,8 +410,7 @@ class MailInService
             ['type', 'disposition'],
             ])->first();
 
-        if ($mail_memo_id == null || $mail_disposition_id == null)
-        {
+        if ($mail_memo_id == null || $mail_disposition_id == null) {
             return redirect('/');
         }
 
@@ -441,7 +436,7 @@ class MailInService
         $mail_attribute->mail = $mail;
         $mail_attribute->memo = $memo;
 
-        $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4', 'potrait');
         return $pdf->download('pdf-example.pdf');
 
         // return response(200);
