@@ -75,7 +75,6 @@ class MailOutService
     {
         // Validate Form
         $request->validated();
-
         // Check Mail is exists and kind of mail out
         $mail = Mail::findOrFail($id);
         if ($mail->kind != 'out') {
@@ -145,11 +144,17 @@ class MailOutService
         // Add Delivered Log to new Transaction
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
+            'log' => 'correction',
+            'user_id' => $user->id
+        ]);
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction->id,
             'log' => 'send',
             'user_id' => $user->id
         ]);
 
-        return response(200);
+        return true;
     }
 
     public static function delete($id)
@@ -168,7 +173,7 @@ class MailOutService
     {
         //Check if Mail Exists and Mail kind is 'out'
         $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'out'){
+        if ($mail->kind != 'out') {
             return abort(403);
         }
 
@@ -181,7 +186,7 @@ class MailOutService
         $last_mail_transaction_isnt_forward = $mail_version_last->mailTransactions->where('type', 'forward')->isEmpty();
 
         //Redirect if Last Mail Transaction type isn't 'corrected' or 'create'
-        if ($last_mail_transaction_isnt_corrected || $last_mail_transaction_isnt_create || $last_mail_transaction_isnt_forward){
+        if ($last_mail_transaction_isnt_corrected || $last_mail_transaction_isnt_create || $last_mail_transaction_isnt_forward) {
             return redirect('/');
         }
 

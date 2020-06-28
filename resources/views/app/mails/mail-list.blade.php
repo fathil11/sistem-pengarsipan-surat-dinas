@@ -12,10 +12,10 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                     <table id="dataTable" class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Surat</th>
-                                <th>Instansi </th>
-                                <th class="text-center">Status Surat </th>
-                                <th class="text-center">Aksi </th>
+                                <th class="font-weight-bold">Surat</th>
+                                <th class="font-weight-bold">Instansi </th>
+                                <th class="text-center font-weight-bold">Status Surat </th>
+                                <th class="text-center font-weight-bold">Aksi </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,24 +46,32 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                         @else
                                         Diterima
                                         @endif
-                                        {{ Carbon\Carbon::make($mail->created_at)->diffForHumans() }}
+                                        {{ Carbon\Carbon::make($mail->transaction_time)->diffForHumans() }}
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ $mail->file }}" type="button" class="btn btn-secondary p-2"><i
-                                            class="mdi mdi-download menu-icon"></i></a>
-                                    <button type="button" class="btn btn-success p-2"
-                                        onclick="window.location.href='surat-masuk-teruskan.php'"
-                                        {{ ($mail->transaction == 'outcome') ? 'disabled' : ''}}><i
-                                            class="mdi mdi-check menu-icon"></i></button>
+                                    <form
+                                        action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/download"
+                                        method="POST" class="d-inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-secondary p-2"><i
+                                                class="mdi mdi-download menu-icon"></i></button>
+                                    </form>
+                                    <form class="d-inline"
+                                        action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/teruskan">
+                                        <button type="submit" class="btn btn-success p-2"
+                                            {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
+                                                class="mdi mdi-check menu-icon"></i></button>
+                                    </form>
                                     @if ($mail_kind == 'out')
                                     <button type="button" class="btn btn-info p-2"
-                                        onclick="window.location.href='surat-masuk-koreksi.php'"
-                                        {{ ($mail->transaction == 'outcome') ? 'disabled' : ''}}><i
-                                            class="mdi mdi-border-color menu-icon"></i></button>
+                                        onclick="window.location.href='/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}{{ ($mail->status['status'] == 'Perlu Dikoreksi') ? '/koreksi' : '' }}'"
+                                        {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>
+                                        <i class="mdi mdi-border-color menu-icon"></i></button>
                                     @endif
                                     <button type="button" class="btn btn-danger p-2"
-                                        {{ ($mail->transaction == 'outcome') ? 'disabled' : ''}}><i
+                                        {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
                                             class="mdi mdi-delete menu-icon"></i></button>
                                 </td>
                             </tr>

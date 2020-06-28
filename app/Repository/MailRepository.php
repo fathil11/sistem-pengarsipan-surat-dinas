@@ -70,66 +70,91 @@ class MailRepository
             $status_option = [
             'income'=>[
                 'create'=>[
+                    'type' => 'create',
                     'status'=>'Perlu Tanggapan',
                     'color' => 'danger',
+                    'action' => 'buat-koreksi',
                     'in' => ['Log'],
                     'out' => ['Log']],
                 'correction'=>[
+                    'type' => 'correction',
                     'status'=>'Perlu Dikoreksi',
                     'color' => 'danger',
+                    'action' => 'koreksi',
                     'in' => ['Log', 'Correction'],
                     'out' => ['Log', 'Correction']],
                 'corrected'=>[
+                    'type' => 'corrected',
                     'status'=>'Perlu Tanggapan',
                     'color' => 'danger',
+                    'action' => 'buat-koreksi',
                     'in' => ['Log', 'Correction'],
                     'out' => ['Log', 'Correction']],
                 'memo'=>[
+                    'type' => 'memo',
                     'status'=>'Perlu Didisposisikan',
                     'color' => 'danger',
+                    'action' => 'disposisi',
                     'in' => ['Log', 'Memo'],
                     'out' => []],
                 'disposition'=>[
+                    'type' => 'disposition',
                     'status'=>'Disposisi',
                     'color' => 'success',
-                    'in'=> ['Memo'], 'out' => []],
+                    'action' => '',
+                    'in'=> ['Memo'],
+                    'out' => []],
                 'forward'=>[
+                    'type' => 'forward',
                     'status'=>'Perlu Tanggapan',
                     'color' => 'danger',
+                    'action' => '',
                     'in'=> [],
                     'out' => ['Log']],
             ],
             'outcome'=>[
                 'create'=>[
+                    'type' => 'create',
+                    'action' => '',
                     'status' => 'Menunggu Tanggapan',
                     'color' => 'success',
                     'in' => ['Log'],
                     'out' => ['Log']],
                 'correction'=>[
+                    'type' => 'correction',
+                    'action' => '',
                     'status' => 'Menunggu Koreksi',
                     'color' => 'secondary',
-                    'in' => ['Log',
-                    'Correction'], 'out' => ['Log', 'Correction']],
+                    'in' => ['Log', 'Correction'],
+                    'out' => ['Log', 'Correction']],
                 'corrected'=>[
+                    'type' => 'corrected',
+                    'action' => '',
                     'status' => 'Telah Dikoreksi',
                     'color' => 'success',
-                    'in' => ['Log',
-                    'Correction'], 'out' => ['Log', 'Correction']],
+                    'in' => ['Log', 'Correction'],
+                    'out' => ['Log', 'Correction']],
                 'memo'=>[
+                    'type' => 'memo',
+                    'action' => '',
                     'status' => 'Menunggu Didisposisikan',
                     'color' => 'primary',
-                    'in' => ['Log',
-                    'Memo'], 'out' => ['Log', 'Memo']],
+                    'in' => ['Log', 'Memo'],
+                    'out' => ['Log', 'Memo']],
                 'disposition'=>[
+                    'type' => 'disposition',
+                    'action' => '',
                     'status' => 'Telah Didisposisikan',
                     'color' => 'success',
                     'in' => ['Memo'],
                     'out' => []],
                 'forward'=>[
+                    'type' => 'forward',
+                    'action' => '',
                     'status' => 'Menunggu Tanggapan',
                     'color' => 'primary',
-                    'in'=> [], 'out' =>
-                    ['Log']],
+                    'in'=> [],
+                    'out' =>['Log']],
             ]];
 
             if (in_array($transaction->user_id, $userids)) {
@@ -141,6 +166,8 @@ class MailRepository
             }
 
             $mail = $transaction->mailVersion->mail;
+            $mail->transaction_time = $transaction->created_at;
+            $mail->transaction_id = $transaction->id;
 
             if ($mail_id != null) {
                 foreach ($transaction->status[$mail_kind] as $item) {
