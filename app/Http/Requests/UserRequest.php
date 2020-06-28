@@ -31,7 +31,7 @@ class UserRequest extends FormRequest
             'user_position_detail_id' => 'nullable|numeric|min:1|max:255|exists:user_position_details,id',
             'email' => 'required|min:3|max:255|email:rfc',
             'phone_number' => 'required|min:4|max:25',
-            'username' => 'required|min:3|max:255',
+            'username' => 'nullable|min:3|max:255',
             'password' => 'required|min:6|max:512',
         ];
     }

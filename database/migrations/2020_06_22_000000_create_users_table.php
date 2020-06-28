@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->foreign('user_department_id')->references('id')->on('user_departments');
             $table->string('email')->unique();
             $table->string('phone_number')->nullable();
-            $table->string('username')->unique();
+            $table->string('username')->unique()->nullable();
             $table->string('password');
             $table->softDeletes();
             $table->timestamps();

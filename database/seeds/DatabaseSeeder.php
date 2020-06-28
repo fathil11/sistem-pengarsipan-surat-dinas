@@ -11,17 +11,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(AdminSeeder::class);
         // User Seeder
-        $this->call(UserDepartmentSeeder::class);
-        $this->call(UserPositionSeeder::class);
-        $this->call(UserPositionDetailSeeder::class);
-        $this->call(UserSeeder::class);
+        // $this->call(UserDepartmentSeeder::class);
+        // $this->call(UserPositionSeeder::class);
+        // $this->call(UserPositionDetailSeeder::class);
+        // $this->call(UserSeeder::class);
 
         // Mail Seeder
-        $this->call(MailPrioritySeeder::class);
-        $this->call(MailReferenceSeeder::class);
-        $this->call(MailTypeSeeder::class);
-        $this->call(MailFolderSeeder::class);
-        $this->call(MailSeeder::class);
+        // $this->call(MailPrioritySeeder::class);
+        // $this->call(MailReferenceSeeder::class);
+        // $this->call(MailTypeSeeder::class);
+        // $this->call(MailFolderSeeder::class);
+        // $this->call(MailSeeder::class);
     }
 }

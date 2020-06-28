@@ -16,8 +16,8 @@
                 </a>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">
-                        <i class="mdi mdi-logout mr-2 text-primary"></i> Signout </a>
+                    <a class="dropdown-item" href="/logout">
+                        <i class="mdi mdi-logout mr-2 text-primary"></i> Logout </a>
                 </div>
             </li>
             <li class="nav-item d-none d-lg-block full-screen-link">
@@ -26,7 +26,7 @@
                 </a>
             </li>
             <li class="nav-item nav-logout d-none d-lg-block">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/logout">
                     <i class="mdi mdi-logout"></i>
                 </a>
             </li>
