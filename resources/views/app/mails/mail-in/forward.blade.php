@@ -53,7 +53,7 @@
                 </div>
                 <form action="{{ url('surat/masuk/'.$mail->id.'/teruskan') }}" method="post">
                     @csrf
-                    @method('patch')
+                    @method('post')
                     <div class="mt-5">
                     @if ($errors->any())
                         <p class="text-danger">{{ $errors->first() }}</p>

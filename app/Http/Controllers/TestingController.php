@@ -30,7 +30,7 @@ class TestingController extends Controller
 {
     public function showMailIn($id)
     {
-        Auth::login(User::find(6));
+        // Auth::login(User::find(6));
         $mail = Mail::findOrFail($id);
 
         // Check user is authorized for updating EmailOut
@@ -42,59 +42,45 @@ class TestingController extends Controller
         return view('app.mails.mail-view', compact('mail'));
     }
 
-    public function showProcessMailIn($id)
+
+    //=== Arsip Surat ===
+    public function showMailArchiveFolder()
     {
-        Auth::login(User::find(2));
-        $mail = Mail::findOrFail($id);
-
-        // Check user is authorized for updating EmailOut
-        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
-
-        $user_departments = UserDepartment::get();
-
-        if ($mail == null) {
-            return abort(403, 'Anda tidak punya akses');
-        }
-
-        $user = User::with('position')->where('id', Auth::id())->first();
-        if($user->getRole() == 'sekretaris')
-        {
-            return view('app.mails.mail-in.forward')->with(compact('mail', 'user_departments'));
-        }
-        else if($user->getRole() == 'kepala_dinas')
-        {
-            return view('app.mails.mail-in.disposition')->with(compact('mail', 'user_departments'));
-        }
-        return redirect('/surat/masuk');
+        return view('app.mails.all-mail.archive-mail-folder-list');
     }
 
-    public function showMailArchiveYear()
+    public function showMailArchiveFolderYear()
     {
         $mails = Mail::select(DB::raw('YEAR(mail_created_at) as year'))->where('status', 'archive')->orderBy('mail_created_at')->distinct()->get();
         $years = $mails->pluck('year');
-        return view('app.mails.all-mail.archive-mail-folder-list')->with(compact('years'));
+        return view('app.mails.all-mail.archive-mail-year-list')->with(compact('years'));
     }
 
-    public function showMailArchive($year)
+    public function showMailArchiveAll()
     {
-        if(strtolower($year) == 'semua')
-        {
-            $mails = Mail::with('type', 'reference', 'priority')->where('status', 'archive')->orderBy('mail_created_at')->get();
-        }
-        else if(strtolower($year) == 'surat-masuk')
-        {
-            $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'in'])->orderBy('mail_created_at')->get();
-        }
-        else if (strtolower($year) == 'surat-keluar')
-        {
-            $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'out'])->orderBy('mail_created_at')->get();
-        }
-        else
-        {
-            $mails = Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where('status', 'archive')->orderBy('mail_created_at')->get();
-        }
+        $mails = Mail::with('type', 'reference', 'priority')->where('status', 'archive')->orderBy('mail_created_at')->get();
         return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
     }
+
+    public function showMailArchiveMailIn()
+    {
+        $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'in'])->orderBy('mail_created_at')->get();
+        return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+    }
+
+    public function showMailArchiveMailOut()
+    {
+        $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'out'])->orderBy('mail_created_at')->get();
+        return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+    }
+
+    public function showMailArchiveYear($year)
+    {
+        $mails = Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where('status', 'archive')->orderBy('mail_created_at')->get();
+        return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+    }
+
+
 
     public function mailInList()
     {

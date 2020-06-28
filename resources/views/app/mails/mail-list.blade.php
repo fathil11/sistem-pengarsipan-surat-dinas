@@ -54,22 +54,32 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                         action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/download"
                                         method="POST" class="d-inline">
                                         @csrf
-                                        @method('post')
+                                        @method('POST')
                                         <button type="submit" class="btn btn-secondary p-2"><i
                                                 class="mdi mdi-download menu-icon"></i></button>
                                     </form>
-                                    <form class="d-inline"
-                                        action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/{{ ($mail_kind=='in' && \App\User::with('position')->where('id', Auth::id())->first()->getRole() == 'kepala_dinas') ? 'disposisi' : 'teruskan' }}">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-success p-2"
-                                        {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
+                                    @if(Auth::user()->isTU() && $mail->status['status'] == 'Perlu Tanggapan')
+                                    <button type="button" class="btn btn-success p-2"
+                                        onclick="window.location.href='/surat/keluar/{{ $mail->id }}/beri-nomor'"
+                                        {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>
+                                        <i class="mdi mdi-border-color menu-icon"></i></button>
+                                    @elseif ($mail_kind == 'out' && !Auth::user()->isTU())
+                                    <form class="d-inline" method="POST"
+                                        action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/teruskan">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-success p-2"
+                                            {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
                                                 class="mdi mdi-check menu-icon"></i></button>
                                     </form>
                                     <button type="button" class="btn btn-info p-2"
                                         onclick="window.location.href='/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}{{ ($mail->status['status'] == 'Perlu Dikoreksi') ? '/koreksi' : '' }}'"
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>
                                         <i class="mdi mdi-border-color menu-icon"></i></button>
+                                    @endif
+                                    @if ($mail_kind == 'in')
+                                        <a href="/surat/{{ ($mail_kind=='in') ? 'masuk' : 'keluar'}}/{{ $mail->id }}/{{ ($mail_kind=='in' && \App\User::with('position')->where('id', Auth::id())->first()->getRole() == 'kepala_dinas') ? 'disposisi' : 'teruskan' }}" class="btn btn-success p-2 {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}"><i
+                                            class="mdi mdi-check menu-icon"></i></a>
                                     @endif
                                     <button type="button" class="btn btn-danger p-2"
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i

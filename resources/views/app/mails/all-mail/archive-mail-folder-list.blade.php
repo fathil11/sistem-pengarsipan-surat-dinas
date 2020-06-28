@@ -9,34 +9,30 @@ Arsip Surat
             <div class="card-body">
                 {{-- <h4 class="card-title"></h4> --}}
                 <div class="grid-container">
-                    <div class="grid-item" onclick="window.location.href='/surat/arsip/semua'">
+                    <div class="grid-item" onclick="window.location.href='/surat/semua/arsip/semua'">
                         <div>
                             <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">
                         </div>
                         <div><b>Semua</b></div>
                     </div>
-                    <div class="grid-item" onclick="window.location.href='/surat/arsip/surat-masuk'">
+                    <div class="grid-item" onclick="window.location.href='/surat/semua/arsip/surat-masuk'">
                         <div>
                             <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">
                         </div>
                         <div><b>Surat masuk</b></div>
                     </div>
-                    <div class="grid-item" onclick="window.location.href='/surat/arsip/surat-keluar'">
+                    <div class="grid-item" onclick="window.location.href='/surat/semua/arsip/surat-keluar'">
                         <div>
                             <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">
                         </div>
                         <div><b>Surat keluar</b></div>
                     </div>
-                    @forelse ($years as $year)
-                        <div class="grid-item" onclick="window.location.href='/surat/arsip/{{ $year }}'">
-                            <div>
-                                <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">
-                            </div>
-                            <div><b>{{ $year }}</b></div>
+                    <div class="grid-item" onclick="window.location.href='/surat/semua/arsip/tahun'">
+                        <div>
+                            <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">
                         </div>
-                    @empty
-                        Tidak ada arsip surat
-                    @endforelse
+                        <div><b>Tahun</b></div>
+                    </div>
                 </div>
             </div>
         </div>

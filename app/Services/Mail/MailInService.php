@@ -226,6 +226,33 @@ class MailInService
         return response(200);
     }
 
+    // Form Forward & Disposition
+    public static function showProccess($id)
+    {
+        // Auth::login(User::find(2));
+        $mail = Mail::findOrFail($id);
+
+        // Check user is authorized for updating EmailOut
+        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
+
+        $user_departments = UserDepartment::get();
+
+        if ($mail == null) {
+            return abort(403, 'Anda tidak punya akses');
+        }
+
+        $user = User::with('position')->where('id', Auth::id())->first();
+        if($user->getRole() == 'sekretaris')
+        {
+            return view('app.mails.mail-in.forward')->with(compact('mail', 'user_departments'));
+        }
+        else if($user->getRole() == 'kepala_dinas')
+        {
+            return view('app.mails.mail-in.disposition')->with(compact('mail', 'user_departments'));
+        }
+        return redirect('/surat/masuk');
+    }
+
     //Forward Mail In
     public static function forward(MailMemoRequest $request, $id){
         // Validate Form
