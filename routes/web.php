@@ -71,7 +71,7 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
-Route::group(['prefix' => 'pengguna'], function() {
+Route::group(['prefix' => 'pengguna'], function () {
     // User
     Route::get('/lihat', 'UserSettingController@showUsers');
     Route::get('/', 'UserSettingController@createUser');
@@ -80,8 +80,8 @@ Route::group(['prefix' => 'pengguna'], function() {
     Route::patch('/{id}', 'UserSettingController@updateUser');
     Route::delete('/{id}', 'UserSettingController@deleteUser');
 
-    Route::group(['prefix' => 'pengaturan'], function() {
-        Route::group(['prefix' => 'jabatan'], function() {
+    Route::group(['prefix' => 'pengaturan'], function () {
+        Route::group(['prefix' => 'jabatan'], function () {
             Route::get('/', 'UserSettingController@showUsersPosition');
             Route::get('/tambah', 'UserSettingController@createUserPosition');
             Route::post('/tambah', 'UserSettingController@storeUserPosition');
@@ -89,7 +89,7 @@ Route::group(['prefix' => 'pengguna'], function() {
             Route::patch('/{id}', 'UserSettingController@updateUserPosition');
             Route::delete('/{id}', 'UserSettingController@deleteUserPosition');
         });
-        Route::group(['prefix' => 'unit-kerja'], function() {
+        Route::group(['prefix' => 'unit-kerja'], function () {
             Route::get('/', 'UserSettingController@showUsersPositionDetail');
             Route::get('/tambah', 'UserSettingController@createUserPositionDetail');
             Route::post('/tambah', 'UserSettingController@storeUserPositionDetail');
@@ -97,7 +97,7 @@ Route::group(['prefix' => 'pengguna'], function() {
             Route::patch('/{id}', 'UserSettingController@updateUserPositionDetail');
             Route::delete('/{id}', 'UserSettingController@deleteUserPositionDetail');
         });
-        Route::group(['prefix' => 'bidang'], function() {
+        Route::group(['prefix' => 'bidang'], function () {
             Route::get('/', 'UserSettingController@showUsersDepartment');
             Route::get('/tambah', 'UserSettingController@createUserDepartment');
             Route::post('/tambah', 'UserSettingController@storeUserDepartment');
@@ -108,9 +108,9 @@ Route::group(['prefix' => 'pengguna'], function() {
     });
 });
 
-Route::group(['prefix' => 'surat'], function() {
-    Route::group(['prefix' => 'pengaturan'], function() {
-        Route::group(['prefix' => 'jenis-surat'], function() {
+Route::group(['prefix' => 'surat'], function () {
+    Route::group(['prefix' => 'pengaturan'], function () {
+        Route::group(['prefix' => 'jenis-surat'], function () {
             Route::get('/', 'MailSettingController@showMailsType');
             Route::get('/tambah', 'MailSettingController@createMailType');
             Route::post('/tambah', 'MailSettingController@storeMailType');
@@ -118,7 +118,7 @@ Route::group(['prefix' => 'surat'], function() {
             Route::patch('/{id}', 'MailSettingController@updateMailType');
             Route::delete('/{id}', 'MailSettingController@deleteMailType');
         });
-        Route::group(['prefix' => 'sifat-surat'], function() {
+        Route::group(['prefix' => 'sifat-surat'], function () {
             Route::get('/', 'MailSettingController@showMailsReference');
             Route::get('/tambah', 'MailSettingController@createMailReference');
             Route::post('/tambah', 'MailSettingController@storeMailReference');
@@ -126,7 +126,7 @@ Route::group(['prefix' => 'surat'], function() {
             Route::patch('/{id}', 'MailSettingController@updateMailReference');
             Route::delete('/{id}', 'MailSettingController@deleteMailReference');
         });
-        Route::group(['prefix' => 'prioritas-surat'], function() {
+        Route::group(['prefix' => 'prioritas-surat'], function () {
             Route::get('/', 'MailSettingController@showMailsPriority');
             Route::get('/tambah', 'MailSettingController@createMailPriority');
             Route::post('/tambah', 'MailSettingController@storeMailPriority');
@@ -134,7 +134,7 @@ Route::group(['prefix' => 'surat'], function() {
             Route::patch('/{id}', 'MailSettingController@updateMailPriority');
             Route::delete('/{id}', 'MailSettingController@deleteMailPriority');
         });
-        Route::group(['prefix' => 'folder-surat'], function() {
+        Route::group(['prefix' => 'folder-surat'], function () {
             Route::get('/', 'MailSettingController@showMailsFolder');
             Route::get('/tambah', 'MailSettingController@createMailFolder');
             Route::post('/tambah', 'MailSettingController@storeMailFolder');
@@ -142,7 +142,7 @@ Route::group(['prefix' => 'surat'], function() {
             Route::patch('/{id}', 'MailSettingController@updateMailFolder');
             Route::delete('/{id}', 'MailSettingController@deleteMailFolder');
         });
-        Route::group(['prefix' => 'tipe-koreksi'], function() {
+        Route::group(['prefix' => 'tipe-koreksi'], function () {
             Route::get('/', 'MailSettingController@showMailsCorrectionType');
             Route::get('/tambah', 'MailSettingController@createMailCorrectionType');
             Route::post('/tambah', 'MailSettingController@storeMailCorrectionType');
@@ -157,5 +157,7 @@ Route::group(['prefix' => 'surat'], function() {
 Route::get('/', 'FathilTestingController@showDashboard');
 Route::get('/surat/masuk', 'FathilTestingController@showMailInList');
 Route::get('/surat/keluar', 'FathilTestingController@showMailOutList');
+Route::get('/surat/keluar/{id}', 'FathilTestingController@showMailOut');
+Route::post('/surat/keluar/{id}/download', 'FathilTestingController@downloadMailOut');
 Route::get('/test', 'FathilTestingController@test');
 Route::get('/tes', 'TestingController@tes');

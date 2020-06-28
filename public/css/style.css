@@ -14020,7 +14020,7 @@ button.bg-dark:focus {
 
 .text-primary,
 .list-wrapper .completed .remove {
-    color: #367588 !important;
+    color: rgba(37, 175, 178, 1) !important;
 }
 
 a.text-primary:hover,

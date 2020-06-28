@@ -21,30 +21,44 @@ class FathilTestingController extends Controller
     public function showMailOutList()
     {
         $mail_repository = new MailRepository();
-        Auth::login(User::find(7));
-        $mails = $mail_repository->getMailData('out');
-        return view('app.mails.mail-out-list', compact('mails'));
+        Auth::login(User::find(8));
+        $mail_kind = 'out';
+        $mails = $mail_repository->getMailData($mail_kind);
+        return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
     }
 
     public function showMailInList()
     {
         $mail_repository = new MailRepository();
-        Auth::login(User::find(6));
-        $mails = $mail_repository->getMailData('in');
-        return view('app.mails.mail-in-list', compact('mails'));
+        /** @var App|User  */
+        Auth::login(User::find(8));
+        $mail_kind = 'in';
+        $mails = $mail_repository->getMailData($mail_kind);
+        return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
+    }
+
+    public function showMailOut($id)
+    {
+        Auth::login(User::find(8));
+        $mail = Mail::findOrFail($id);
+
+        // Check user is authorized for updating EmailOut
+        $mail = (new MailRepository)->getMailData('out', false, $id)->first();
+
+        if ($mail == null) {
+            return abort(403, 'Anda tidak punya akses');
+        }
+        return view('app.mails.mail-view', compact('mail'));
+    }
+
+    public function downloadMailOut($id)
+    {
+        $mail = (new MailRepository)->getMailData('out', false, $id)->first();
+        $file_name = $mail->file->original_name . '.' . $mail->file->type;
+        return response()->download(storage_path('app').'\documents\testing.sql', $file_name);
     }
 
     public function test()
     {
-        $transactions = MailTransaction::whereHas('mailVersion', function (Builder $query) {
-            $query->whereHas('mail', function (Builder $query) {
-                $query->where('kind', 'out');
-            });
-        });
-        dd($transactions->get()->last());
-        // dd($test[6]->where('user_id', 8));
-        // dd(UserDepartment::getDepartmentId('INFOKOM'));
-
-        // return view('welcome');
     }
 }
