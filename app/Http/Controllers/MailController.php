@@ -33,8 +33,8 @@ class MailController extends Controller
     public function showMailOutList()
     {
         //== Auth For Testing
-        /** @var App\User $user */
-        Auth::login(User::find(6));
+        // /** @var App\User $user */
+        // Auth::login(User::find(6));
 
         $mail_repository = new MailRepository();
         $mail_kind = 'out';
@@ -47,8 +47,8 @@ class MailController extends Controller
     public function showMailOut($id)
     {
         //== Auth For Testing
-        /** @var App\User $user */
-        Auth::login(User::find(6));
+        // /** @var App\User $user */
+        // Auth::login(User::find(6));
 
         $mail = Mail::findOrFail($id);
         // Check user is authorized for updating EmailOut
@@ -68,8 +68,8 @@ class MailController extends Controller
     public function showCreateMailOut()
     {
         //== Auth For Testing
-        /** @var App\User $user */
-        Auth::login(User::find(6));
+        // /** @var App\User $user */
+        // Auth::login(User::find(6));
 
         /** @var App\User $Auth */
         if (Auth::user()->isTU()) {
@@ -88,8 +88,8 @@ class MailController extends Controller
     public function showCreateMailIn()
     {
         //== Auth For Testing
-        /** @var App\User $user */
-        Auth::login(User::find(6));
+        // /** @var App\User $user */
+        // Auth::login(User::find(6));
 
         /** @var App\User $Auth */
         if (!Auth::user()->isTU()) {
@@ -207,8 +207,8 @@ class MailController extends Controller
     public function showMailInList()
     {
         //== Auth For Testing
-        /** @var App\User $user */
-        Auth::login(User::find(6));
+        // /** @var App\User $user */
+        // Auth::login(User::find(2));
 
         $mail_repository = new MailRepository();
 
@@ -217,7 +217,20 @@ class MailController extends Controller
         return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
     }
 
+    public function showMailIn($id)
+    {
+        // /** @var App\User $user */
+        // Auth::login(User::find(6));
+        $mail = Mail::findOrFail($id);
 
+        // Check user is authorized for updating EmailOut
+        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
+
+        if ($mail == null) {
+            return abort(403, 'Anda tidak punya akses');
+        }
+        return view('app.mails.mail-view', compact('mail'));
+    }
 
     public function storeMailIn(MailInRequest $request)
     {
@@ -237,6 +250,11 @@ class MailController extends Controller
     public function downloadMailIn($id)
     {
         return MailInService::download($id);
+    }
+
+    public function showProcessMailIn($id)
+    {
+        return MailInService::showProccess($id);
     }
 
     public function forwardMailIn(MailMemoRequest $request, $id)

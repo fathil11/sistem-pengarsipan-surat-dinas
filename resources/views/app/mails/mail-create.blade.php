@@ -26,7 +26,7 @@ Buat Surat {{ Str::ucfirst($mail_kind) }}
                             </div>
                         </div>
                     </div>
-                    @if (Auth::user()->isSekretaris() && $mail_kind == 'masuk')
+                    @if (Auth::user()->isTU() && $mail_kind == 'masuk')
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

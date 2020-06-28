@@ -77,6 +77,10 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>
                                         <i class="mdi mdi-border-color menu-icon"></i></button>
                                     @endif
+                                    @if ($mail_kind == 'in')
+                                        <a href="/surat/{{ ($mail_kind=='in') ? 'masuk' : 'keluar'}}/{{ $mail->id }}/{{ ($mail_kind=='in' && \App\User::with('position')->where('id', Auth::id())->first()->getRole() == 'kepala_dinas') ? 'disposisi' : 'teruskan' }}" class="btn btn-success p-2 {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}"><i
+                                            class="mdi mdi-check menu-icon"></i></a>
+                                    @endif
                                     <button type="button" class="btn btn-danger p-2"
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
                                             class="mdi mdi-delete menu-icon"></i></button>

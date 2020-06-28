@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function showDashboard()
     {
         /** @var App\User $user */
-        Auth::login(User::find(5));
+        Auth::login(User::find(2));
         return view('app.dashboard');
     }
 }

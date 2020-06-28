@@ -108,7 +108,9 @@ Route::group(['prefix' => 'surat'], function () {
         Route::patch('/{id}', 'MailController@updateMailIn');
         Route::delete('/{id}', 'MailController@deleteMailIn');
 
+        Route::get('/{id}/teruskan', 'MailController@showProcessMailIn');
         Route::post('/{id}/teruskan', 'MailController@forwardMailIn');
+        Route::get('/{id}/disposisi', 'MailController@showProcessMailIn');
         Route::post('/{id}/disposisi', 'MailController@dispositionMailIn');
     });
 
@@ -171,9 +173,39 @@ Route::group(['prefix' => 'surat'], function () {
             Route::delete('/{id}', 'MailSettingController@deleteMailCorrectionType');
         });
     });
+    Route::group(['prefix' => 'semua'], function(){
+        Route::get('/masuk', 'TestingController@mailInList');
+        Route::get('/keluar', 'TestingController@mailOutList');
+        Route::group(['prefix' => 'arsip'], function () {
+            Route::get('/', 'TestingController@showMailArchiveFolder');
+            Route::get('/semua', 'TestingController@showMailArchiveAll');
+            Route::get('/surat-masuk', 'TestingController@showMailArchiveMailIn');
+            Route::get('/surat-keluar', 'TestingController@showMailArchiveMailOut');
+            Route::get('/tahun', 'TestingController@showMailArchiveFolderYear');
+            Route::get('/tahun/{year}', 'TestingController@showMailArchiveYear');
+        });
+    });
 });
 
 
+Route::get('/surat/masuk/semua', 'TestingController@mailInList');
+Route::get('/surat/keluar/semua', 'TestingController@mailOutList');
+Route::get('/surat/arsip', 'TestingController@showMailArchiveYear');
+Route::get('/surat/arsip/{year}', 'TestingController@showMailArchive');
+
+
+// Route::get('/surat/masuk', 'FathilTestingController@showMailInList');
+// Route::get('/surat/masuk/{id}', 'MailController@showMailIn');
+// Route::get('/surat/masuk/{id}/teruskan', 'TestingController@showProcessMailIn');
+// Route::patch('/surat/masuk/{id}/teruskan', 'MailController@forwardMailIn');
+// Route::get('/surat/masuk/{id}/disposisi', 'TestingController@showProcessMailIn');
+// Route::patch('/surat/masuk/{id}/disposisi', 'MailController@dispositionMailIn');
+
+
+Route::get('/surat/keluar', 'FathilTestingController@showMailOutList');
+Route::get('/surat/keluar/{id}', 'FathilTestingController@showMailOut');
+Route::post('/surat/keluar/{id}/download', 'FathilTestingController@downloadMailOut');
+Route::post('/surat/masuk/{id}/download', 'MailController@downloadDispositionMailIn');
 
 Route::get('/test', 'FathilTestingController@test');
 Route::get('/tes', 'TestingController@tes');

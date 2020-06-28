@@ -25,6 +25,7 @@ class MailMemoRequest extends FormRequest
     {
         return [
             'memo' => 'required|min:3|max:1000',
+            'target_user' => 'required',
         ];
     }
 }
