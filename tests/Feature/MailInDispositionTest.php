@@ -45,6 +45,11 @@ class MailInDispositionTest extends TestCase
 
         $response->assertOk();
 
+        $this->assertDatabaseHas('mails', [
+            'id' => Mail::all()->last()->id,
+            'status' => null,
+        ]);
+
         $response = $this->post('/test/surat/masuk/11/disposisi', [
             'memo' => 'Perfect',
         ]);

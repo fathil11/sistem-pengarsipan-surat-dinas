@@ -232,7 +232,7 @@ class MailInService
         MailLog::firstOrCreate([
             'mail_transaction_id' => $mail_transaction_last->id,
             'user_id' => $user_id,
-            'log' => 'download mail',
+            'log' => 'download',
         ]);
 
         // return Storage::download($mail_file->directory_name);
@@ -391,7 +391,7 @@ class MailInService
         MailLog::create([
             'mail_transaction_id' => $mail_transaction_last->id,
             'user_id' => $user_id,
-            'log' => 'download disposition',
+            'log' => 'download',
         ]);
 
         //=== Create & Download File Disposisi ===
