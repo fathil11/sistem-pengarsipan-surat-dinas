@@ -51,7 +51,7 @@
                         </tr>
                     </table>
                 </div>
-                <form action="{{ url('surat/masuk/'.$mail->id.'/teruskan') }}" method="post">
+                <form action="{{ url('surat/masuk/'.$mail->id.'/disposisi') }}" method="post">
                     @csrf
                     @method('patch')
                     <div class="mt-5">
@@ -64,19 +64,18 @@
                         <textarea class="form-control" name="memo" id="exampleTextarea1" rows="10"></textarea>
                     </div>
                     <div class="form-group">
-                        <h2 class="mt-5 mb-4 text-primary text-center text-md-left">Teruskan Surat</h2>
+                        <h2 class="mt-5 mb-4 text-primary text-center text-md-left">Disposisi Surat</h2>
                         <ul class="ks-cboxtags p-0">
-                            <li><input type="checkbox" id="kepala_dinas" name="target_user" value="Kepala Dinas" checked><label for="kepala_dinas">Kepala Dinas</label></li>
+                            <li><input type="checkbox" id="kepala_dinas" name="target_user" value="Kepala Dinas" disabled><label for="kepala_dinas">Kepala Dinas</label></li>
                             <li><input type="checkbox" id="sekretaris" name="target_user" value="Sekretaris Dinas" disabled><label for="sekretaris">Sekretaris</label></li>
-                            @forelse ($user_departments as $user_department)
-                                <li><input type="checkbox" id="kepala {{ $user_department->department_abbreviation }}" name="target_user" value="{{ $user_department->department_abbreviation }}" disabled><label for="kepala {{ $user_department->department_abbreviation }}">Kepala Bidang {{ $user_department->department_abbreviation }}</label></li>
+                            @forelse ($user_departments as $key => $user_department)
+                                <li><input type="checkbox" id="kepala {{ $user_department->department_abbreviation }}" name="target_user[{{ ++$key }}]" value="{{ $user_department->department_abbreviation }}"><label for="kepala {{ $user_department->department_abbreviation }}">Kepala Bidang {{ $user_department->department_abbreviation }}</label></li>
                             @empty
 
                             @endforelse
-
                         </ul>
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-gradient-primary mr-2">Teruskan Surat</button>
+                            <button type="submit" class="btn btn-gradient-primary mr-2">Disposisi Surat</button>
                             <a class="btn btn-light" href="/surat/masuk/">Cancel</a>
                         </div>
                     </div>

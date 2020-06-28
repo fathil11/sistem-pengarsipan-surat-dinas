@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/vendor.bundle.base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @yield('css')
 
     @include('common.favicon')
 
@@ -31,7 +32,7 @@
                             <span class="page-title-icon bg-gradient-primary text-white mr-2">
                                 <i class="mdi mdi-home"></i>
                             </span> @yield('title') </h3>
-                            @yield('add')
+                        @yield('add')
                     </div>
                     @yield('content')
                 </div>
@@ -53,7 +54,7 @@
     <script src="{{ asset('js/data.js') }}"></script>
     <script src="{{ asset('js/todolist.js') }}"></script>
 
-    @yield('script')
+    @yield('js')
 
 </body>
 

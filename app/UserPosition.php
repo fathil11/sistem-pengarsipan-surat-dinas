@@ -55,6 +55,9 @@ class UserPosition extends Model
             case 'admin': case 'kepala_dinas':
                 $top_role = 'kepala_tu';
                 break;
+            case 'sekretaris':
+                $top_role = 'kepala_dinas';
+                break;
             case 'kepala_bidang':
                 $top_role = 'sekretaris';
                 break;

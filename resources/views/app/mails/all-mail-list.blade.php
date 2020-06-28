@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
+Daftar Surat
 @endsection
 @section('content')
 <div class="row">

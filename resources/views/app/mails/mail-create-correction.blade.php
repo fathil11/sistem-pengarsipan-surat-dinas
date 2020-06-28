@@ -110,51 +110,17 @@ Detail Surat
 </div>
 @endif
 
-@if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi')
-
-<div class="row">
-    <div class="col-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="mb-3 text-primary text-center text-md-left">Masukan Koreksi Surat</h2>
-                <form action="/surat/keluar/{{ $mail->transaction_id }}/buat-koreksi" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Jenis Koreksi</label>
-                                <select name="mail_correction_type_id" class="form-control">
-                                    <option value="1">-- Jenis Koreksi --</option>
-                                    @foreach ($mail_extra['correction_type'] as $type)
-                                    <option value="{{ $type->id }}">
-                                        {{ $type->type }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Catatan Koreksi</label>
-                                <textarea name="note" class="form-control" id="exampleTextarea1" rows="2"
-                                    placeholder="Masih ada kesalahan pada ..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-block btn-gradient-primary">Koreksi
-                        Surat</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-
 <div class="row">
     <div class="col">
         <div class="form-group">
-            <a class="btn btn-light" href="/surat/{{ ($mail->kind == 'in') ? 'masuk' : 'keluar' }}">Kembali</a>
+            <a class="btn btn-block btn-light"
+                href="/surat/{{ ($mail->kind == 'in') ? 'masuk' : 'keluar' }}">Kembali</a>
+        </div>
+    </div>
+    <div class="col">
+        <div class="form-group">
+            <a class="btn btn-block btn-warning" href="/surat/{{ ($mail->kind == 'in') ? 'masuk' : 'keluar' }}">Koreksi
+                Surat</a>
         </div>
     </div>
 </div>

@@ -103,9 +103,8 @@ class User extends Authenticatable
 
             $target_user = $this->withRole(UserPosition::getTopRole($user_role))->withDepartment($user_department)->first();
         } else {
-            $target_user = $this->withRole(UserPosition::getTopRole($user_role))->first();
+            $target_user = User::withRole(UserPosition::getTopRole($user_role))->first();
         }
-
         return $target_user;
     }
 
