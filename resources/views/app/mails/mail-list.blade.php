@@ -60,8 +60,10 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                     </form>
                                     <form class="d-inline"
                                         action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/{{ ($mail_kind=='in' && \App\User::with('position')->where('id', Auth::id())->first()->getRole() == 'kepala_dinas') ? 'disposisi' : 'teruskan' }}">
-                                        <button type="submit" class="btn btn-success p-2"
-                                            {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-success p-2"
+                                        {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
                                                 class="mdi mdi-check menu-icon"></i></button>
                                     </form>
                                     @if ($mail_kind == 'out')

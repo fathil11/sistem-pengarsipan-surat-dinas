@@ -153,11 +153,17 @@ Route::group(['prefix' => 'surat'], function () {
     });
 });
 
+Route::patch('/surat/keluar/{id}/teruskan', 'FathilTestingController@forwardMailOut');
 Route::get('/', 'FathilTestingController@showDashboard');
 Route::patch('/surat/keluar/{id}/buat-koreksi', 'FathilTestingController@createCorrection');
 Route::get('/surat/keluar/{id}/koreksi', 'FathilTestingController@showMailOutCorrection');
 Route::patch('/surat/keluar/{id}/koreksi', 'FathilTestingController@updateMailOut');
-Route::patch('/surat/keluar/{id}/teruskan', 'FathilTestingController@forwardMailOut');
+
+Route::get('/surat/masuk/semua', 'TestingController@showMailInList');
+Route::get('/surat/keluar/semua', 'TestingController@showMailOutList');
+Route::get('/surat/arsip', 'TestingController@showMailArchiveYear');
+Route::get('/surat/arsip/{year}', 'TestingController@showMailArchive');
+
 
 Route::get('/surat/masuk', 'FathilTestingController@showMailInList');
 Route::get('/surat/masuk/{id}', 'MailController@showMailIn');

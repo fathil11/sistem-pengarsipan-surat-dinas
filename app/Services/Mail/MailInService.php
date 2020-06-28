@@ -216,7 +216,7 @@ class MailInService
         $mail = (new MailRepository)->getMailData('in', false, $id)->first();
         $file_name = $mail->file->directory_name;
 
-        MailLog::create([
+        MailLog::firstOrCreate([
             'mail_transaction_id' => $mail->transaction_id,
             'log' => 'download',
             'user_id' => Auth::id(),

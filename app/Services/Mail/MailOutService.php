@@ -63,6 +63,12 @@ class MailOutService
 
         MailLog::create([
             'mail_transaction_id' => $mail_transaction->id,
+            'log' => 'create',
+            'user_id' => $user->id
+        ]);
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction->id,
             'log' => 'send',
             'user_id' => $user->id
         ]);
@@ -172,23 +178,26 @@ class MailOutService
             return abort(403);
         }
 
-        //Get Last Mail Version
-        $mail_version_last = $mail->mailVersions->last();
-
-        //Check if Last Mail Transaction type isn't 'corrected' or 'create' or 'forward'
-        $last_mail_transaction_isnt_corrected = $mail_version_last->mailTransactions->where('type', 'corrected')->isEmpty();
-        $last_mail_transaction_isnt_create = $mail_version_last->mailTransactions->where('type', 'create')->isEmpty();
-        $last_mail_transaction_isnt_forward = $mail_version_last->mailTransactions->where('type', 'forward')->isEmpty();
-
-        //Redirect if Last Mail Transaction type isn't 'corrected' or 'create'
-        if ($last_mail_transaction_isnt_corrected || $last_mail_transaction_isnt_create || $last_mail_transaction_isnt_forward){
-            return redirect('/');
-        }
-
         // Assign authenticated user
         /** @var App\User $user */
         $user = Auth::user();
         $target_user = $user->getTopPosition();
+
+        //Get Last Mail Version
+        $mail_version_last = $mail->mailVersions->last();
+
+        //Check if Last Mail Transaction type isn't 'corrected' or 'create' or 'forward'
+        $update_mail_request = (new MailRepository)
+        ->withSameStakeHolder('out')
+        ->where('mail_version_id', $mail_version_last->id)
+        ->where('type', 'correction')
+        ->first();
+
+        //Redirect if Last Mail Transaction type isn't 'corrected' or 'create'
+        if ($update_mail_request == null && $update_mail_request->target_user_id != $user->id) {
+            return abort(403, 'Anda tidak punya akses !');
+        }
+
         // Create & Process (Mail Transaction)
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version_last->id,
@@ -203,6 +212,6 @@ class MailOutService
             'user_id' => $user->id
         ]);
 
-        return response(200);
+        return true;
     }
 }

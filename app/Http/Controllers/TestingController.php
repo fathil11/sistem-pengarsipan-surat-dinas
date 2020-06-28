@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Repository\MailRepository;
 
@@ -67,44 +68,26 @@ class TestingController extends Controller
         return redirect('/surat/masuk');
     }
 
+    public function showMailArchiveYear()
+    {
+        $mails = Mail::select(DB::raw('YEAR(mail_created_at) as year'))->where('status', 'archive')->orderBy('mail_created_at')->distinct()->get();
+        $years = $mails->pluck('year');
+        return view('app.mails.archive-mail-year-list')->with(compact('years'));
+    }
+
+    public function showMailArchive($year)
+    {
+        if(strtolower($year) == 'semua')
+        {
+            $mails = Mail::with('type', 'reference', 'priority')->where('status', 'archive')->orderBy('mail_created_at')->get();
+        } else {
+            $mails = Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where('status', 'archive')->orderBy('mail_created_at')->get();
+        }
+        return view('app.mails.archive-mail-list')->with(compact('mails'));
+    }
+
     public function tes()
     {
-        //Check if Mail Exists and Mail kind is 'out'
-        $mail = Mail::findOrFail(6);
-
-        //Get Last Mail Version
-        $mail_version_last = $mail->mailVersions->last();
-
-        $last_mail_transaction = $mail_version_last->mailTransactions->last();
-        //Check if Last Mail Transaction type isn't 'corrected' or 'create'
-        $last_mail_transaction_isnt_corrected = $mail_version_last->mailTransactions->where('type', 'corrected')->isEmpty();
-        $last_mail_transaction_isnt_create = $mail_version_last->mailTransactions->where('type', 'create')->isEmpty();
-
-        //Redirect if Last Mail Transaction type isn't 'corrected' or 'create'
-        if ($last_mail_transaction_isnt_corrected || $last_mail_transaction_isnt_create){
-            return redirect('/');
-        }
-
-        // Assign authenticated user
-        /** @var App\User $user */
-        $user = User::find(8);
-        // dd($user->position->position);
-        $target_user = $user->getTopPosition();
-        dd($target_user->position->position);
-        // Create & Process (Mail Transaction)
-        $mail_transaction = MailTransaction::create([
-            'mail_version_id' => $mail_version_last->id,
-            'user_id' => $user->id,
-            'target_user_id' => $target_user->id,
-            'type' => 'forward'
-        ]);
-
-        MailLog::create([
-            'mail_transaction_id' => $mail_transaction->id,
-            'log' => 'send',
-            'user_id' => $user->id
-        ]);
-
         return response(200);
     }
 }

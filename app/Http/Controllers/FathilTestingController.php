@@ -70,7 +70,9 @@ class FathilTestingController extends Controller
     public function downloadMailOut($id)
     {
         $mail = (new MailRepository)->getMailData('out', false, $id)->first();
-        $file_name = $mail->file->original_name . '.' . $mail->file->type;
+        $file_mime = '.' . $mail->file->type;
+        $file_stored = $mail->file->directory_name . '.' . $mail->file->type;
+        $file_name = $mail->file->original_name . $file_mime;
 
         MailLog::create([
             'mail_transaction_id' => $mail->transaction_id,
@@ -78,7 +80,7 @@ class FathilTestingController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return response()->download(storage_path('app').'\documents\testing.sql', $file_name);
+        return response()->download(storage_path('app').'\documents\\'.$file_stored, $file_name);
     }
 
     public function showMailOutCorrection($id)
@@ -137,9 +139,11 @@ class FathilTestingController extends Controller
         return redirect('/surat/keluar')->with('success', 'Berhasil membuat koreksi surat.');
     }
 
-    public function forwardforwardMailOut($id)
+    public function forwardMailOut($id)
     {
-        dd('tes');
-        MailOutService::forward($id);
+        if (MailOutService::forward($id) == true) {
+            return redirect('/surat/keluar')->with('success', 'Berhasil meneruskan surat.');
+        }
+        // }
     }
 }
