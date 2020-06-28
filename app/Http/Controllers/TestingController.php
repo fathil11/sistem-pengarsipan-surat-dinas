@@ -72,7 +72,7 @@ class TestingController extends Controller
     {
         $mails = Mail::select(DB::raw('YEAR(mail_created_at) as year'))->where('status', 'archive')->orderBy('mail_created_at')->distinct()->get();
         $years = $mails->pluck('year');
-        return view('app.mails.archive-mail-year-list')->with(compact('years'));
+        return view('app.mails.all-mail.archive-mail-folder-list')->with(compact('years'));
     }
 
     public function showMailArchive($year)
@@ -80,10 +80,32 @@ class TestingController extends Controller
         if(strtolower($year) == 'semua')
         {
             $mails = Mail::with('type', 'reference', 'priority')->where('status', 'archive')->orderBy('mail_created_at')->get();
-        } else {
+        }
+        else if(strtolower($year) == 'surat-masuk')
+        {
+            $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'in'])->orderBy('mail_created_at')->get();
+        }
+        else if (strtolower($year) == 'surat-keluar')
+        {
+            $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'out'])->orderBy('mail_created_at')->get();
+        }
+        else
+        {
             $mails = Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where('status', 'archive')->orderBy('mail_created_at')->get();
         }
-        return view('app.mails.archive-mail-list')->with(compact('mails'));
+        return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+    }
+
+    public function mailInList()
+    {
+        $mails = Mail::with('type', 'reference', 'priority')->where('kind', 'in')->whereNull('status')->orderBy('mail_created_at')->get();
+        return view('app.mails.all-mail.all-mail-list')->with(compact('mails'));
+    }
+
+    public function mailOutList()
+    {
+        $mails = Mail::with('type', 'reference', 'priority')->where('kind', 'out')->whereNull('status')->orderBy('mail_created_at')->get();
+        return view('app.mails.all-mail.all-mail-list')->with(compact('mails'));
     }
 
     public function tes()

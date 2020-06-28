@@ -15,6 +15,18 @@ Arsip Surat
                         </div>
                         <div><b>Semua</b></div>
                     </div>
+                    <div class="grid-item" onclick="window.location.href='/surat/arsip/surat-masuk'">
+                        <div>
+                            <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">
+                        </div>
+                        <div><b>Surat masuk</b></div>
+                    </div>
+                    <div class="grid-item" onclick="window.location.href='/surat/arsip/surat-keluar'">
+                        <div>
+                            <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">
+                        </div>
+                        <div><b>Surat keluar</b></div>
+                    </div>
                     @forelse ($years as $year)
                         <div class="grid-item" onclick="window.location.href='/surat/arsip/{{ $year }}'">
                             <div>

@@ -159,8 +159,8 @@ Route::patch('/surat/keluar/{id}/buat-koreksi', 'FathilTestingController@createC
 Route::get('/surat/keluar/{id}/koreksi', 'FathilTestingController@showMailOutCorrection');
 Route::patch('/surat/keluar/{id}/koreksi', 'FathilTestingController@updateMailOut');
 
-Route::get('/surat/masuk/semua', 'TestingController@showMailInList');
-Route::get('/surat/keluar/semua', 'TestingController@showMailOutList');
+Route::get('/surat/masuk/semua', 'TestingController@mailInList');
+Route::get('/surat/keluar/semua', 'TestingController@mailOutList');
 Route::get('/surat/arsip', 'TestingController@showMailArchiveYear');
 Route::get('/surat/arsip/{year}', 'TestingController@showMailArchive');
 
