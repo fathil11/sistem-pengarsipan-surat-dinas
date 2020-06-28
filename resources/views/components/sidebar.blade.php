@@ -90,7 +90,7 @@
         </li>
         <li class="nav-item">
             <div class="nav-link text-center">
-                <a class="btn btn-block btn-gradient-primary" href="/pengguna/tambah">
+                <a class="btn btn-block btn-gradient-primary" href="/pengguna">
                     <span class="menu-title">
                         <span class="mdi mdi-account-plus menu-icon">
                         </span>
