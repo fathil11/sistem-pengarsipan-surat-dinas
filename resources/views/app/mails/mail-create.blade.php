@@ -1,42 +1,58 @@
 @extends('layouts.app')
 @section('title')
-Koreksi Surat
+Buat Surat {{ Str::ucfirst($mail_kind) }}
 @endsection
 @section('content')
 <div class="row">
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h2>Koreksi Surat</h2>
-                <form class="mt-5" action="/surat/keluar/{{ $mail->id }}/koreksi" method="POST"
-                    enctype="multipart/form-data">
+                <form class="mt-3" action="/surat/{{ $mail_kind }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('PATCH')
+                    @method('POST')
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold" for="judul-surat">Judul Surat</label>
-                                <input type="text" class="form-control" name="title" value="{{ $mail->title }}"
-                                    id="judul-surat" placeholder="Judul Surat">
+                                <input type="text" class="form-control" name="title" value="{{ old('title') }}"
+                                    id="judul-surat" placeholder="Judul surat ...">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold" for="judul-surat">Instansi</label>
-                                <input type="text" class="form-control" name="origin" value="{{ $mail->origin }}"
-                                    id="instansi" placeholder="Instansi">
+                                <input type="text" class="form-control" name="origin" value="{{ old('origin') }}"
+                                    id="instansi" placeholder="Instansi ...">
                             </div>
                         </div>
                     </div>
+                    @if (Auth::user()->isSekretaris() && $mail_kind == 'masuk')
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold" for="judul-surat">Nomor Surat</label>
+                                <input type="text" class="form-control" name="code" value="{{ old('code') }}"
+                                    id="judul-surat" placeholder="Nomor surat ...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold" for="judul-surat">Nomor Agenda</label>
+                                <input type="text" class="form-control" name="directory_code"
+                                    value="{{ old('directory_code') }}" id="instansi" placeholder="Nomor agenda ...">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="font-weight-bold">Jenis Surat</label>
                                 <select name="mail_type_id" class="form-control">
+                                    <option value="1">- Pilih jenis surat -</option>
                                     @foreach ($mail_extra['type'] as $type)
-                                    <option value="{{ $type->id }}"
-                                        {{ ($mail->mail_type_id == $type->id) ? 'selected' : '' }}>
-                                        {{ Str::ucfirst( $type->type)}}
+                                    <option value="{{ $type->id }}">
+                                        {{ Str::ucfirst($type->type) }}
                                     </option>
                                     @endforeach
                                 </select>
@@ -46,10 +62,10 @@ Koreksi Surat
                             <div class="form-group">
                                 <label class="font-weight-bold">Sifat Surat</label>
                                 <select name="mail_reference_id" class="form-control">
+                                    <option value="1">- Pilih sifat surat -</option>
                                     @foreach ($mail_extra['reference'] as $type)
-                                    <option value="{{ $type->id }}"
-                                        {{ ($mail->mail_reference_id == $type->id) ? 'selected' : '' }}>
-                                        {{ Str::ucfirst( $type->type)}}
+                                    <option value="{{ $type->id }}">
+                                        {{ Str::ucfirst($type->type) }}
                                     </option>
                                     @endforeach
                                 </select>
@@ -59,10 +75,10 @@ Koreksi Surat
                             <div class="form-group">
                                 <label class="font-weight-bold">Prioritas Surat</label>
                                 <select name="mail_priority_id" class="form-control">
+                                    <option value="1">- Pilih prioritas surat -</option>
                                     @foreach ($mail_extra['priority'] as $type)
-                                    <option value="{{ $type->id }}"
-                                        {{ ($mail->mail_priority_id == $type->id) ? 'selected' : '' }}>
-                                        {{ Str::ucfirst( $type->type)}}
+                                    <option value="{{ $type->id }}">
+                                        {{ Str::ucfirst($type->type) }}
                                     </option>
                                     @endforeach
                                 </select>
@@ -74,9 +90,9 @@ Koreksi Surat
                             <div class="form-group">
                                 <label class="font-weight-bold">Folder Surat</label>
                                 <select name="mail_folder_id" class="form-control">
+                                    <option value="1">- Pilih folder surat -</option>
                                     @foreach ($mail_extra['folder'] as $type)
-                                    <option value="{{ $type->id }}"
-                                        {{ ($mail->mail_folder_id == $type->id) ? 'selected' : '' }}>
+                                    <option value="{{ $type->id }}">
                                         {{ Str::ucfirst($type->folder) }}
                                     </option>
                                     @endforeach
@@ -85,12 +101,11 @@ Koreksi Surat
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold">Waktu Surat Diterima</label>
+                                <label class="font-weight-bold">Waktu Surat</label>
                                 <div class="input-group date">
                                     <input type="text" class="form-control datepicker" name="mail_created_at"
-                                        placeholder="Waktu Surat Diterima" aria-label="Waktu Surat Diterima"
-                                        aria-describedby="basic-addon2"
-                                        value="{{ $mail->created_at->isoFormat('d MMMM Y') }}">
+                                        placeholder="Waktu surat ..." aria-describedby="basic-addon2"
+                                        value="{{ old('created_at') }}">
                                 </div>
                             </div>
 
@@ -102,7 +117,7 @@ Koreksi Surat
                             accept=".doc, .docx, .pdf, .png, .jpg, .jpeg">
                         <div class="input-group col-xs-12">
                             <input type="text" class="form-control file-upload-info" disabled
-                                placeholder="{{ $mail->file->original_name . '.' . $mail->file->type }}">
+                                placeholder="Upload dokumen disini ...">
                             <span class="input-group-append">
                                 <button class="file-upload-browse btn btn-gradient-primary"
                                     type="button">Upload</button>
@@ -116,9 +131,7 @@ Koreksi Surat
                             </div>
                             <div class="col">
                                 <button type="submit" value="submit"
-                                    class="btn btn-block btn-gradient-primary mr-2">Simpan
-                                    Koreksi
-                                    Surat</button>
+                                    class="btn btn-block btn-gradient-primary mr-2">Buat Surat</button>
                             </div>
                         </div>
                     </div>

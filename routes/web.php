@@ -17,16 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 // Route for Testing
 Route::group(['prefix' => 'test'], function () {
-    // Mail In === CRUD ===
-    Route::post('/surat/masuk/', 'MailController@storeMailIn');
-    Route::patch('/surat/masuk/{id}', 'MailController@updateMailIn');
-    Route::delete('/surat/masuk/{id}', 'MailController@deleteMailIn');
-
-    //Mail In === Process ===
-    Route::post('/surat/masuk/{id}/teruskan', 'MailController@forwardMailIn');
-    Route::post('/surat/masuk/{id}/disposisi', 'MailController@dispositionMailIn');
-
-
     Route::post('/pengguna/surat/jenis', 'MailSettingController@storeMailType');
     Route::patch('/pengguna/surat/jenis/{id}', 'MailSettingController@updateMailType');
     Route::delete('/pengguna/surat/jenis/{id}', 'MailSettingController@deleteMailType');
@@ -71,6 +61,8 @@ Route::group(['prefix' => 'test'], function () {
     Route::delete('/pengguna/unit-kerja/{id}', 'UserSettingController@deleteUserPositionDetail');
 });
 
+Route::get('/', 'HomeController@showDashboard');
+
 Route::group(['prefix' => 'pengguna'], function () {
     // User
     Route::get('/lihat', 'UserSettingController@showUsers');
@@ -109,6 +101,34 @@ Route::group(['prefix' => 'pengguna'], function () {
 });
 
 Route::group(['prefix' => 'surat'], function () {
+    Route::group(['prefix' => 'masuk'], function () {
+        Route::get('/', 'MailController@showMailInList');
+        Route::get('/buat', 'MailController@showCreateMailIn');
+        Route::post('/', 'MailController@storeMailIn');
+        Route::patch('/{id}', 'MailController@updateMailIn');
+        Route::delete('/{id}', 'MailController@deleteMailIn');
+
+        Route::post('/{id}/teruskan', 'MailController@forwardMailIn');
+        Route::post('/{id}/disposisi', 'MailController@dispositionMailIn');
+    });
+
+    Route::group(['prefix' => 'keluar'], function () {
+        Route::get('/', 'MailController@showMailOutList');
+        Route::get('/buat', 'MailController@showCreateMailOut');
+        Route::post('/', 'MailController@storeMailOut');
+
+        Route::patch('/{id}/buat-koreksi', 'MailController@createCorrection');
+
+        Route::get('/{id}/koreksi', 'MailController@showMailOutCorrection');
+        Route::patch('/{id}/koreksi', 'MailController@updateMailOut');
+
+        Route::patch('/{id}/teruskan', 'MailController@forwardMailOut');
+        Route::post('/{id}/download', 'MailController@downloadMailOut');
+        Route::get('/{id}/beri-nomor', 'MailController@showAddCodeMailOut');
+        Route::post('/{id}/beri-nomor', 'MailController@createCodeMailOut');
+        Route::get('/{id}', 'MailController@showMailOut');
+    });
+
     Route::group(['prefix' => 'pengaturan'], function () {
         Route::group(['prefix' => 'jenis-surat'], function () {
             Route::get('/', 'MailSettingController@showMailsType');
@@ -153,11 +173,6 @@ Route::group(['prefix' => 'surat'], function () {
     });
 });
 
-Route::patch('/surat/keluar/{id}/teruskan', 'FathilTestingController@forwardMailOut');
-Route::get('/', 'FathilTestingController@showDashboard');
-Route::patch('/surat/keluar/{id}/buat-koreksi', 'FathilTestingController@createCorrection');
-Route::get('/surat/keluar/{id}/koreksi', 'FathilTestingController@showMailOutCorrection');
-Route::patch('/surat/keluar/{id}/koreksi', 'FathilTestingController@updateMailOut');
 
 Route::get('/surat/masuk/semua', 'TestingController@mailInList');
 Route::get('/surat/keluar/semua', 'TestingController@mailOutList');

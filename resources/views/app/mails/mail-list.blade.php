@@ -66,7 +66,6 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
                                                 class="mdi mdi-check menu-icon"></i></button>
                                     </form>
-                                    @if ($mail_kind == 'out')
                                     <button type="button" class="btn btn-info p-2"
                                         onclick="window.location.href='/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}{{ ($mail->status['status'] == 'Perlu Dikoreksi') ? '/koreksi' : '' }}'"
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>
