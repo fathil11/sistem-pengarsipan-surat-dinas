@@ -156,6 +156,13 @@ Route::group(['prefix' => 'surat'], function () {
 // Route::get('/', 'FathilTestingController@test');
 Route::get('/', 'FathilTestingController@showDashboard');
 Route::get('/surat/masuk', 'FathilTestingController@showMailInList');
+Route::get('/surat/masuk/{id}', 'TestingController@showMailIn');
+Route::get('/surat/masuk/{id}/teruskan', 'TestingController@showProcessMailIn');
+Route::patch('/surat/masuk/{id}/teruskan', 'MailController@forwardMailIn');
+Route::get('/surat/masuk/{id}/disposisi', 'TestingController@showProcessMailIn');
+Route::patch('/surat/masuk/{id}/disposisi', 'MailController@dispositionMailIn');
+
+
 Route::get('/surat/keluar', 'FathilTestingController@showMailOutList');
 Route::get('/surat/keluar/{id}', 'FathilTestingController@showMailOut');
 Route::post('/surat/keluar/{id}/download', 'FathilTestingController@downloadMailOut');

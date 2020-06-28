@@ -52,10 +52,8 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                 <td class="text-center">
                                     <a href="{{ $mail->file }}" type="button" class="btn btn-secondary p-2"><i
                                             class="mdi mdi-download menu-icon"></i></a>
-                                    <button type="button" class="btn btn-success p-2"
-                                        onclick="window.location.href='surat-masuk-teruskan.php'"
-                                        {{ ($mail->transaction == 'outcome') ? 'disabled' : ''}}><i
-                                            class="mdi mdi-check menu-icon"></i></button>
+                                    <a href="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/teruskan" class="btn btn-success p-2"{{ ($mail->transaction == 'outcome') ? 'disabled' : ''}}><i
+                                        class="mdi mdi-check menu-icon"></i></a>
                                     @if ($mail_kind == 'out')
                                     <button type="button" class="btn btn-info p-2"
                                         onclick="window.location.href='surat-masuk-koreksi.php'"

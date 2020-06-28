@@ -264,7 +264,7 @@ class MailInService
 
 
         $user_id = Auth::id();
-        $target_user = User::select('id')->withPosition('Kepala Dinas')->first();
+        $target_user = User::select('id')->withPosition($request->target_user)->first();
 
         //Create Mail Transaction Memo
         $mail_transaction = MailTransaction::create([
@@ -287,7 +287,7 @@ class MailInService
             'log' => 'send',
         ]);
 
-        return response(200);
+        return redirect('/surat/masuk');
     }
 
     public static function disposition(MailMemoRequest $request, $id){

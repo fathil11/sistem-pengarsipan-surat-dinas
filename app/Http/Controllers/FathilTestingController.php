@@ -31,7 +31,7 @@ class FathilTestingController extends Controller
     {
         $mail_repository = new MailRepository();
         /** @var App|User  */
-        Auth::login(User::find(8));
+        Auth::login(User::find(6));
         $mail_kind = 'in';
         $mails = $mail_repository->getMailData($mail_kind);
         return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
