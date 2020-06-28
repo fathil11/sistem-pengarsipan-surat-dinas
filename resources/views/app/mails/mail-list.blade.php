@@ -54,12 +54,14 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                         action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/download"
                                         method="POST" class="d-inline">
                                         @csrf
-                                        @method('PATCH')
+                                        @method('POST')
                                         <button type="submit" class="btn btn-secondary p-2"><i
                                                 class="mdi mdi-download menu-icon"></i></button>
                                     </form>
-                                    <form class="d-inline"
+                                    <form class="d-inline" method="POST"
                                         action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/teruskan">
+                                        @csrf
+                                        @method('PATCH')
                                         <button type="submit" class="btn btn-success p-2"
                                             {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
                                                 class="mdi mdi-check menu-icon"></i></button>

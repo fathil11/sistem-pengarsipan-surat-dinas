@@ -23,7 +23,7 @@ class MailLog extends Model
                 $log = 'Dibuat';
                 break;
             case 'send':
-                $log = 'Dikirim';
+                $log = 'Diteruskan';
                 break;
             case 'corrected': case 'correction':
                 $log = 'Dikoreksi';
