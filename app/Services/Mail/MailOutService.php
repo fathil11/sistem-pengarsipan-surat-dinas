@@ -73,7 +73,7 @@ class MailOutService
             'user_id' => $user->id
         ]);
 
-        return response(200);
+        return true;
     }
 
     // Update Mail Out

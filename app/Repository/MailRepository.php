@@ -14,13 +14,14 @@ class MailRepository
         $user = Auth::user();
         $userids = $user->withSameStakeholder()->pluck('id')->toArray();
 
+        // Get mail transaction with user or target user role
         $transactions = MailTransaction::where(function ($query) use ($userids) {
             $query->whereIn('user_id', $userids)
             ->orWhereIn('target_user_id', $userids);
         })
         ->whereHas('mailVersion', function (Builder $query) use ($mail_kind) {
-            $query->whereHas('mail', function (Builder $query) use ($mail_kind) {
-                return $query->where('kind', $mail_kind);
+            $query->select('mail_id')->whereHas('mail', function (Builder $query) use ($mail_kind) {
+                return $query->select('kind')->where('kind', $mail_kind);
             });
         });
 
