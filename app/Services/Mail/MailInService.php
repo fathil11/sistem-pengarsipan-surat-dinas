@@ -92,7 +92,7 @@ class MailInService
             'log' => 'send',
         ]);
 
-        return response(200);
+        return redirect('/surat/masuk')->with('success', 'Berhasil menambahkan surat masuk.');
     }
 
     //Update Mail In
@@ -180,7 +180,7 @@ class MailInService
             'log' => 'send',
         ]);
 
-        return response(200);
+        return redirect('/surat/masuk')->with('success', 'Berhasil mengubah surat.');
     }
 
     //Delete Mail In
@@ -206,7 +206,7 @@ class MailInService
 
         $mail->delete();
 
-        return response(200);
+        return redirect()->back()->with('success', 'Berhasil menghapus data');
     }
 
     //Download Mail
@@ -222,7 +222,7 @@ class MailInService
         ]);
 
         // return Storage::download($mail_file->directory_name);
-        return response(200);
+        return redirect()->back()->with('success', 'Berhasil mengunduh surat');
     }
 
     // Form Forward & Disposition

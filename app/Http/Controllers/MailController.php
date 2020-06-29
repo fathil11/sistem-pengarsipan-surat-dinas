@@ -114,10 +114,10 @@ class MailController extends Controller
         $request->validated();
 
         if (!MailOutService::store($request)) {
-            return redirect('/surat/keluar')->with('errors', 'Gagal menambahkan surat masuk.');
+            return redirect('/surat/keluar')->with('errors', 'Gagal menambahkan surat keluar.');
         }
 
-        return redirect('/surat/keluar')->with('success', 'Berhasil menambahkan surat masuk.');
+        return redirect('/surat/keluar')->with('success', 'Berhasil menambahkan surat keluar.');
     }
 
     // Show Update Mail Out
@@ -234,7 +234,7 @@ class MailController extends Controller
         return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
     }
 
-    public function showMailIn($id)
+    public function showMailIn(MailRepository $mail_repository, $id)
     {
         // /** @var App\User $user */
         // Auth::login(User::find(1));

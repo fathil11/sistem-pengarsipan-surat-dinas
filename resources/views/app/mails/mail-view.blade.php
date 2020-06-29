@@ -110,7 +110,7 @@ Detail Surat
 </div>
 @endif
 
-@if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi')
+@if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi' && $mail->kind == 'out')
 @if (Auth::user()->isTU())
 <div class="row">
     <div class="col-12 grid-margin stretch-card">
