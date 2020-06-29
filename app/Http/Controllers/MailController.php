@@ -234,7 +234,7 @@ class MailController extends Controller
         return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
     }
 
-    public function showMailIn($id)
+    public function showMailIn(MailRepository $mail_repository, $id)
     {
         // /** @var App\User $user */
         // Auth::login(User::find(1));
