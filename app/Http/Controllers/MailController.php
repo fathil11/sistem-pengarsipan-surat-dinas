@@ -201,9 +201,8 @@ class MailController extends Controller
     public function downloadMailOut($id)
     {
         $mail = (new MailRepository)->getMailData('out', false, $id)->first();
-        $file_mime = '.' . $mail->file->type;
-        $file_stored = $mail->file->directory_name . '.' . $mail->file->type;
-        $file_name = $mail->file->original_name . $file_mime;
+        $file_stored = $mail->file->directory_name;
+        $file_name = $mail->file->original_name;
 
         MailLog::create([
             'mail_transaction_id' => $mail->transaction_id,
@@ -211,7 +210,7 @@ class MailController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return response()->download(storage_path('app').'\documents\\'.$file_stored, $file_name);
+        return response()->download(storage_path('app').'/'.$file_stored, $file_name);
     }
 
     // Delete Mail Out
