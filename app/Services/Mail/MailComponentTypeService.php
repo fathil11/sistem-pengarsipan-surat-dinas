@@ -33,14 +33,14 @@ class MailComponentTypeService
             'color' => $request->color,
         ]);
 
-        return redirect('/surat/pengaturan/jenis-surat');
+        return true;
     }
 
     /** Edit Mail Type */
     public static function edit($id)
     {
         $mail_type = MailType::findOrFail($id);
-        return view('app.mails.settings.type.type-edit', compact('mail_type'));
+        return true;
     }
 
     /** Update Mail Type */
@@ -59,7 +59,7 @@ class MailComponentTypeService
             'color' => $request->color,
         ]);
 
-        return redirect('/surat/pengaturan/jenis-surat');
+        return true;
     }
 
     /** Delete Mail Type */
