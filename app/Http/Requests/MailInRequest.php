@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MailInRequest extends FormRequest
@@ -32,9 +33,15 @@ class MailInRequest extends FormRequest
             'mail_type_id' => 'required|numeric|min:1|max:255|exists:mail_types,id',
             'mail_reference_id' => 'required|numeric|min:1|max:255|exists:mail_references,id',
             'mail_priority_id' => 'required|numeric|min:1|max:255|exists:mail_priorities,id',
-            'mail_created_at' => 'required|date',
 
             'file' => 'file|mimes:pdf,doc,docx,jpeg,jpg,png|max:5120',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'mail_created_at' => Carbon::parse($this->mail_created_at),
+        ]);
     }
 }

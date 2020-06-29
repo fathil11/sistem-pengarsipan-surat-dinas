@@ -114,10 +114,10 @@ class MailController extends Controller
         $request->validated();
 
         if (!MailOutService::store($request)) {
-            return redirect('/surat/keluar')->with('errors', 'Gagal menambahkan surat masuk.');
+            return redirect('/surat/keluar')->with('errors', 'Gagal menambahkan surat keluar.');
         }
 
-        return redirect('/surat/keluar')->with('success', 'Berhasil menambahkan surat masuk.');
+        return redirect('/surat/keluar')->with('success', 'Berhasil menambahkan surat keluar.');
     }
 
     // Show Update Mail Out

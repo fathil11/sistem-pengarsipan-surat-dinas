@@ -13,7 +13,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Jenis Surat</th>
+                                <th>Sifat Surat</th>
                                 <th>Kode</th>
                                 <th>Preview</th>
                                 <th class="text-center">Aksi</th>

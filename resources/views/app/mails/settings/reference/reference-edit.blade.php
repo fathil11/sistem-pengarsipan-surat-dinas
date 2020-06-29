@@ -16,10 +16,10 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="type">Jenis Surat</label>
+                                <label for="type">Sifat Surat</label>
                                 <input type="text" class="form-control @error('type') is-invalid @enderror" name="type"
                                     id="type" value="{{ old('type', $mail_reference->type) }}"
-                                    placeholder="Jenis Surat">
+                                    placeholder="Sifat Surat">
                             </div>
                         </div>
                         <div class="col-md-4">

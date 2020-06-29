@@ -145,7 +145,7 @@
                             href="{{ url('surat/pengaturan/sifat-surat') }}">Sifat Surat</a>
                     </li>
                     <li class="nav-item"> <a
-                            class="nav-link{{ Request::is('surat/pengaturan/prioritas-surat') ? 'active' : '' }}"
+                            class="nav-link {{ Request::is('surat/pengaturan/prioritas-surat') ? 'active' : '' }}"
                             href="{{ url('surat/pengaturan/prioritas-surat') }}">Prioritas
                             Surat</a></li>
                     <div class="dropdown-divider"></div>
