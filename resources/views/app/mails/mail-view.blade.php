@@ -53,13 +53,31 @@ Detail Surat
                         </tr>
                     </table>
                 </div>
-                <form action="/surat/{{ ($mail->kind == 'in') ? 'masuk' : 'keluar' }}/{{$mail->id}}/download"
-                    method="post">
-                    @csrf
-                    <button type="submit" class="btn btn-block btn-gradient-primary mt-5"><i
-                            class="mdi mdi-download"></i>
-                        Unduh Surat</button>
-                </form>
+                <div class="row">
+                    <div class="col">
+                        <form action="/surat/{{ ($mail->kind == 'in') ? 'masuk' : 'keluar' }}/{{$mail->id}}/download"
+                            method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-block btn-gradient-primary mt-5"><i
+                                    class="mdi mdi-download"></i>
+                                Unduh Surat</button>
+                        </form>
+                    </div>
+                    @if ($mail->kind == 'in')
+                    @if (($mail->transaction == 'outcome' && Auth::user()->isKepalaDinas()) || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition'))
+                    <div class="col">
+                        <form action="/surat/masuk/{{$mail->id}}/download-disposisi"
+                            method="post">
+                            @csrf
+                            @method('patch')
+                            <button type="submit" class="btn btn-block btn-gradient-danger mt-5"><i
+                                class="mdi mdi-download"></i>
+                            Unduh Disposisi Surat</button>
+                        </form>
+                    </div>
+                    @endif
+                    @endif
+                </div>
             </div>
         </div>
     </div>

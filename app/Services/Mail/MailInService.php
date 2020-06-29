@@ -15,6 +15,8 @@ use App\MailLog;
 use App\MailMemo;
 use App\Repository\MailRepository;
 
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Database\Eloquent\Collection;
 use PDF;
 
@@ -213,7 +215,6 @@ class MailInService
     public static function download($id)
     {
         $mail = (new MailRepository)->getMailData('in', false, $id)->first();
-        $file_name = $mail->file->directory_name;
 
         MailLog::firstOrCreate([
             'mail_transaction_id' => $mail->transaction_id,
@@ -221,8 +222,7 @@ class MailInService
             'user_id' => Auth::id(),
         ]);
 
-        // return Storage::download($mail_file->directory_name);
-        return redirect()->back()->with('success', 'Berhasil mengunduh surat');
+        return Storage::download($mail->file->directory_name);
     }
 
     // Form Forward & Disposition
@@ -246,7 +246,9 @@ class MailInService
         } elseif ($user->getRole() == 'kepala_dinas') {
             return view('app.mails.mail-in.disposition')->with(compact('mail', 'user_departments'));
         }
-        return redirect('/surat/masuk');
+        else {
+            return redirect('/surat/masuk');
+        }
     }
 
     //Forward Mail In
@@ -304,7 +306,7 @@ class MailInService
             'log' => 'send',
         ]);
 
-        return redirect('/surat/masuk');
+        return redirect('/surat/masuk')->with('success', 'Berhasil meneruskan surat');
     }
 
     public static function disposition(MailMemoRequest $request, $id)
@@ -373,11 +375,7 @@ class MailInService
         }
         $target_user = User::select('id')->withPosition('Kepala Bidang')->first();
 
-        $mail->update([
-            'status' => 'archive',
-        ]);
-
-        return redirect('/surat/masuk')->with('status', 'download-disposition');
+        return redirect('/surat/masuk')->with('success', 'Berhasil mendisposisi surat');
 
         //=== Create & Download Disposition File ===
         // $secretary_memo = $mail_transaction_last->transactionMemo->memo;
@@ -418,11 +416,27 @@ class MailInService
         $user_id = Auth::id();
         $mail_transaction_last = $mail_version_last->mailTransactions->last();
 
+
         MailLog::firstOrCreate([
             'mail_transaction_id' => $mail_transaction_last->id,
             'user_id' => $user_id,
-            'log' => 'download',
+            'log' => 'download-disposition',
         ]);
+
+        $mail_transaction_dispositions = MailTransaction::select('target_user_id')->where(['mail_version_id' => $mail_version_last->id, 'type' => 'disposition'])->get();
+
+        $transaction_disposition_count = MailTransaction::select('target_user_id')->where(['mail_version_id' => $mail_version_last->id, 'type' => 'disposition'])->count();
+
+        foreach($mail_transaction_dispositions as $key => $mail_transaction_disposition)
+        {
+            $mail_log = MailLog::where(['mail_transaction_id' => $mail_transaction_last->id, 'user_id' => $mail_transaction_disposition->target_user_id, 'log' => 'download-disposition'])->count();
+            $key = $key + $mail_log;
+        }
+
+        if($transaction_disposition_count+1 == $key+1)
+        {
+            $mail->update(['status' => 'archive']);
+        }
 
         //=== Create & Download File Disposisi ===
         $secretary_memo = MailMemo::select('memo')->where('mail_transaction_id', $mail_memo_id->id)->first();
@@ -440,5 +454,25 @@ class MailInService
         return $pdf->download('pdf-example.pdf');
 
         // return response(200);
+    }
+
+    public static function archive($id)
+    {
+        $mail = Mail::findOrFail($id);
+        $mail->status = 'archive';
+
+        $user_id = Auth::id();
+        $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
+        $mail_transaction_last = $mail_version_last->mailTransactions->last();
+
+        MailLog::firstOrCreate([
+            'mail_transaction_id' => $mail_transaction_last->id,
+            'user_id' => $user_id,
+            'log' => 'archived',
+        ]);
+
+        if ($mail->save()) {
+            return redirect('/surat/keluar')->with('success', 'Berhasil mengarsipkan surat');
+        }
     }
 }

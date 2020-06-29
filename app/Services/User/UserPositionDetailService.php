@@ -31,7 +31,7 @@ class UserPositionDetailService
             'position_detail' => $request->position_detail,
         ]);
 
-        return redirect('/pengguna/pengaturan/unit-kerja');
+        return redirect('/pengguna/pengaturan/unit-kerja')->with('success', 'Berhasil menambahkan unit kerja');
     }
 
     /** Edit User Position Detail */
@@ -55,7 +55,7 @@ class UserPositionDetailService
             'position_detail' => $request->position_detail,
         ]);
 
-        return redirect('/pengguna/pengaturan/unit-kerja');
+        return redirect('/pengguna/pengaturan/unit-kerja')->with('success', 'Berhasil mengubah unit kerja');
     }
 
     /** Delete User Position Detail */
@@ -64,6 +64,6 @@ class UserPositionDetailService
         // Check UserPositionDetail is Exists
         $user_position_detail = UserPositionDetail::findOrFail($id);
         $user_position_detail->delete();
-        return redirect('/pengguna/pengaturan/unit-kerja');
+        return redirect('/pengguna/pengaturan/unit-kerja')->with('success', 'Berhasil menghapus unit kerja');
     }
 }

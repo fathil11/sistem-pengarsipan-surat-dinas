@@ -69,7 +69,7 @@ class UserService
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect('/pengguna/lihat');
+        return redirect('/pengguna/lihat')->with('success', 'Berhasil menambahkan pengguna');
     }
 
     /** Edit User Position Detail */
@@ -128,7 +128,7 @@ class UserService
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect('/pengguna/lihat');
+        return redirect('/pengguna/lihat')->with('success', 'Berhasil mengubah pengguna');
     }
 
     /** Delete User */
@@ -138,6 +138,6 @@ class UserService
         $user = User::findOrFail($id);
 
         $user->delete();
-        return redirect('/pengguna/lihat');
+        return redirect('/pengguna/lihat')->with('success', 'Berhasil menghapus pengguna');
     }
 }

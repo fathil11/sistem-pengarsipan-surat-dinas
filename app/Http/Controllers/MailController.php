@@ -291,6 +291,11 @@ class MailController extends Controller
         return MailInService::downloadDisposition($id);
     }
 
+    public function archiveMailIn($id)
+    {
+        return MailInService::archive($id);
+    }
+
     public function archiveMailOut($id)
     {
         if (!Auth::user()->isTU()) {

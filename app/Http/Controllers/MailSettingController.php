@@ -29,7 +29,7 @@ class MailSettingController extends Controller
 
     public function storeMailType(MailComponentsRequest $request)
     {
-        MailComponentTypeService::store($request);
+        return MailComponentTypeService::store($request);
     }
 
     public function editMailType($id)

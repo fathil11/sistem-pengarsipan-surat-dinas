@@ -37,7 +37,7 @@ class UserPositionService
             'role' => $request->role
         ]);
 
-        return redirect('/pengguna/pengaturan/jabatan');
+        return redirect('/pengguna/pengaturan/jabatan')->with('success', 'Berhasil menambahkan jabatan');
     }
 
     /** Edit User Position */
@@ -67,7 +67,7 @@ class UserPositionService
             'role' => $request->role
         ]);
 
-        return redirect('/pengguna/pengaturan/jabatan');
+        return redirect('/pengguna/pengaturan/jabatan')->with('success', 'Berhasil mengubah jabatan');
     }
 
     /** Delete User Position */
@@ -76,6 +76,6 @@ class UserPositionService
         // Check UserPosition is Exists
         $user_position = UserPosition::findOrFail($id);
         $user_position->delete();
-        return redirect('/pengguna/pengaturan/jabatan');
+        return redirect('/pengguna/pengaturan/jabatan')->with('success', 'Berhasil menghapus jabatan');
     }
 }

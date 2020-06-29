@@ -88,6 +88,14 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                     <a href="/surat/{{ ($mail_kind=='in') ? 'masuk' : 'keluar'}}/{{ $mail->id }}/{{ ($mail_kind=='in' && \App\User::with('position')->where('id', Auth::id())->first()->getRole() == 'kepala_dinas') ? 'disposisi' : 'teruskan' }}"
                                         class="btn btn-success p-2 {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}"><i
                                             class="mdi mdi-check menu-icon"></i></a>
+                                    <form class="d-inline" method="POST"
+                                        action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/download-disposisi">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-primary p-2"
+                                            {{ ((($mail->transaction == 'outcome' && Auth::user()->isKepalaDinas())) || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? '' : 'disabled'}}><i
+                                            class="mdi mdi-download menu-icon"></i></button>
+                                    </form>
                                     @endif
                                     <form action="/surat/{{ $mail->id }}" class="d-inline" method="POST">
                                         @csrf

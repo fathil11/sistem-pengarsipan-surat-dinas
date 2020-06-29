@@ -109,6 +109,8 @@ Route::group(['middlware', 'auth'], function () {
             Route::get('/buat', 'MailController@showCreateMailIn');
             Route::post('/', 'MailController@storeMailIn');
             Route::post('/{id}/download', 'MailController@downloadMailIn');
+            Route::patch('/{id}/download-disposisi', 'MailController@downloadDispositionMailIn');
+            Route::get('/{id}', 'MailController@showMailIn');
             Route::patch('/{id}', 'MailController@updateMailIn');
             Route::delete('/{id}', 'MailController@deleteMailIn');
 

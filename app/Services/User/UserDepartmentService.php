@@ -32,7 +32,7 @@ class UserDepartmentService
             'department_abbreviation' => $request->department_abbreviation
         ]);
 
-        return redirect('/pengguna/pengaturan/bidang');
+        return redirect('/pengguna/pengaturan/bidang')->with('success', 'Berhasil menambahkan bidang');
     }
 
     /** Edit User Department */
@@ -57,7 +57,7 @@ class UserDepartmentService
             'department_abbreviation' => $request->department_abbreviation
         ]);
 
-        return redirect('/pengguna/pengaturan/bidang');
+        return redirect('/pengguna/pengaturan/bidang')->with('success', 'Berhasil mengubah bidang');
     }
 
     /** Delete User Department */
@@ -66,6 +66,6 @@ class UserDepartmentService
         // Check UserDepartment is Exists
         $user_department = UserDepartment::findOrFail($id);
         $user_department->delete();
-        return redirect('/pengguna/pengaturan/bidang');
+        return redirect('/pengguna/pengaturan/bidang')->with('success', 'Berhasil menghapus bidang');
     }
 }
