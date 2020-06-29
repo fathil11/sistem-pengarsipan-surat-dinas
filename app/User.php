@@ -97,7 +97,6 @@ class User extends Authenticatable
     public function getTopPosition()
     {
         $user_role = $this->getRole();
-
         if ($user_role == 'kepala_seksie') {
             $user_department = $this->getDepartment();
 

@@ -24,6 +24,10 @@ class UserService
         $positions = UserPosition::get();
         $position_details = UserPositionDetail::get();
         $departments = UserDepartment::get();
+
+        if ($position_details->count() == 0 || $positions->count() == 0 || $departments->count() == 0) {
+            return redirect('/')->withErrors('Silahkan tambahkan jabatan, unit kerja, atau bidang untuk menambahkan user.');
+        }
         return view('app.users.user-add')->with(compact('positions', 'position_details', 'departments'));
     }
 
@@ -47,7 +51,7 @@ class UserService
         if ($position->checkRoleHasExtra()) {
             // Validate UserDepartment is empty
             if ($request->user_department_id == null) {
-                return redirect()->back()->withErrors('Bidang tidak boleh kosong !');
+                return redirect()->back()->withErrors('Bidang tidak boleh kosong.');
             } elseif ($request->user_department_id != null && $request->user_position_detail_id == null) {
                 $request->user_position_detail_id = null;
             }
@@ -69,7 +73,7 @@ class UserService
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect('/pengguna/lihat')->with('success', 'Berhasil menambahkan pengguna');
+        return redirect('/pengguna/lihat')->with('success', 'Berhasil menambahkan pengguna.');
     }
 
     /** Edit User Position Detail */
@@ -79,7 +83,7 @@ class UserService
         $positions = UserPosition::get();
         $position_details = UserPositionDetail::get();
         $departments = UserDepartment::get();
-        return view('app.users.user-edit')->with(compact('user','positions', 'position_details', 'departments'));;
+        return view('app.users.user-edit')->with(compact('user', 'positions', 'position_details', 'departments'));
     }
 
     /** Update User */
@@ -128,7 +132,7 @@ class UserService
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect('/pengguna/lihat')->with('success', 'Berhasil mengubah pengguna');
+        return redirect('/pengguna/lihat')->with('success', 'Berhasil mengupdate pengguna');
     }
 
     /** Delete User */

@@ -50,7 +50,6 @@ class UserPosition extends Model
         if (!self::checkRoleIsExists($role)) {
             return null;
         }
-
         switch ($role) {
             case 'admin': case 'kepala_dinas':
                 $top_role = 'kepala_tu';

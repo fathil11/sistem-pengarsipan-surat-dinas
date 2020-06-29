@@ -29,17 +29,26 @@ class MailSettingController extends Controller
 
     public function storeMailType(MailComponentsRequest $request)
     {
-        return MailComponentTypeService::store($request);
+        if (MailComponentTypeService::store($request)) {
+            return redirect('/surat/pengaturan/jenis-surat')->with('success', 'Berhasil menambahkan jenis surat');
+        }
+        return abort(500);
     }
 
     public function editMailType($id)
     {
-        return MailComponentTypeService::edit($id);
+        if (MailComponentTypeService::edit($id)) {
+            return view('app.mails.settings.type.type-edit', compact('mail_type'));
+        }
+        return abort(500);
     }
 
     public function updateMailType(MailComponentsRequest $request, $id)
     {
-        return MailComponentTypeService::update($request, $id);
+        if (MailComponentTypeService::update($request, $id)) {
+            return redirect('/surat/pengaturan/jenis-surat')->with('success', 'Berhasil mengupdate jenis surat');
+        }
+        return abort(500);
     }
 
     public function deleteMailType($id)
