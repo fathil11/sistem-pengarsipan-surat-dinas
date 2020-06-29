@@ -30,7 +30,7 @@ class MailSettingController extends Controller
     public function storeMailType(MailComponentsRequest $request)
     {
         if (MailComponentTypeService::store($request)) {
-            return redirect('/surat/pengaturan/jenis-surat');
+            return redirect('/surat/pengaturan/jenis-surat')->with('success', 'Berhasil menambahkan jenis surat');
         }
         return abort(500);
     }
@@ -46,7 +46,7 @@ class MailSettingController extends Controller
     public function updateMailType(MailComponentsRequest $request, $id)
     {
         if (MailComponentTypeService::update($request, $id)) {
-            return redirect('/surat/pengaturan/jenis-surat');
+            return redirect('/surat/pengaturan/jenis-surat')->with('success', 'Berhasil mengupdate jenis surat');
         }
         return abort(500);
     }

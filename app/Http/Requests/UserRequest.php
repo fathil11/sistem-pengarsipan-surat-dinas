@@ -26,9 +26,9 @@ class UserRequest extends FormRequest
         return [
             'nip' => 'required|min:3|max:100',
             'name' => 'required|min:3|max:255',
-            'user_position_id' => 'required|numeric|min:1|max:255|exists:user_positions,id',
-            'user_department_id' => 'nullable|numeric|min:1|max:255|exists:user_departments,id',
-            'user_position_detail_id' => 'nullable|numeric|min:1|max:255|exists:user_position_details,id',
+            'user_position_id' => 'required|min:1|max:255|exists:user_positions,id',
+            'user_department_id' => 'nullable|min:1|max:255|exists:user_departments,id',
+            'user_position_detail_id' => 'nullable|min:1|max:255|exists:user_position_details,id',
             'email' => 'required|min:3|max:255|email:rfc',
             'phone_number' => 'required|min:4|max:25',
             'username' => 'nullable|min:3|max:255',

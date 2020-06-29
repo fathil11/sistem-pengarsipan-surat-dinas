@@ -50,6 +50,7 @@ class MailOutService
         /** @var App\User $user */
         $user = Auth::user();
         $target_user = $user->getTopPosition();
+
         // Create & Process (Mail Transaction)
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version->id,
