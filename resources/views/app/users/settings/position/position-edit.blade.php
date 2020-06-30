@@ -10,7 +10,7 @@
                 <p class="text-danger">{{ $errors->first() }}</p>
                 @endif
                 <form action="{{ url('pengguna/pengaturan/jabatan/'.$user_position->id) }}" class="forms-sample mt-4"
-                    method="post">
+                    method="post" autocomplete="off">
                     @csrf
                     @method('patch')
                     <div class="row">

@@ -7,16 +7,20 @@
             <div class="card-body">
                 <h2>Pengaturan Unit Kerja</h2>
                 @if ($errors->any())
-                    <p class="text-danger">{{ $errors->first() }}</p>
+                <p class="text-danger">{{ $errors->first() }}</p>
                 @endif
-                <form action="{{ url('pengguna/pengaturan/unit-kerja/'.$user_position_detail->id) }}" class="forms-sample mt-4" method="post">
+                <form action="{{ url('pengguna/pengaturan/unit-kerja/'.$user_position_detail->id) }}"
+                    class="forms-sample mt-4" method="post" autocomplete="off">
                     @csrf
-                    @method('patch  ')
+                    @method('patch ')
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="unit-kerja">Unit Kerja</label>
-                                <input type="text" class="form-control @error('position_detail') is-invalid @enderror" name="position_detail" id="unit-kerja" value="{{ old('position_detail', $user_position_detail->position_detail) }}" placeholder="Unit Kerja">
+                                <input type="text" class="form-control @error('position_detail') is-invalid @enderror"
+                                    name="position_detail" id="unit-kerja"
+                                    value="{{ old('position_detail', $user_position_detail->position_detail) }}"
+                                    placeholder="Unit Kerja">
                             </div>
                         </div>
                     </div>

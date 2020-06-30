@@ -135,7 +135,7 @@ Detail Surat
         <div class="card">
             <div class="card-body">
                 <h2 class="mb-3 text-primary text-center text-md-left">Nomor Surat Keluar</h2>
-                <form action="/surat/keluar/{{ $mail->id }}/buat-nomor" method="POST">
+                <form action="/surat/keluar/{{ $mail->id }}/buat-nomor" method="POST" autocomplete="off">
                     @csrf
                     @method('PATCH')
                     <div class="row">
@@ -196,7 +196,7 @@ Detail Surat
             <div class="card-body">
                 <h2 class="mb-3 text-primary text-center text-md-left">Masukan Koreksi
                     Surat</h2>
-                <form action="/surat/keluar/{{ $mail->transaction_id }}/buat-koreksi" method="POST">
+                <form action="/surat/keluar/{{ $mail->transaction_id }}/buat-koreksi" method="POST" autocomplete="off">
                     @csrf
                     @method('PATCH')
                     <div class="row">

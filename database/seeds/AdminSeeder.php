@@ -47,5 +47,15 @@ class AdminSeeder extends Seeder
             'username' => 'admin',
             'password' => Hash::make('123123'),
         ]);
+
+        User::create([
+            'nip' => '007007007',
+            'name' => 'Sri Wahyuni',
+            'user_position_id' => 4,
+            'email' => 'sekretaris@dinkesmelawi.com',
+            'phone_number' => '082225210125',
+            'username' => 'admin',
+            'password' => Hash::make('123123'),
+        ]);
     }
 }

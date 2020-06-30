@@ -9,7 +9,8 @@
                 @if ($errors->any())
                 <p class="text-danger">{{ $errors->first() }}</p>
                 @endif
-                <form action="{{ url('pengguna/'.$user->id) }}" class="forms-sample mt-4" method="post">
+                <form action="{{ url('pengguna/'.$user->id) }}" class="forms-sample mt-4" method="post"
+                    autocomplete="off">
                     @csrf
                     @method('patch')
                     <div class="row">
