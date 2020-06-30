@@ -7,22 +7,50 @@
             <div class="card-body">
                 <h2>Pengaturan Jabatan</h2>
                 @if ($errors->any())
-                    <p class="text-danger">{{ $errors->first() }}</p>
+                <p class="text-danger">{{ $errors->first() }}</p>
                 @endif
-                <form action="{{ url('pengguna/pengaturan/jabatan/'.$user_position->id) }}" class="forms-sample mt-4" method="post">
+                <form action="{{ url('pengguna/pengaturan/jabatan/'.$user_position->id) }}" class="forms-sample mt-4"
+                    method="post">
                     @csrf
                     @method('patch')
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="position">Jabatan</label>
-                                <input type="text" class="form-control @error('position') is-invalid @enderror" name="position" id="position" placeholder="Jabatan" value="{{ old('position', $user_position->position) }}">
+                                <input type="text" class="form-control @error('position') is-invalid @enderror"
+                                    name="position" id="position" placeholder="Jabatan"
+                                    value="{{ old('position', $user_position->position) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="role">peran</label>
-                                <input type="text" class="form-control @error('role') is-invalid @enderror" name="role" id="role" placeholder="peran" value="{{ old('role', $user_position->role) }}">
+                                <label class="font-weight-bold">Akses</label>
+                                <select name="role" class="form-control">
+                                    <option value="">- Pilih Akses -</option>
+                                    <option value="admin" {{ ($user_position->role) == 'admin' ? 'selected' : '' }}>
+                                        Admin
+                                    </option>
+                                    <option value="kepala_dinas"
+                                        {{ ($user_position->role) == 'kepala_dinas' ? 'selected' : '' }}>
+                                        Kepala
+                                        Dinas</option>
+                                    <option value="sekretaris"
+                                        {{ ($user_position->role) == 'sekretaris' ? 'selected' : '' }}>
+                                        Sekretaris
+                                    </option>
+                                    <option value="kepala_tu"
+                                        {{ ($user_position->role) == 'kepala_tu' ? 'selected' : '' }}>
+                                        Kepala TU
+                                    </option>
+                                    <option value="kepala_bidang"
+                                        {{ ($user_position->role) == 'kepala_bidang' ? 'selected' : '' }}>
+                                        Kepala
+                                        Bidang</option>
+                                    <option value="kepala_seksie"
+                                        {{ ($user_position->role) == 'kepala_seksie' ? 'selected' : '' }}>
+                                        Kepala
+                                        Seksie</option>
+                                </select>
                             </div>
                         </div>
                     </div>

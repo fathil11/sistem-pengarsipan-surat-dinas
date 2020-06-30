@@ -31,7 +31,7 @@ class MailCompFolderService
             'folder' => $request->folder,
         ]);
 
-        return redirect('/surat/pengaturan/folder-surat');
+        return true;
     }
 
     /** Edit Mail Folder */
@@ -55,7 +55,7 @@ class MailCompFolderService
             'folder' => $request->folder,
         ]);
 
-        return redirect('/surat/pengaturan/folder-surat');
+        return true;
     }
 
     /** Delete Mail Folder */
@@ -64,6 +64,6 @@ class MailCompFolderService
         // Check Mail Folder is Exists
         $mail_folder = MailFolder::findOrFail($id);
         $mail_folder->delete();
-        return redirect('/surat/pengaturan/folder-surat');
+        return true;
     }
 }

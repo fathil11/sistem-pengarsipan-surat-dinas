@@ -15,6 +15,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Jabatan</th>
+                                <th>Akses</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -28,14 +29,19 @@
                                     <div class="text-wrap">
                                         <h6>{{ $user_position->position }}</h6>
                                     </div>
+                                </td>
+                                <td>
                                     <div>{{ $user_position->role }}</div>
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ url('pengguna/pengaturan/jabatan/'.$user_position->id) }}" class="btn btn-info p-2"><i class="mdi mdi-border-color menu-icon"></i></a>
-                                    <form action="{{ url('pengguna/pengaturan/jabatan/'.$user_position->id) }}" class="d-inline" method="post">
+                                    <a href="{{ url('pengguna/pengaturan/jabatan/'.$user_position->id) }}"
+                                        class="btn btn-info p-2"><i class="mdi mdi-border-color menu-icon"></i></a>
+                                    <form action="{{ url('pengguna/pengaturan/jabatan/'.$user_position->id) }}"
+                                        class="d-inline" method="post">
                                         @csrf
                                         @method('delete')
-                                        <button type="submit" class="btn btn-danger p-2" type="submit"><i class="mdi mdi-delete menu-icon"></i></button>
+                                        <button type="submit" class="btn btn-danger p-2" type="submit"><i
+                                                class="mdi mdi-delete menu-icon"></i></button>
                                     </form>
                                 </td>
                             </tr>

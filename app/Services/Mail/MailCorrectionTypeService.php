@@ -31,7 +31,7 @@ class MailCorrectionTypeService
             'type' => $request->type,
         ]);
 
-        return redirect('/surat/pengaturan/tipe-koreksi');
+        return true;
     }
 
     /** Edit Mail Correction Type */
@@ -55,7 +55,7 @@ class MailCorrectionTypeService
             'type' => $request->type,
         ]);
 
-        return redirect('/surat/pengaturan/tipe-koreksi');
+        return true;
     }
 
     /** Delete Mail Correction Type */
@@ -64,6 +64,6 @@ class MailCorrectionTypeService
         // Check Mail Correction Type is Exists
         $mail_correction_type = MailCorrectionType::findOrFail($id);
         $mail_correction_type->delete();
-        return redirect('/surat/pengaturan/tipe-koreksi');
+        return true;
     }
 }

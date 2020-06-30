@@ -35,8 +35,9 @@ class AdminSeeder extends Seeder
         ]);
         UserPosition::create([
             'position' => 'Kepala Seksie',
-            'role' => 'kepala_seksies',
+            'role' => 'kepala_seksie',
         ]);
+
         User::create([
             'nip' => '007007007',
             'name' => 'Om Bambang',

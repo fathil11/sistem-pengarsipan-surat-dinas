@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Services\User\UserService;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\UserPositionRequest;
 use App\Services\User\UserPositionService;
 use App\Http\Requests\UserDepartmentRequest;
@@ -35,7 +36,7 @@ class UserSettingController extends Controller
         return UserService::edit($id);
     }
 
-    public function updateUser(UserRequest $request, $id)
+    public function updateUser(UserUpdateRequest $request, $id)
     {
         return UserService::update($request, $id);
     }

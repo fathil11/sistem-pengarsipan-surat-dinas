@@ -4,10 +4,11 @@ namespace App\Services\User;
 
 use App\User;
 use App\UserPosition;
-use App\UserPositionDetail;
 use App\UserDepartment;
+use App\UserPositionDetail;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserUpdateRequest;
 
 class UserService
 {
@@ -87,7 +88,7 @@ class UserService
     }
 
     /** Update User */
-    public static function update(UserRequest $request, $id)
+    public static function update(UserUpdateRequest $request, $id)
     {
         // Validate Form
         $request->validated();
@@ -120,17 +121,30 @@ class UserService
         }
 
         // Update User
-        $user->update([
-            'nip' => $request->nip,
-            'name' => $request->name,
-            'user_position_id' => $request->user_position_id,
-            'user_department_id' => $user_department_id,
-            'user_position_detail_id' => $user_position_detail_id,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-        ]);
+        if ($request->has('password')) {
+            $user->update([
+                'nip' => $request->nip,
+                'name' => $request->name,
+                'user_position_id' => $request->user_position_id,
+                'user_department_id' => $user_department_id,
+                'user_position_detail_id' => $user_position_detail_id,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
+            ]);
+        } else {
+            $user->update([
+                'nip' => $request->nip,
+                'name' => $request->name,
+                'user_position_id' => $request->user_position_id,
+                'user_department_id' => $user_department_id,
+                'user_position_detail_id' => $user_position_detail_id,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'username' => $request->username,
+            ]);
+        }
 
         return redirect('/pengguna/lihat')->with('success', 'Berhasil mengupdate pengguna');
     }
