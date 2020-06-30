@@ -214,15 +214,24 @@ class MailInService
     //Download Mail
     public static function download($id)
     {
-        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
+        $mail = Mail::findOrFail($id);
+
+        if ($mail->kind != 'in') {
+            return response(403);
+        }
+
+        //Get Last Mail Version
+        $mail_version_last = $mail->mailVersions->last();
+        $mail_transaction_last = $mail_version_last->mailTransactions->last();
+        $mail_file = $mail_version_last->mailFile;
 
         MailLog::firstOrCreate([
-            'mail_transaction_id' => $mail->transaction_id,
+            'mail_transaction_id' => $mail_transaction_last->id,
             'log' => 'download',
             'user_id' => Auth::id(),
         ]);
 
-        return Storage::download($mail->file->directory_name);
+        return Storage::download($mail_file->directory_name, $mail_file->original_name);
     }
 
     // Form Forward & Disposition

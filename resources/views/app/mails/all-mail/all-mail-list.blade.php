@@ -35,7 +35,7 @@ Daftar Surat {{ Request::is('surat/semua/masuk') ? 'Masuk' : 'Keluar' }}
                                 <td class="text-wrap"> {{ $mail->origin }} </td>
                                 <td class="text-center">
                                     <form
-                                        action="/surat/semua/{{ ($mail->kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/download"
+                                        action="/surat/{{ ($mail->kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/download"
                                         method="POST" class="d-inline">
                                         @csrf
                                         @method('post')
