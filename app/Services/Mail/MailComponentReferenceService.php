@@ -33,7 +33,7 @@ class MailComponentReferenceService
             'color' => $request->color,
         ]);
 
-        return redirect('/surat/pengaturan/sifat-surat');
+        return true;
     }
 
     /** Edit Mail Reference */
@@ -59,7 +59,7 @@ class MailComponentReferenceService
             'color' => $request->color,
         ]);
 
-        return redirect('/surat/pengaturan/sifat-surat');
+        return true;
     }
 
     /** Delete Mail Reference */
@@ -68,6 +68,6 @@ class MailComponentReferenceService
         // Check Mail Reference is Exists
         $mail_reference = MailReference::findOrFail($id);
         $mail_reference->delete();
-        return redirect('/surat/pengaturan/sifat-surat');
+        return true;
     }
 }

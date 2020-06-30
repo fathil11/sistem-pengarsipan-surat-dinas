@@ -40,7 +40,7 @@ class MailComponentTypeService
     public static function edit($id)
     {
         $mail_type = MailType::findOrFail($id);
-        return true;
+        return $mail_type;
     }
 
     /** Update Mail Type */

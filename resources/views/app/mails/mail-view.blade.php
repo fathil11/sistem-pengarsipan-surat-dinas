@@ -64,15 +64,15 @@ Detail Surat
                         </form>
                     </div>
                     @if ($mail->kind == 'in')
-                    @if (($mail->transaction == 'outcome' && Auth::user()->isKepalaDinas()) || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition'))
+                    @if (($mail->transaction == 'outcome' && Auth::user()->isKepalaDinas()) || ($mail->transaction ==
+                    'income' && $mail->status['type'] == 'disposition'))
                     <div class="col">
-                        <form action="/surat/masuk/{{$mail->id}}/download-disposisi"
-                            method="post">
+                        <form action="/surat/masuk/{{$mail->id}}/download-disposisi" method="post">
                             @csrf
                             @method('patch')
                             <button type="submit" class="btn btn-block btn-gradient-danger mt-5"><i
-                                class="mdi mdi-download"></i>
-                            Unduh Disposisi Surat</button>
+                                    class="mdi mdi-download"></i>
+                                Unduh Disposisi Surat</button>
                         </form>
                     </div>
                     @endif
@@ -130,12 +130,12 @@ Detail Surat
 
 @if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi' && $mail->kind == 'out')
 @if (Auth::user()->isTU())
-<div class="row">
+<div class="row" id="beri-nomor">
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h2 class="mb-3 text-primary text-center text-md-left">Nomor Surat Keluar</h2>
-                <form action="/surat/keluar/{{ $mail->id }}/buat-nomor" method="POST">
+                <form action="/surat/keluar/{{ $mail->id }}/buat-nomor" method="POST" autocomplete="off">
                     @csrf
                     @method('PATCH')
                     <div class="row">
@@ -196,7 +196,7 @@ Detail Surat
             <div class="card-body">
                 <h2 class="mb-3 text-primary text-center text-md-left">Masukan Koreksi
                     Surat</h2>
-                <form action="/surat/keluar/{{ $mail->transaction_id }}/buat-koreksi" method="POST">
+                <form action="/surat/keluar/{{ $mail->transaction_id }}/buat-koreksi" method="POST" autocomplete="off">
                     @csrf
                     @method('PATCH')
                     <div class="row">

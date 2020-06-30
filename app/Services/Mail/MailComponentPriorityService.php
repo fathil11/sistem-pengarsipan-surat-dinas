@@ -33,7 +33,7 @@ class MailComponentPriorityService
             'color' => $request->color,
         ]);
 
-        return redirect('/surat/pengaturan/prioritas-surat');
+        return true;
     }
 
     /** Edit Mail Priority */
@@ -59,7 +59,7 @@ class MailComponentPriorityService
             'color' => $request->color,
         ]);
 
-        return redirect('/surat/pengaturan/prioritas-surat');
+        return true;
     }
 
     /** Delete Mail Priority */
@@ -68,6 +68,6 @@ class MailComponentPriorityService
         // Check Mail Priority is Exists
         $mail_priority = MailPriority::findOrFail($id);
         $mail_priority->delete();
-        return redirect('/surat/pengaturan/prioritas-surat');
+        return true;
     }
 }

@@ -35,7 +35,7 @@ class MailController extends Controller
     {
         $mail_kind = 'out';
         $mails = $mail_repository->getMailData($mail_kind);
-
+        dd($mails);
         return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
     }
 

@@ -67,7 +67,7 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                     </form>
                                     @if(Auth::user()->isTU() && $mail->status['status'] == 'Perlu Tanggapan')
                                     <button type="button" class="btn btn-success p-2"
-                                        onclick="window.location.href='/surat/keluar/{{ $mail->id }}/beri-nomor'"
+                                        onclick="window.location.href='/surat/keluar/{{ $mail->id }}#beri-nomor'"
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>
                                         <i class="mdi mdi-border-color menu-icon"></i></button>
                                     @elseif ($mail_kind == 'out' && !Auth::user()->isTU())
@@ -94,7 +94,7 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                         @method('PATCH')
                                         <button type="submit" class="btn btn-primary p-2"
                                             {{ ((($mail->transaction == 'outcome' && Auth::user()->isKepalaDinas())) || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? '' : 'disabled'}}><i
-                                            class="mdi mdi-download menu-icon"></i></button>
+                                                class="mdi mdi-download menu-icon"></i></button>
                                     </form>
                                     @endif
                                     <form action="/surat/{{ $mail->id }}" class="d-inline" method="POST">

@@ -7,7 +7,8 @@ Buat Surat {{ Str::ucfirst($mail_kind) }}
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <form class="mt-3" action="/surat/{{ $mail_kind }}" method="POST" enctype="multipart/form-data">
+                <form class="mt-3" action="/surat/{{ $mail_kind }}" method="POST" enctype="multipart/form-data"
+                    autocomplete="off">
                     @csrf
                     @method('POST')
                     <div class="row">

@@ -37,7 +37,8 @@ class MailSettingController extends Controller
 
     public function editMailType($id)
     {
-        if (MailComponentTypeService::edit($id)) {
+        $mail_type = MailComponentTypeService::edit($id);
+        if ($mail_type) {
             return view('app.mails.settings.type.type-edit', compact('mail_type'));
         }
         return abort(500);
@@ -53,7 +54,9 @@ class MailSettingController extends Controller
 
     public function deleteMailType($id)
     {
-        return MailComponentTypeService::delete($id);
+        if (MailComponentTypeService::delete($id)) {
+            return redirect('/surat/pengaturan/jenis-surat')->with('success', 'Berhasil menghapus jenis surat');
+        }
     }
 
 
@@ -70,7 +73,9 @@ class MailSettingController extends Controller
 
     public function storeMailPriority(MailComponentsRequest $request)
     {
-        return MailComponentPriorityService::store($request);
+        if (MailComponentPriorityService::store($request)) {
+            return redirect('/surat/pengaturan/prioritas-surat')->with('success', 'Berhasil menambahkan prioritas surat');
+        }
     }
 
     public function editMailPriority($id)
@@ -80,12 +85,16 @@ class MailSettingController extends Controller
 
     public function updateMailPriority(MailComponentsRequest $request, $id)
     {
-        return MailComponentPriorityService::update($request, $id);
+        if (MailComponentPriorityService::update($request, $id)) {
+            return redirect('/surat/pengaturan/prioritas-surat')->with('success', 'Berhasil mengupdate prioritas surat');
+        }
     }
 
     public function deleteMailPriority($id)
     {
-        return MailComponentPriorityService::delete($id);
+        if (MailComponentPriorityService::delete($id)) {
+            return redirect('/surat/pengaturan/prioritas-surat')->with('success', 'Berhasil menghapus prioritas surat');
+        }
     }
 
 
@@ -102,12 +111,16 @@ class MailSettingController extends Controller
 
     public function storeMailReference(MailComponentsRequest $request)
     {
-        return MailComponentReferenceService::store($request);
+        if (MailComponentReferenceService::store($request)) {
+            return redirect('surat/pengaturan/sifat-surat')->with('success', 'Berhasil menambahkan sifat surat');
+        }
     }
 
     public function updateMailReference(MailComponentsRequest $request, $id)
     {
-        return MailComponentReferenceService::update($request, $id);
+        if (MailComponentReferenceService::update($request, $id)) {
+            return redirect('surat/pengaturan/sifat-surat')->with('success', 'Berhasil mengupdate sifat surat');
+        }
     }
 
     public function editMailReference($id)
@@ -117,7 +130,9 @@ class MailSettingController extends Controller
 
     public function deleteMailReference($id)
     {
-        return MailComponentReferenceService::delete($id);
+        if (MailComponentReferenceService::delete($id)) {
+            return redirect('surat/pengaturan/sifat-surat')->with('success', 'Berhasil menghapus sifat surat');
+        }
     }
 
     //=== CRUD FOR MAIL FOLDER ===
@@ -133,7 +148,9 @@ class MailSettingController extends Controller
 
     public function storeMailFolder(MailCompFolderRequest $request)
     {
-        return MailCompFolderService::store($request);
+        if (MailCompFolderService::store($request)) {
+            return redirect('/surat/pengaturan/folder-surat')->with('Berhasil menambahkan folder surat');
+        }
     }
 
     public function editMailFolder($id)
@@ -143,12 +160,16 @@ class MailSettingController extends Controller
 
     public function updateMailFolder(MailCompFolderRequest $request, $id)
     {
-        return MailCompFolderService::update($request, $id);
+        if (MailCompFolderService::update($request, $id)) {
+            return redirect('/surat/pengaturan/folder-surat')->with('Berhasil mengupdate folder surat');
+        }
     }
 
     public function deleteMailFolder($id)
     {
-        return MailCompFolderService::delete($id);
+        if (MailCompFolderService::delete($id)) {
+            return redirect('/surat/pengaturan/folder-surat')->with('Berhasil menghapus folder surat');
+        }
     }
 
     //=== CRUD FOR MAIL CORRECTION TYPE ===
@@ -164,7 +185,9 @@ class MailSettingController extends Controller
 
     public function storeMailCorrectionType(MailCorrectionTypeRequest $request)
     {
-        return MailCorrectionTypeService::store($request);
+        if (MailCorrectionTypeService::store($request)) {
+            return redirect('surat/pengaturan/tipe-koreksi')->with('success', 'Berhasil menambahkan tipe koreksi surat');
+        }
     }
 
     public function editMailCorrectionType($id)
@@ -174,11 +197,15 @@ class MailSettingController extends Controller
 
     public function updateMailCorrectionType(MailCorrectionTypeRequest $request, $id)
     {
-        return MailCorrectionTypeService::update($request, $id);
+        if (MailCorrectionTypeService::update($request, $id)) {
+            return redirect('surat/pengaturan/tipe-koreksi')->with('success', 'Berhasil mengupdate tipe koreksi surat');
+        }
     }
 
     public function deleteMailCorrectionType($id)
     {
-        return MailCorrectionTypeService::delete($id);
+        if (MailCorrectionTypeService::delete($id)) {
+            return redirect('surat/pengaturan/tipe-koreksi')->with('success', 'Berhasil menghapus tipe koreksi surat');
+        }
     }
 }
