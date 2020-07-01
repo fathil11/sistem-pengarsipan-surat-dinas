@@ -187,7 +187,7 @@ class MailRepository
             }
 
             $mail->status = $transaction->status;
-            $mail->file = $transaction->mailVersion->first()->mailFile;
+            $mail->file = $transaction->mailVersion->mailFile;
             $mail->transaction = $transaction->transaction;
 
 

@@ -1,4 +1,4 @@
-<link rel="shortcut icon" href="images/favicon/favicon.ico">
+<link rel="shortcut icon" href="/images/favicon/favicon.ico">
 <link rel="icon" type="image/png" sizes="192x192"
     href="{{ asset('/images/favicon/android-icon-192x192-dunplab-manifest-5525.png') }}">
 <link rel="apple-touch-icon" sizes="180x180"

@@ -1,7 +1,10 @@
 <?php
 
 use App\User;
+use App\Mail\TestMail;
+use App\Mail\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -226,3 +229,7 @@ Route::get('/logout', function () {
     session()->flush();
     return redirect('/masuk');
 });
+
+// Route::get('/tes123', function () {
+//     Mail::to('bambangtriswanto@gmail.com')->send(new Notification());
+// });

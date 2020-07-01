@@ -13,33 +13,8 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        UserPosition::create([
-            'position' => 'Admin',
-            'role' => 'admin',
-        ]);
-        UserPosition::create([
-            'position' => 'Kepala Dinas',
-            'role' => 'kepala_dinas',
-        ]);
-        UserPosition::create([
-            'position' => 'Sekretaris',
-            'role' => 'sekretaris',
-        ]);
-        UserPosition::create([
-            'position' => 'Kepala TU',
-            'role' => 'kepala_tu',
-        ]);
-        UserPosition::create([
-            'position' => 'Kepala Bidang',
-            'role' => 'kepala_bidang',
-        ]);
-        UserPosition::create([
-            'position' => 'Kepala Seksie',
-            'role' => 'kepala_seksie',
-        ]);
-
         User::create([
-            'nip' => '11111',
+            'nip' => '00001',
             'name' => 'Admin',
             'user_position_id' => 1,
             'email' => 'admin@dinkesmelawi.com',
@@ -49,17 +24,17 @@ class AdminSeeder extends Seeder
         ]);
 
         User::create([
-            'nip' => '22222',
+            'nip' => '00002',
             'name' => 'Kepala Dinas',
             'user_position_id' => 2,
             'email' => 'kepaladinas@dinkesmelawi.com',
             'phone_number' => '082225210125',
-            'username' => 'kepala_dinas',
+            'username' => 'kepaladinas',
             'password' => Hash::make('123123'),
         ]);
 
         User::create([
-            'nip' => '33333',
+            'nip' => '00003',
             'name' => 'Sekretaris',
             'user_position_id' => 3,
             'email' => 'sekretaris@dinkesmelawi.com',
@@ -69,12 +44,45 @@ class AdminSeeder extends Seeder
         ]);
 
         User::create([
-            'nip' => '44444',
+            'nip' => '00004',
             'name' => 'Kepala TU',
             'user_position_id' => 4,
             'email' => 'kepalatu@dinkesmelawi.com',
             'phone_number' => '082225210125',
-            'username' => 'kepala_tu',
+            'username' => 'kepalatu',
+            'password' => Hash::make('123123'),
+        ]);
+
+        User::create([
+            'nip' => '00005',
+            'name' => 'Kepala Bidang 1',
+            'user_position_id' => 5,
+            'user_department_id' => 1,
+            'email' => 'kabid1@dinkesmelawi.com',
+            'phone_number' => '082225210125',
+            'username' => 'kabid1',
+            'password' => Hash::make('123123'),
+        ]);
+
+        User::create([
+            'nip' => '00006',
+            'name' => 'Kepala Bidang 2',
+            'user_position_id' => 5,
+            'user_department_id' => 2,
+            'email' => 'kabid2@dinkesmelawi.com',
+            'phone_number' => '082225210125',
+            'username' => 'kabid2',
+            'password' => Hash::make('123123'),
+        ]);
+
+        User::create([
+            'nip' => '00007',
+            'name' => 'Kepala Bidang 3',
+            'user_position_id' => 5,
+            'user_department_id' => 3,
+            'email' => 'kabid3@dinkesmelawi.com',
+            'phone_number' => '082225210125',
+            'username' => 'kabid3',
             'password' => Hash::make('123123'),
         ]);
     }

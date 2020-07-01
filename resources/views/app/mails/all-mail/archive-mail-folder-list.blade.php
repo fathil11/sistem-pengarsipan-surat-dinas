@@ -15,6 +15,12 @@ Arsip Surat
                         </div>
                         <div><b>Semua</b></div>
                     </div>
+                    <div class="grid-item" onclick="window.location.href='/surat/semua/arsip/folder'">
+                        <div>
+                            <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">
+                        </div>
+                        <div><b>Folder</b></div>
+                    </div>
                     <div class="grid-item" onclick="window.location.href='/surat/semua/arsip/surat-masuk'">
                         <div>
                             <img class="folder" src="{{ asset('images/svg/folder.svg') }}" alt="">

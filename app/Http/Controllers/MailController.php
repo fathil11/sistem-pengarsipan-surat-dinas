@@ -35,7 +35,6 @@ class MailController extends Controller
     {
         $mail_kind = 'out';
         $mails = $mail_repository->getMailData($mail_kind);
-        dd($mails);
         return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
     }
 
@@ -64,7 +63,7 @@ class MailController extends Controller
             return abort(403, 'Anda tidak punya akses');
         }
 
-        $mail_extra = $this->getMailExtra($mail);
+        $mail_extra['correction_type'] = $this->getMailExtra($mail);
 
         return view('app.mails.mail-view', compact(['mail', 'mail_extra']));
     }
@@ -156,15 +155,32 @@ class MailController extends Controller
         return redirect('/surat/keluar')->with('success', 'Berhasil meneruskan surat.');
     }
 
+    public function showMailOutCorrection($id)
+    {
+        // dd(session('errors'));
+        $mail = Mail::findOrFail($id);
+        $mail = (new MailRepository)->getMailData('out', false, $id)->first();
+
+        if ($mail->transaction != 'income' || $mail->status['action'] != 'koreksi') {
+            return abort(403, 'Anda tidak punya akses');
+        }
+
+        $mail_extra['type'] = MailType::all();
+        $mail_extra['reference'] = MailReference::all();
+        $mail_extra['priority'] = MailPriority::all();
+        $mail_extra['folder'] = MailFolder::all();
+
+        return view('app.mails.mail-out-update', compact(['mail', 'mail_extra']));
+    }
     // Create Correction Mail Out
     public function createCorrection(Request $request, $transaction_id)
     {
         $transaction = MailTransaction::findOrFail($transaction_id);
-
         $current_transaction = MailTransaction::create([
             'mail_version_id' => $transaction->mail_version_id,
             'user_id' => Auth::id(),
             'target_user_id' => $transaction->user_id,
+            'type' => 'correction'
         ]);
 
         MailLog::create([
@@ -201,6 +217,7 @@ class MailController extends Controller
     public function downloadMailOut($id)
     {
         $mail = (new MailRepository)->getMailData('out', false, $id)->first();
+
         $file_stored = $mail->file->directory_name;
         $file_name = $mail->file->original_name;
 
@@ -322,8 +339,8 @@ class MailController extends Controller
 
     private function getMailExtra($mail)
     {
-        if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi') {
-            return $mail_extra['correction_type'] = MailCorrectionType::all();
+        if ($mail->transaction == 'income' && ($mail->status['status'] == 'Perlu Tanggapan')) {
+            return MailCorrectionType::all();
         }
         return null;
     }

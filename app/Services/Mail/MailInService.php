@@ -222,7 +222,7 @@ class MailInService
             'user_id' => Auth::id(),
         ]);
 
-        return Storage::download($mail->file->directory_name);
+        return Storage::download($mail->file->directory_name, $mail->file->original_name);
     }
 
     // Form Forward & Disposition
@@ -245,8 +245,7 @@ class MailInService
             return view('app.mails.mail-in.forward')->with(compact('mail', 'user_departments'));
         } elseif ($user->getRole() == 'kepala_dinas') {
             return view('app.mails.mail-in.disposition')->with(compact('mail', 'user_departments'));
-        }
-        else {
+        } else {
             return redirect('/surat/masuk');
         }
     }
@@ -427,14 +426,12 @@ class MailInService
 
         $transaction_disposition_count = MailTransaction::select('target_user_id')->where(['mail_version_id' => $mail_version_last->id, 'type' => 'disposition'])->count();
 
-        foreach($mail_transaction_dispositions as $key => $mail_transaction_disposition)
-        {
+        foreach ($mail_transaction_dispositions as $key => $mail_transaction_disposition) {
             $mail_log = MailLog::where(['mail_transaction_id' => $mail_transaction_last->id, 'user_id' => $mail_transaction_disposition->target_user_id, 'log' => 'download-disposition'])->count();
             $key = $key + $mail_log;
         }
 
-        if($transaction_disposition_count+1 == $key+1)
-        {
+        if ($transaction_disposition_count+1 == $key+1) {
             $mail->update(['status' => 'archive']);
         }
 
@@ -451,7 +448,7 @@ class MailInService
         $mail_attribute->memo = $memo;
 
         $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4', 'potrait');
-        return $pdf->download('pdf-example.pdf');
+        return $pdf->download('Disposisi.pdf');
 
         // return response(200);
     }

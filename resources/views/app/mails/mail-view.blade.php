@@ -88,8 +88,16 @@ Detail Surat
         <div class="card">
             <div class="card-body">
                 <h2 class="mb-2 text-primary text-center text-md-left">Koreksi Surat</h2>
-                <p>{{ $mail->correction->type }}</p>
-                <p>{{ $mail->correction->note }}</p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Jenis Kesalahan</h5>
+                        <p>{{ $mail->correction->mailCorrectionType->type }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Catatan Kesalahan</h5>
+                        <p>{{ $mail->correction->note }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -128,7 +136,7 @@ Detail Surat
 </div>
 @endif
 
-@if ($mail->transaction == 'income' && $mail->status['action'] == 'buat-koreksi' && $mail->kind == 'out')
+
 @if (Auth::user()->isTU())
 <div class="row" id="beri-nomor">
     <div class="col-12 grid-margin stretch-card">
@@ -189,8 +197,11 @@ Detail Surat
             </div>
         </div>
     </div>
-</div> @else
-<div class="row">
+</div>
+@endif
+
+@if($mail->transaction == 'income' && ($mail->status['status'] == 'Perlu Tanggapan'))
+<div class="row" id="buat-koreksi">
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -217,7 +228,7 @@ Detail Surat
                             <div class="form-group">
                                 <label class="font-weight-bold">Catatan Koreksi</label>
                                 <textarea name="note" class="form-control" id="exampleTextarea1" rows="2"
-                                    placeholder="Masih ada kesalahan pada ..."></textarea>
+                                    placeholder="Catatan ..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -228,7 +239,6 @@ Detail Surat
         </div>
     </div>
 </div>
-@endif
 @endif
 
 <div class="row">
