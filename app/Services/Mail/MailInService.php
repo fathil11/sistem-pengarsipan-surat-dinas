@@ -2,26 +2,28 @@
 
 namespace App\Services\Mail;
 
-use Illuminate\Support\Facades\Auth;
-
-use App\User;
-use App\UserDepartment;
-
-use App\Mail;
-use App\MailVersion;
-use App\MailFile;
-use App\MailTransaction;
-use App\MailLog;
-use App\MailMemo;
-use App\Repository\MailRepository;
-
-use Illuminate\Support\Facades\Storage;
-
-use Illuminate\Database\Eloquent\Collection;
 use PDF;
 
+use App\Mail;
+use App\User;
+
+use App\MailLog;
+use App\MailFile;
+use App\MailMemo;
+use App\MailVersion;
+use App\UserDepartment;
+use App\MailTransaction;
+use App\Mail\Notification;
+
+use App\Repository\MailRepository;
+
 use App\Http\Requests\MailInRequest;
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Requests\MailMemoRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Mail as Mailer;
 
 class MailInService
 {
@@ -93,6 +95,8 @@ class MailInService
             'user_id' => $user_id,
             'log' => 'send',
         ]);
+
+        Mailer::to($target_user->email)->send(new Notification($mail));
 
         return redirect('/surat/masuk')->with('success', 'Berhasil menambahkan surat masuk.');
     }
@@ -181,6 +185,8 @@ class MailInService
             'user_id' => $user_id,
             'log' => 'send',
         ]);
+
+        Mailer::to($target_user->email)->send(new Notification($mail));
 
         return redirect('/surat/masuk')->with('success', 'Berhasil mengubah surat.');
     }
@@ -305,6 +311,8 @@ class MailInService
             'log' => 'send',
         ]);
 
+        Mailer::to($target_user->email)->send(new Notification($mail));
+
         return redirect('/surat/masuk')->with('success', 'Berhasil meneruskan surat');
     }
 
@@ -371,6 +379,8 @@ class MailInService
                 'user_id' => $user_id,
                 'log' => 'send',
             ]);
+
+            Mailer::to($target_user->email)->send(new Notification($mail));
         }
         $target_user = User::select('id')->withPosition('Kepala Bidang')->first();
 

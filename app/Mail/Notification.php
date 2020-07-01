@@ -16,9 +16,12 @@ class Notification extends Mailable
      *
      * @return void
      */
-    public function __construct()
+
+    public $mail;
+
+    public function __construct($mail)
     {
-        //
+        $this->mail = $mail;
     }
 
     /**

@@ -229,7 +229,3 @@ Route::get('/logout', function () {
     session()->flush();
     return redirect('/masuk');
 });
-
-// Route::get('/tes123', function () {
-//     Mail::to('bambangtriswanto@gmail.com')->send(new Notification());
-// });

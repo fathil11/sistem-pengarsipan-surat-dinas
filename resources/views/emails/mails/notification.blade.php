@@ -1,10 +1,11 @@
 @component('mail::message')
 # Notifikasi Surat
-Ada surat yang perlu
-Judul : Surat untuk om Bambang
-Jenis : Undangan
-Sifat : Rahasia
-Prioritas : Segera
+<p>Ada surat yang perlu ditanggapi</p>
+<p> <b>Judul</b> : {{ $mail->title }}</p>
+<p> <b>Instansi</b> : {{ $mail->origin }}</p>
+<p> <b>Jenis</b> : {{ $mail->type->type }}</p>
+<p> <b>Sifat</b> : {{ $mail->reference->type }}</p>
+<p> <b>Prioritas</b> : {{ $mail->priority->type }}</p>
 
 @component('mail::button', ['url' => 'www.sipas.dinkesmelawi.com'])
 Lihat Surat

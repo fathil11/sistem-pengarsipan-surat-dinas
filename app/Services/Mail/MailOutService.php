@@ -14,6 +14,7 @@ use App\Repository\MailRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\MailOutRequest;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail as Mailer;
 
 class MailOutService
 {
@@ -72,11 +73,7 @@ class MailOutService
             'user_id' => $user->id
         ]);
 
-        try {
-            Mail::to($target_user->email)->send(new Notification());
-        } catch (\Exception  $e) {
-            return true;
-        }
+        Mailer::to($target_user->email)->send(new Notification($mail));
 
         return true;
     }
@@ -160,6 +157,8 @@ class MailOutService
             'user_id' => $user->id
         ]);
 
+        Mailer::to($target_user->email)->send(new Notification($mail));
+
         return true;
     }
 
@@ -211,6 +210,8 @@ class MailOutService
             'log' => 'send',
             'user_id' => $user->id
         ]);
+
+        Mailer::to($target_user->email)->send(new Notification($mail));
 
         return true;
     }

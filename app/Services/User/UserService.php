@@ -121,7 +121,7 @@ class UserService
         }
 
         // Update User
-        if ($request->has('password')) {
+        if ($request->password == null) {
             $user->update([
                 'nip' => $request->nip,
                 'name' => $request->name,

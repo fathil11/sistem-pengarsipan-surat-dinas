@@ -4,7 +4,7 @@
 The body of your message.
 
 @component('mail::button', ['url' => 'https://sipas.dinkesmelawi.com'])
-Kunjungi Surat
+Cek Surat
 @endcomponent
 
 Thanks,<br>
