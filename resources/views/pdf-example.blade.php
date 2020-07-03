@@ -50,7 +50,7 @@
 
     <style type="text/css">
         * {
-            font-family: Arial;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         }
 
         td {
@@ -78,8 +78,8 @@
 </head>
 
 <body>
-    <img src="https://modulkomputer.com/wp-content/uploads/2018/03/contoh-kop-surat-kementrian-pendidikan.png" alt=""
-        style="max-width: 100%;" />
+    <h2 style="text-align: center">Lembar Disposisi</h2>
+    <br>
     <hr>
     <table width=100% class="content">
         <tr>
@@ -96,14 +96,20 @@
                         <td>{{ $mail->mail->title }}</td>
                     </tr>
                     <tr>
+                        <td>Jenis Surat</td>
+                        <td>:</td>
+                        <td>{{ $mail->mail->type->type }}</td>
+                    </tr>
+                    <tr>
                         <td>Sifat Surat</td>
                         <td>:</td>
                         <td>{{ $mail->mail->reference->type }}</td>
                     </tr>
                     <tr>
-                        <td>Tanggal Surat / Nomor</td>
+                        <td>Prioritas Surat</td>
                         <td>:</td>
-                        <td>{{  $mail->mail->mail_created_at->isoFormat('DD MMMM Y') }}</td>
+                        <td>{{ $mail->mail->priority->type }}
+                        </td>
                     </tr>
                     <tr>
                         <td>Asal Surat</td>
