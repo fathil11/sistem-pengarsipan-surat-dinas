@@ -13,7 +13,8 @@ Daftar Surat {{ Request::is('surat/semua/masuk') ? 'Masuk' : 'Keluar' }}
                         <thead>
                             <tr>
                                 <th class="font-weight-bold">Surat</th>
-                                <th class="font-weight-bold">Instansi</th>
+                                <th class="font-weight-bold text-center">Instansi</th>
+                                <th class="font-weight-bold text-center">Status</th>
                                 <th class="text-center font-weight-bold">Aksi</th>
                             </tr>
                         </thead>
@@ -32,7 +33,31 @@ Daftar Surat {{ Request::is('surat/semua/masuk') ? 'Masuk' : 'Keluar' }}
                                     <label class="badge mt-2"
                                         style="background: {{ $mail->priority->color }};">{{ Str::upper($mail->priority->type) }}</label>
                                 </td>
-                                <td class="text-wrap"> {{ $mail->origin }} </td>
+                                <td class="text-wrap text-center"> {{ $mail->origin }} </td>
+                                <td class="text-wrap text-center">
+                                    @php
+                                    switch($mails[0]->mailVersions->last()->mailTransactions->last()->type){
+                                    case 'disposition':
+                                    $status = 'Telah Didisposisikan';
+                                    $color = 'success';
+                                    break;
+                                    case 'memo':
+                                    $status = 'Sedang di Kepala Dinas';
+                                    $color = 'warning';
+                                    break;
+                                    case 'forward':
+                                    $status = 'Sedang Diproses';
+                                    $color = 'primary';
+                                    break;
+                                    default:
+                                    $status = $mails[0]->mailVersions->last()->mailTransactions->last()->type;
+                                    $color = 'danger';
+                                    }
+                                    @endphp
+                                    <label class="badge badge-{{ $color }}">
+                                        {{ $status }}
+                                    </label>
+                                </td>
                                 <td class="text-center">
                                     <form
                                         action="/surat/{{ ($mail->kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/download"
@@ -41,6 +66,14 @@ Daftar Surat {{ Request::is('surat/semua/masuk') ? 'Masuk' : 'Keluar' }}
                                         @method('post')
                                         <button type="submit" class="btn btn-secondary p-2"><i
                                                 class="mdi mdi-download menu-icon"></i></button>
+                                    </form>
+                                    <form
+                                        action="/surat/{{ ($mail->kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/arsip"
+                                        method="POST" class="d-inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-warning p-2"><i
+                                                class="mdi mdi-book-variant menu-icon"></i></button>
                                     </form>
                                     <form action="/surat/{{ $mail->id }}" class="d-inline" method="post">
                                         @csrf

@@ -2,26 +2,28 @@
 
 namespace App\Services\Mail;
 
-use Illuminate\Support\Facades\Auth;
-
-use App\User;
-use App\UserDepartment;
-
-use App\Mail;
-use App\MailVersion;
-use App\MailFile;
-use App\MailTransaction;
-use App\MailLog;
-use App\MailMemo;
-use App\Repository\MailRepository;
-
-use Illuminate\Support\Facades\Storage;
-
-use Illuminate\Database\Eloquent\Collection;
 use PDF;
 
+use App\Mail;
+use App\User;
+
+use App\MailLog;
+use App\MailFile;
+use App\MailMemo;
+use App\MailVersion;
+use App\UserDepartment;
+use App\MailTransaction;
+use App\Mail\Notification;
+
+use App\Repository\MailRepository;
+
 use App\Http\Requests\MailInRequest;
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Requests\MailMemoRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Mail as Mailer;
 
 class MailInService
 {
@@ -72,7 +74,7 @@ class MailInService
 
         //Initialize Mail Transaction to Secretary
         $user_id = Auth::id();
-        $target_user = User::select('id')->withPosition('Sekretaris')->first();
+        $target_user = User::select(['id', 'email'])->withPosition('Sekretaris')->first();
 
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version->id,
@@ -93,6 +95,8 @@ class MailInService
             'user_id' => $user_id,
             'log' => 'send',
         ]);
+
+        Mailer::to($target_user->email)->send(new Notification($mail));
 
         return redirect('/surat/masuk')->with('success', 'Berhasil menambahkan surat masuk.');
     }
@@ -159,7 +163,7 @@ class MailInService
         $mail_transaction_last = MailTransaction::select('id')->where('mail_version_id', $mail_version_last->id)->get()->last();
 
         $user_id = Auth::id();
-        $target_user = User::select('id')->withPosition('Sekretaris')->first();
+        $target_user = User::select(['id', 'email'])->withPosition('Sekretaris')->first();
 
         // Add Corrected Log to Editor
         MailLog::create([
@@ -181,6 +185,8 @@ class MailInService
             'user_id' => $user_id,
             'log' => 'send',
         ]);
+
+        Mailer::to($target_user->email)->send(new Notification($mail));
 
         return redirect('/surat/masuk')->with('success', 'Berhasil mengubah surat.');
     }
@@ -231,7 +237,7 @@ class MailInService
             'user_id' => Auth::id(),
         ]);
 
-        return Storage::download($mail_file->directory_name, $mail_file->original_name);
+        return Storage::download($mail->file->directory_name, $mail->file->original_name);
     }
 
     // Form Forward & Disposition
@@ -254,8 +260,7 @@ class MailInService
             return view('app.mails.mail-in.forward')->with(compact('mail', 'user_departments'));
         } elseif ($user->getRole() == 'kepala_dinas') {
             return view('app.mails.mail-in.disposition')->with(compact('mail', 'user_departments'));
-        }
-        else {
+        } else {
             return redirect('/surat/masuk');
         }
     }
@@ -286,7 +291,7 @@ class MailInService
 
 
         $user_id = Auth::id();
-        $target_user = User::select('id')->withPosition($request->target_user)->first();
+        $target_user = User::select(['id', 'email'])->withPosition($request->target_user)->first();
 
         //Create Mail Transaction Memo
         $mail_transaction = MailTransaction::create([
@@ -314,6 +319,8 @@ class MailInService
             'user_id' => $user_id,
             'log' => 'send',
         ]);
+
+        Mailer::to($target_user->email)->send(new Notification($mail));
 
         return redirect('/surat/masuk')->with('success', 'Berhasil meneruskan surat');
     }
@@ -381,8 +388,10 @@ class MailInService
                 'user_id' => $user_id,
                 'log' => 'send',
             ]);
+
+            Mailer::to($target_user->email)->send(new Notification($mail));
         }
-        $target_user = User::select('id')->withPosition('Kepala Bidang')->first();
+        $target_user = User::select(['id', 'email'])->withPosition('Kepala Bidang')->first();
 
         return redirect('/surat/masuk')->with('success', 'Berhasil mendisposisi surat');
 
@@ -436,14 +445,12 @@ class MailInService
 
         $transaction_disposition_count = MailTransaction::select('target_user_id')->where(['mail_version_id' => $mail_version_last->id, 'type' => 'disposition'])->count();
 
-        foreach($mail_transaction_dispositions as $key => $mail_transaction_disposition)
-        {
+        foreach ($mail_transaction_dispositions as $key => $mail_transaction_disposition) {
             $mail_log = MailLog::where(['mail_transaction_id' => $mail_transaction_last->id, 'user_id' => $mail_transaction_disposition->target_user_id, 'log' => 'download-disposition'])->count();
             $key = $key + $mail_log;
         }
 
-        if($transaction_disposition_count+1 == $key+1)
-        {
+        if ($transaction_disposition_count+1 == $key+1) {
             $mail->update(['status' => 'archive']);
         }
 
@@ -460,7 +467,7 @@ class MailInService
         $mail_attribute->memo = $memo;
 
         $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4', 'potrait');
-        return $pdf->download('pdf-example.pdf');
+        return $pdf->download('Disposisi.pdf');
 
         // return response(200);
     }
@@ -481,7 +488,7 @@ class MailInService
         ]);
 
         if ($mail->save()) {
-            return redirect('/surat/keluar')->with('success', 'Berhasil mengarsipkan surat');
+            return redirect()->back()->with('success', 'Berhasil mengarsipkan surat');
         }
     }
 }

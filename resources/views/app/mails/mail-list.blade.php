@@ -65,12 +65,19 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                         <button type="submit" class="btn btn-secondary p-2"><i
                                                 class="mdi mdi-download menu-icon"></i></button>
                                     </form>
-                                    @if(Auth::user()->isTU() && $mail->status['status'] == 'Perlu Tanggapan')
+                                    @if (Auth::user()->isTU() && $mail->status['status'] == 'Perlu Tanggapan' &&
+                                    $mail->code != null)
                                     <button type="button" class="btn btn-success p-2"
+                                        onclick="window.location.href='/surat/keluar/{{ $mail->id }}/arsip'"> <i
+                                            class=" mdi mdi-book-variant menu-icon"></i></button>
+                                    @endif
+                                    @if(Auth::user()->isTU() && $mail->status['status'] == 'Perlu Tanggapan')
+                                    <button type="button" class="btn btn-warning p-2"
                                         onclick="window.location.href='/surat/keluar/{{ $mail->id }}#beri-nomor'"
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>
                                         <i class="mdi mdi-border-color menu-icon"></i></button>
                                     @elseif ($mail_kind == 'out' && !Auth::user()->isTU())
+                                    @if ($mail->status['status'] != 'Perlu Dikoreksi')
                                     <form class="d-inline" method="POST"
                                         action="/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/teruskan">
                                         @csrf
@@ -79,8 +86,9 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                             {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}><i
                                                 class="mdi mdi-check menu-icon"></i></button>
                                     </form>
+                                    @endif
                                     <button type="button" class="btn btn-info p-2"
-                                        onclick="window.location.href='/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}{{ ($mail->status['status'] == 'Perlu Dikoreksi') ? '/koreksi' : '' }}'"
+                                        onclick="window.location.href='/surat/{{ ($mail_kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}{{ ($mail->status['status'] == 'Perlu Dikoreksi') ? '/koreksi' : '#buat-koreksi' }}'"
                                         {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>
                                         <i class="mdi mdi-border-color menu-icon"></i></button>
                                     @endif

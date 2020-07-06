@@ -7,6 +7,25 @@ Koreksi Surat
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
+                <h2 class="mb-2 text-danger text-center text-md-left">Catatan</h2>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Jenis Kesalahan</h5>
+                        <p>{{ $mail->correction->mailCorrectionType->type }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Catatan Kesalahan</h5>
+                        <p>{{ $mail->correction->note }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
                 <h2>Koreksi Surat</h2>
                 <form class="mt-5" action="/surat/keluar/{{ $mail->id }}/koreksi" method="POST"
                     enctype="multipart/form-data">
@@ -102,7 +121,7 @@ Koreksi Surat
                             accept=".doc, .docx, .pdf, .png, .jpg, .jpeg">
                         <div class="input-group col-xs-12">
                             <input type="text" class="form-control file-upload-info" disabled
-                                placeholder="{{ $mail->file->original_name . '.' . $mail->file->type }}">
+                                placeholder="{{ $mail->file->original_name }}">
                             <span class="input-group-append">
                                 <button class="file-upload-browse btn btn-gradient-primary"
                                     type="button">Upload</button>

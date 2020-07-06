@@ -16,123 +16,136 @@
             <td>Judul Surat</td>
             <td>:</td>
             <td>{{ $mail->mail->title }}</td>
-        </tr>
-        <tr>
-            <td>Direktori Surat</td>
-            <td>:</td>
-            <td>{{ $mail->mail->directory_code }}</td>
-        </tr>
-        <tr>
-            <td>Kode Surat</td>
-            <td>:</td>
-            <td>{{ $mail->mail->code }}</td>
-        </tr>
-        <tr>
-            <td>Memo Sekretaris</td>
-            <td>:</td>
-            <td>{{ $mail->memo->secretary }}</td>
-        </tr>
-        <tr>
-            <td>Memo Kepala Dinas</td>
-            <td>:</td>
-            <td>{{ $mail->memo->hod }}</td>
-        </tr>
-    </table>
+</tr>
+<tr>
+    <td>Direktori Surat</td>
+    <td>:</td>
+    <td>{{ $mail->mail->directory_code }}</td>
+</tr>
+<tr>
+    <td>Kode Surat</td>
+    <td>:</td>
+    <td>{{ $mail->mail->code }}</td>
+</tr>
+<tr>
+    <td>Memo Sekretaris</td>
+    <td>:</td>
+    <td>{{ $mail->memo->secretary }}</td>
+</tr>
+<tr>
+    <td>Memo Kepala Dinas</td>
+    <td>:</td>
+    <td>{{ $mail->memo->hod }}</td>
+</tr>
+</table>
 </body>
+
 </html> --}}
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Aloha!</title>
 
-<style type="text/css">
-    * {
-        font-family: Verdana, Arial, sans-serif;
-    }
-    table{
-        font-size: x-small;
-    }
-    td{
-        vertical-align: top;
-    }
-    tfoot tr td{
-        font-weight: bold;
-        font-size: x-small;
-    }
-    .gray {
-        background-color: lightgray
-    }
-</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Disposisi</title>
+
+    <style type="text/css">
+        * {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+        tfoot tr td {
+            font-weight: bold;
+        }
+
+        .gray {
+            background-color: lightgray
+        }
+
+        .content {
+            font-size: 18px;
+        }
+
+        .header {
+            font-weight: 600;
+            font-size: 20px;
+        }
+    </style>
 
 </head>
+
 <body>
-    <img src="https://modulkomputer.com/wp-content/uploads/2018/03/contoh-kop-surat-kementrian-pendidikan.png" alt="" style="max-width: 100%;"/>
+    <h2 style="text-align: center">Lembar Disposisi</h2>
+    <br>
     <hr>
-    <table width=100%>
+    <table width=100% class="content">
         <tr>
             <td>
                 <table>
                     <tr>
-                        <td>Nomor</td>
+                        <td>Kode</td>
                         <td>:</td>
                         <td>{{ $mail->mail->directory_code }}</td>
                     </tr>
                     <tr>
-                        <td>Pengirim</td>
-                        <td>:</td>
-                        <td>{{ $mail->mail->origin }}</td>
-                    </tr>
-                    <tr>
                         <td>Perihal</td>
                         <td>:</td>
-                        <td>Disposisi {{ $mail->mail->title }}</td>
+                        <td>{{ $mail->mail->title }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jenis Surat</td>
+                        <td>:</td>
+                        <td>{{ $mail->mail->type->type }}</td>
+                    </tr>
+                    <tr>
+                        <td>Sifat Surat</td>
+                        <td>:</td>
+                        <td>{{ $mail->mail->reference->type }}</td>
+                    </tr>
+                    <tr>
+                        <td>Prioritas Surat</td>
+                        <td>:</td>
+                        <td>{{ $mail->mail->priority->type }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Asal Surat</td>
+                        <td>:</td>
+                        <td>{{ $mail->mail->origin }}</td>
                     </tr>
                 </table>
             </td>
             @php
-                use Carbon\Carbon;
+            use Carbon\Carbon;
             @endphp
             <td style="text-align: right">
                 <table>
                     <tr>
                         <td>Tanggal Masuk</td>
                         <td>:</td>
-                        <td>{{ $mail->mail->created_at }}</td>
+                        <td>{{ $mail->mail->created_at->isoFormat('DD MMMM Y') }}</td>
                     </tr>
                     <tr>
                         <td>Tanggal Surat</td>
                         <td>:</td>
-                        <td>{{ $mail->mail->mail_created_at }}</td>
+                        <td>{{ $mail->mail->mail_created_at->isoFormat('DD MMMM Y') }}</td>
                     </tr>
                 </table>
             </td>
         </tr>
     </table>
-
+    <br>
     <hr>
-
+    <p class="header">Catatan Sekretaris</p>
+    <p class="content">{{ $mail->memo->secretary }}</p>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
     <hr>
-    <table width=100%>
-        <tr>
-            <td>Catatan Sekretaris</td>
-            <td>:</td>
-            <td>{{ $mail->memo->secretary }}</td>
-        </tr>
-        <tr>
-            <td>Catatan Kepala Dinas</td>
-            <td>:</td>
-            <td>{{ $mail->memo->hod }}</td>
-        </tr>
-    </table>
+    <p class="header">Catatan Kepala Dinas</p>
+    <p class="content">{{ $mail->memo->hod }}</p>
 
 </body>
+
 </html>

@@ -9,10 +9,12 @@ use App\MailFile;
 use App\MailVersion;
 use App\UserPosition;
 use App\MailTransaction;
+use App\Mail\Notification;
+use App\Repository\MailRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\MailOutRequest;
-use App\Repository\MailRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail as Mailer;
 
 class MailOutService
 {
@@ -24,7 +26,7 @@ class MailOutService
         $mail = Mail::create([
             'kind' => 'out',
             'title' => $request->title,
-            'origin' => 'Internal',
+            'origin' => $request->origin,
             'mail_folder_id' => $request->mail_folder_id,
             'mail_type_id' => $request->mail_type_id,
             'mail_reference_id' => $request->mail_reference_id,
@@ -71,6 +73,8 @@ class MailOutService
             'user_id' => $user->id
         ]);
 
+        Mailer::to($target_user->email)->send(new Notification($mail));
+
         return true;
     }
 
@@ -97,7 +101,7 @@ class MailOutService
         $mail->update([
             'kind' => 'out',
             'title' => $request->title,
-            'origin' => 'Internal',
+            'origin' => $request->origin,
             'mail_folder_id' => $request->mail_folder_id,
             'mail_type_id' => $request->mail_type_id,
             'mail_reference_id' => $request->mail_reference_id,
@@ -153,6 +157,8 @@ class MailOutService
             'user_id' => $user->id
         ]);
 
+        Mailer::to($target_user->email)->send(new Notification($mail));
+
         return true;
     }
 
@@ -185,12 +191,10 @@ class MailOutService
         $update_mail_request = (new MailRepository)
         ->withSameStakeHolder('out')
         ->where('mail_version_id', $mail_version_last->id)
-        ->where('type', 'correction')
         ->first();
-
         //Redirect if Last Mail Transaction type isn't 'corrected' or 'create'
         if ($update_mail_request == null && $update_mail_request->target_user_id != $user->id) {
-            return redirect()('Anda tidak punya akses !');
+            return abort(403, 'Anda tidak punya akses !');
         }
 
         // Create & Process (Mail Transaction)
@@ -206,6 +210,8 @@ class MailOutService
             'log' => 'send',
             'user_id' => $user->id
         ]);
+
+        Mailer::to($target_user->email)->send(new Notification($mail));
 
         return true;
     }

@@ -37,13 +37,13 @@
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
         </li>
-        <li class="nav-item {{ Request::is('surat/masuk') ? 'active' : '' }}">
+        <li class="nav-item {{ Request::is('surat/masuk*') ? 'active' : '' }}">
             <a class="nav-link" href="/surat/masuk">
                 <span class="menu-title">Surat Masuk</span>
                 <i class="mdi mdi-book-multiple menu-icon"></i>
             </a>
         </li>
-        <li class="nav-item {{ Request::is('surat/keluar') ? 'active' : '' }}">
+        <li class="nav-item {{ Request::is('surat/keluar*') ? 'active' : '' }}">
             <a class="nav-link" href="/surat/keluar">
                 <span class="menu-title">Surat Keluar</span>
                 <i class="mdi mdi-briefcase-check menu-icon"></i>
