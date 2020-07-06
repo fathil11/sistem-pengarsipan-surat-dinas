@@ -1,13 +1,13 @@
 <?php
 
-use App\MailCorrectionType;
-use App\MailType;
-use App\MailFolder;
-use App\MailPriority;
-use App\UserPosition;
-use App\MailReference;
-use App\UserDepartment;
+namespace Seed\Production;
+
 use Illuminate\Database\Seeder;
+use App\MailCorrectionType;
+use App\MailReference;
+use App\MailPriority;
+use App\MailFolder;
+use App\MailType;
 
 class InitialSeeder extends Seeder
 {
@@ -18,68 +18,6 @@ class InitialSeeder extends Seeder
      */
     public function run()
     {
-        // User Position
-        UserPosition::create([
-            'position' => 'Admin',
-            'role' => 'admin',
-        ]);
-        UserPosition::create([
-            'position' => 'Kepala Dinas',
-            'role' => 'kepala_dinas',
-        ]);
-        UserPosition::create([
-            'position' => 'Sekretaris',
-            'role' => 'sekretaris',
-        ]);
-        UserPosition::create([
-            'position' => 'Kepala TU',
-            'role' => 'kepala_tu',
-        ]);
-        UserPosition::create([
-            'position' => 'Kepala Bidang',
-            'role' => 'kepala_bidang',
-        ]);
-        UserPosition::create([
-            'position' => 'Kepala Seksie',
-            'role' => 'kepala_seksie',
-        ]);
-
-
-        // User Department
-        UserDepartment::create([
-            'department' => 'Bidang Satu',
-            'department_abbreviation' => 'BID1'
-        ]);
-
-        UserDepartment::create([
-            'department' => 'Bidang Dua',
-            'department_abbreviation' => 'BID2'
-        ]);
-
-        UserDepartment::create([
-            'department' => 'Bidang Tiga',
-            'department_abbreviation' => 'BID3'
-        ]);
-
-
-        // User Position Detail
-        DB::table('user_position_details')->insert([
-            'position_detail' => 'Unknown'
-        ]);
-
-        DB::table('user_position_details')->insert([
-            'position_detail' => 'Anggota 1'
-        ]);
-
-        DB::table('user_position_details')->insert([
-            'position_detail' => 'Anggota 2'
-        ]);
-
-        DB::table('user_position_details')->insert([
-            'position_detail' => 'Anggota 3'
-        ]);
-
-
         // Mail Type
         MailType::create([
             "type" => 'Undangan',
