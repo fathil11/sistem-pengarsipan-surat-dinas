@@ -84,7 +84,8 @@ class TestingController extends Controller
 
     public function mailInList()
     {
-        $mails = Mail::with('type', 'reference', 'priority')->where('kind', 'in')->whereNull('status')->orderBy('mail_created_at')->get();
+        $mails = Mail::with('type', 'reference', 'priority', 'mailVersions', 'mailVersions.mailTransactions')->where('kind', 'in')->whereNull('status')->orderBy('mail_created_at')->get();
+
         return view('app.mails.all-mail.all-mail-list')->with(compact('mails'));
     }
 
@@ -99,4 +100,3 @@ class TestingController extends Controller
         return response(200);
     }
 }
-

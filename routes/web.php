@@ -116,7 +116,7 @@ Route::group(['middlware', 'auth'], function () {
             Route::get('/{id}', 'MailController@showMailIn');
             Route::patch('/{id}', 'MailController@updateMailIn');
             Route::delete('/{id}', 'MailController@deleteMailIn');
-
+            Route::patch('/{id}/arsip', 'MailController@archiveMailIn');
             Route::get('/{id}/teruskan', 'MailController@showProcessMailIn');
             Route::post('/{id}/teruskan', 'MailController@forwardMailIn');
             Route::get('/{id}/disposisi', 'MailController@showProcessMailIn');

@@ -479,7 +479,7 @@ class MailInService
         ]);
 
         if ($mail->save()) {
-            return redirect('/surat/keluar')->with('success', 'Berhasil mengarsipkan surat');
+            return redirect()->back()->with('success', 'Berhasil mengarsipkan surat');
         }
     }
 }

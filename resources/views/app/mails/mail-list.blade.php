@@ -69,7 +69,7 @@ Daftar Surat {{ ($mail_kind == 'in') ? 'Masuk' : 'Keluar' }}
                                     $mail->code != null)
                                     <button type="button" class="btn btn-success p-2"
                                         onclick="window.location.href='/surat/keluar/{{ $mail->id }}/arsip'"> <i
-                                            class=" mdi mdi-check menu-icon"></i></button>
+                                            class=" mdi mdi-book-variant menu-icon"></i></button>
                                     @endif
                                     @if(Auth::user()->isTU() && $mail->status['status'] == 'Perlu Tanggapan')
                                     <button type="button" class="btn btn-warning p-2"
