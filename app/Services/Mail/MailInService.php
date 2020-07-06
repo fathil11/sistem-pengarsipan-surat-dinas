@@ -74,7 +74,7 @@ class MailInService
 
         //Initialize Mail Transaction to Secretary
         $user_id = Auth::id();
-        $target_user = User::select('id')->withPosition('Sekretaris')->first();
+        $target_user = User::select(['id', 'email'])->withPosition('Sekretaris')->first();
 
         $mail_transaction = MailTransaction::create([
             'mail_version_id' => $mail_version->id,
@@ -163,7 +163,7 @@ class MailInService
         $mail_transaction_last = MailTransaction::select('id')->where('mail_version_id', $mail_version_last->id)->get()->last();
 
         $user_id = Auth::id();
-        $target_user = User::select('id')->withPosition('Sekretaris')->first();
+        $target_user = User::select(['id', 'email'])->withPosition('Sekretaris')->first();
 
         // Add Corrected Log to Editor
         MailLog::create([
@@ -282,7 +282,7 @@ class MailInService
 
 
         $user_id = Auth::id();
-        $target_user = User::select('id')->withPosition($request->target_user)->first();
+        $target_user = User::select(['id', 'email'])->withPosition($request->target_user)->first();
 
         //Create Mail Transaction Memo
         $mail_transaction = MailTransaction::create([
@@ -382,7 +382,7 @@ class MailInService
 
             Mailer::to($target_user->email)->send(new Notification($mail));
         }
-        $target_user = User::select('id')->withPosition('Kepala Bidang')->first();
+        $target_user = User::select(['id', 'email'])->withPosition('Kepala Bidang')->first();
 
         return redirect('/surat/masuk')->with('success', 'Berhasil mendisposisi surat');
 
