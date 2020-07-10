@@ -220,7 +220,7 @@ class MailInService
     //Download Mail
     public static function download($id)
     {
-        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
+        $mail = (new MailRepository)->getMailData('in', false, $id, true)->first();
 
         MailLog::firstOrCreate([
             'mail_transaction_id' => $mail->transaction_id,

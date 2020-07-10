@@ -50,7 +50,7 @@
                                 <label for="user_position_detail_id">Unit Kerja</label>
                                 <select class="form-control" id="user_position_detail_id"
                                     name="user_position_detail_id">
-                                    <option>- Pilih Unit Kerja -</option>
+                                    <option value="0">- Pilih Unit Kerja -</option>
                                     @forelse ($position_details as $position_detail)
                                     <option value="{{ $position_detail->id }}"
                                         {{ old('user_position_detail_id', $user->user_position_detail_id) == $position_detail->id ? 'selected' : '' }}>

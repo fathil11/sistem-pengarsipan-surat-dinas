@@ -35,8 +35,8 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'nip' => '19680724 199701 1 001',
-            'name' => 'Susianto,S.Hut.,Mm',
+            'nip' => '19710610 200212 1 006',
+            'name' => 'Dr. Gunadi Linoh',
             'user_position_id' => 3,
             'email' => 'sekretaris@dinkesmelawi.com',
             'phone_number' => '082225210125',
@@ -56,8 +56,8 @@ class UserSeeder extends Seeder
 
         // KABID
         User::create([
-            'nip' => '19710610 200212 1 006',
-            'name' => 'Dr. Gunadi Linoh',
+            'nip' => '197012231991012001',
+            'name' => 'Indriyani Darmowiyoto, S.Sos',
             'user_position_id' => 5,
             'user_department_id' => 1,
             'email' => 'kabid1@dinkesmelawi.com',
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'nip' => '19710124 199703 1 005',
+            'nip' => '197101241997031 005',
             'name' => 'Arif Santoso, Skm.,Mkm',
             'user_position_id' => 5,
             'user_department_id' => 2,
@@ -87,7 +87,7 @@ class UserSeeder extends Seeder
             'username' => 'kabid3',
             'password' => Hash::make('123123'),
         ]);
-        
+
         // KASIE
         User::create([
             'nip' => '19711105 199203 2 007',
@@ -100,7 +100,7 @@ class UserSeeder extends Seeder
             'username' => 'kasie1',
             'password' => Hash::make('123123'),
         ]);
-        
+
         User::create([
             'nip' => '19640320 198703 1 014',
             'name' => 'Eppeda, S.St',
@@ -112,7 +112,7 @@ class UserSeeder extends Seeder
             'username' => 'kasie2',
             'password' => Hash::make('123123'),
         ]);
-        
+
         User::create([
             'nip' => '19670608 198801 2 003',
             'name' => 'Dwi Susan. P',
@@ -124,7 +124,7 @@ class UserSeeder extends Seeder
             'username' => 'kasie3',
             'password' => Hash::make('123123'),
         ]);
-        
+
         User::create([
             'nip' => '19720818 199201 1 001',
             'name' => 'Puspawati, A.Md.Keb',
@@ -136,7 +136,7 @@ class UserSeeder extends Seeder
             'username' => 'kasie4',
             'password' => Hash::make('123123'),
         ]);
-        
+
         User::create([
             'nip' => '19721010 199201 2 001',
             'name' => 'Khairunisa, S.Sos',
@@ -148,7 +148,7 @@ class UserSeeder extends Seeder
             'username' => 'kasie5',
             'password' => Hash::make('123123'),
         ]);
-        
+
         User::create([
             'nip' => '19690404 199103 1 015',
             'name' => 'Chairul Anam, S.Sos',
@@ -160,7 +160,7 @@ class UserSeeder extends Seeder
             'username' => 'kasie6',
             'password' => Hash::make('123123'),
         ]);
-        
+
         User::create([
             'nip' => '19681120 198911 1 001',
             'name' => 'Musadar, S.Sos',
@@ -172,7 +172,7 @@ class UserSeeder extends Seeder
             'username' => 'kasie7',
             'password' => Hash::make('123123'),
         ]);
-        
+
         User::create([
             'nip' => '19750409 200312 1 006',
             'name' => 'Rianto, S.Si.Apt.,Mm',
@@ -184,7 +184,7 @@ class UserSeeder extends Seeder
             'username' => 'kasie8',
             'password' => Hash::make('123123'),
         ]);
-        
+
         User::create([
             'nip' => '19620218 198703 1 012',
             'name' => 'Sabarudin',
@@ -197,6 +197,6 @@ class UserSeeder extends Seeder
             'password' => Hash::make('123123'),
         ]);
 
-        
+
     }
 }

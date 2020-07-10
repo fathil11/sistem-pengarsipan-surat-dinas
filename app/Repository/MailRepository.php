@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MailRepository
 {
-    public function withSameStakeholder($mail_kind)
+    public function withSameStakeholder($mail_kind, $all)
     {
         /** @var App\User $user */
         $user = Auth::user();
@@ -19,8 +19,11 @@ class MailRepository
             $query->whereIn('user_id', $userids)
             ->orWhereIn('target_user_id', $userids);
         })
-        ->whereHas('mailVersion', function (Builder $query) use ($mail_kind) {
-            $query->select('mail_id')->whereHas('mail', function (Builder $query) use ($mail_kind) {
+        ->whereHas('mailVersion', function (Builder $query) use ($mail_kind, $all) {
+            $query->select('mail_id')->whereHas('mail', function (Builder $query) use ($mail_kind, $all) {
+                if($all){
+                    return $query->select('kind')->where('kind', $mail_kind);
+                }
                 return $query->select('kind')->whereNull('status')->where('kind', $mail_kind);
             });
         });
@@ -28,10 +31,10 @@ class MailRepository
         return $transactions;
     }
 
-    public function getMailData($mail_kind, $only_mail_id=false, $mail_id=null)
+    public function getMailData($mail_kind, $only_mail_id=false, $mail_id=null, $all=false)
     {
         if ($only_mail_id) {
-            $mails = $this->withSameStakeholder($mail_kind)
+            $mails = $this->withSameStakeholder($mail_kind, $all)
             ->with([
             'mailVersion',
             'mailVersion.mail'
@@ -44,7 +47,7 @@ class MailRepository
             return $mails;
         }
 
-        $mails = $this->withSameStakeholder($mail_kind)
+        $mails = $this->withSameStakeholder($mail_kind, $all)
         ->with([
         'mailVersion',
         'mailVersion.mail',
