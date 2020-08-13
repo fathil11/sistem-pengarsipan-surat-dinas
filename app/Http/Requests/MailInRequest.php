@@ -41,7 +41,7 @@ class MailInRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mail_created_at' => Carbon::parse($this->mail_created_at),
+            'mail_created_at' => Carbon::parseFromLocale($this->mail_created_at),
         ]);
     }
 }

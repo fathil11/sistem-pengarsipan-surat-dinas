@@ -211,33 +211,33 @@ Detail Surat
                     @csrf
                     @method('PATCH')
                     <div class="row">
-                        <div class="col-md-6 col-sm-12">
+                        {{-- <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label class="font-weight-bold">Jenis Koreksi</label>
                                 <select name="mail_correction_type_id" class="form-control">
                                     <option value="1">-- Jenis Koreksi --</option>
                                     @foreach ($mail_extra['correction_type'] as $type)
                                     <option value="{{ $type->id }}">
-                                        {{ $type->type }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Catatan Koreksi</label>
-                                <textarea name="note" class="form-control" id="exampleTextarea1" rows="2"
-                                    placeholder="Catatan ..."></textarea>
-                            </div>
-                        </div>
+                        {{ $type->type }}
+                        </option>
+                        @endforeach
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-block btn-gradient-primary">Koreksi
-                        Surat</button>
-                </form>
+            </div> --}}
+            <div class="col-md-12 col-sm-12">
+                <div class="form-group">
+                    <label class="font-weight-bold">Catatan Koreksi</label>
+                    <textarea name="note" class="form-control" id="exampleTextarea1" rows="2"
+                        placeholder="Catatan ..."></textarea>
+                </div>
             </div>
         </div>
+        <button type="submit" class="btn btn-block btn-gradient-primary">Koreksi
+            Surat</button>
+        </form>
     </div>
+</div>
+</div>
 </div>
 @endif
 

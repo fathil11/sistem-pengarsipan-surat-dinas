@@ -91,7 +91,7 @@ class MailOutService
         }
 
         // Check user is authorized for updating EmailOut
-        $update_mail_request = (new MailRepository)->withSameStakeHolder('out')->count();
+        $update_mail_request = (new MailRepository)->withSameStakeHolder('out', false)->count();
 
         if ($update_mail_request == 0) {
             return abort(403, 'Anda tidak punya akses.');

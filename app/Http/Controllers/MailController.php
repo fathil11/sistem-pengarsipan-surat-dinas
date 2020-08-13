@@ -197,7 +197,7 @@ class MailController extends Controller
 
         MailCorrection::create([
             'mail_transaction_id' => $current_transaction->id,
-            'mail_correction_type_id' => $request->mail_correction_type_id,
+            // 'mail_correction_type_id' => $request->mail_correction_type_id,
             'note' => $request->note,
         ]);
 
