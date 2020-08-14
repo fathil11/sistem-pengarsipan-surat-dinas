@@ -189,7 +189,7 @@ class MailOutService
 
         //Check if Last Mail Transaction type isn't 'corrected' or 'create' or 'forward'
         $update_mail_request = (new MailRepository)
-        ->withSameStakeHolder('out')
+        ->withSameStakeHolder('out', false)
         ->where('mail_version_id', $mail_version_last->id)
         ->first();
         //Redirect if Last Mail Transaction type isn't 'corrected' or 'create'

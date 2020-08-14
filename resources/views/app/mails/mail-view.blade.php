@@ -89,18 +89,18 @@ Detail Surat
             <div class="card-body">
                 <h2 class="mb-2 text-primary text-center text-md-left">Koreksi Surat</h2>
                 <div class="row mt-4">
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <h5>Jenis Kesalahan</h5>
                         <p>{{ $mail->correction->mailCorrectionType->type }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5>Catatan Kesalahan</h5>
-                        <p>{{ $mail->correction->note }}</p>
-                    </div>
+                </div> --}}
+                <div class="col-md-12">
+                    <h5>Catatan Kesalahan</h5>
+                    <p>{{ $mail->correction->note }}</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 @endif
 
@@ -180,18 +180,11 @@ Detail Surat
                         @endif
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <button type="submit"
-                                class="btn btn-block btn-gradient-primary">{{ ($mail->code != null) ? 'Ubah' : 'Masukan' }}
+                                class="btn btn-block btn-gradient-primary">{{ ($mail->code != null) ? 'Ubah' : 'Simpan' }}
                                 Nomor</button>
                         </div>
-                        @if ($mail->code != null)
-                        <div class="col-md-6" id="archive">
-                            <a class="btn btn-block btn-gradient-warning" href="/surat/keluar/{{ $mail->id }}/arsip">
-                                Arsipkan Surat
-                            </a>
-                        </div>
-                        @endif
                     </div>
                 </form>
             </div>
@@ -200,7 +193,7 @@ Detail Surat
 </div>
 @endif
 
-@if($mail->transaction == 'income' && ($mail->status['status'] == 'Perlu Tanggapan'))
+@if($mail->transaction == 'income' && ($mail->status['status'] == 'Perlu Tanggapan') && !Auth::user()->isTU())
 <div class="row" id="buat-koreksi">
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
@@ -244,9 +237,29 @@ Detail Surat
 <div class="row">
     <div class="col">
         <div class="form-group">
-            <a class="btn btn-light" href="/surat/{{ ($mail->kind == 'in') ? 'masuk' : 'keluar' }}">Kembali</a>
+            <a class="btn btn-light btn-block"
+                href="/surat/{{ ($mail->kind == 'in') ? 'masuk' : 'keluar' }}">Kembali</a>
         </div>
     </div>
+    @if ($mail->code != null)
+    <div class="col-md-12" id="archive">
+        <a class="btn btn-block btn-gradient-warning" href="/surat/keluar/{{ $mail->id }}/arsip">
+            Arsipkan Surat
+        </a>
+    </div>
+    @endif
+    @if ($mail->status['status'] != 'Perlu Dikoreksi' && !Auth::user()->isTU())
+    <div class="col">
+        <form class="d-inline" method="POST"
+            action="/surat/{{ ($mail->kind=='out') ? 'keluar' : 'masuk'}}/{{ $mail->id }}/teruskan">
+            @csrf
+            @method('PATCH')
+            <button type="submit" class="btn btn-success btn-block"
+                {{ ($mail->transaction == 'outcome' || ($mail->transaction == 'income' && $mail->status['type'] == 'disposition')) ? 'disabled' : ''}}>Teruskan</button>
+        </form>
+    </div>
+    @endif
 </div>
+
 
 @endsection
