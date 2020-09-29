@@ -7,20 +7,19 @@ Koreksi Surat
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h2 class="mb-2 text-danger text-center text-md-left">Catatan</h2>
+                <h2 class="mb-2 text-danger text-center text-md-left">Catatan Koreksi</h2>
                 <div class="row mt-4">
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <h5>Jenis Kesalahan</h5>
                         <p>{{ $mail->correction->mailCorrectionType->type }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5>Catatan Kesalahan</h5>
-                        <p>{{ $mail->correction->note }}</p>
-                    </div>
+                </div> --}}
+                <div class="col-md-12">
+                    <p>{{ $mail->correction->note }}</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <div class="row">
     <div class="col-12 grid-margin stretch-card">

@@ -21,7 +21,7 @@ class MailRepository
         })
         ->whereHas('mailVersion', function (Builder $query) use ($mail_kind, $all) {
             $query->select('mail_id')->whereHas('mail', function (Builder $query) use ($mail_kind, $all) {
-                if($all){
+                if ($all) {
                     return $query->select('kind')->where('kind', $mail_kind);
                 }
                 return $query->select('kind')->whereNull('status')->where('kind', $mail_kind);
@@ -192,7 +192,6 @@ class MailRepository
             $mail->status = $transaction->status;
             $mail->file = $transaction->mailVersion->mailFile;
             $mail->transaction = $transaction->transaction;
-
 
             return $mail;
         });

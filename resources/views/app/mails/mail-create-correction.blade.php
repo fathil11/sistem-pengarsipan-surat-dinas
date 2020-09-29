@@ -70,7 +70,7 @@ Detail Surat
         <div class="card">
             <div class="card-body">
                 <h2 class="mb-2 text-primary text-center text-md-left">Koreksi Surat</h2>
-                <p>{{ $mail->correction->type }}</p>
+                {{-- <p>{{ $mail->correction->type }}</p> --}}
                 <p>{{ $mail->correction->note }}</p>
             </div>
         </div>
