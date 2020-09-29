@@ -220,19 +220,10 @@ class MailInService
     //Download Mail
     public static function download($id)
     {
-        $mail = Mail::findOrFail($id);
-
-        if ($mail->kind != 'in') {
-            return response(403);
-        }
-
-        //Get Last Mail Version
-        $mail_version_last = $mail->mailVersions->last();
-        $mail_transaction_last = $mail_version_last->mailTransactions->last();
-        $mail_file = $mail_version_last->mailFile;
+        $mail = (new MailRepository)->getMailData('in', false, $id, true)->first();
 
         MailLog::firstOrCreate([
-            'mail_transaction_id' => $mail_transaction_last->id,
+            'mail_transaction_id' => $mail->transaction_id,
             'log' => 'download',
             'user_id' => Auth::id(),
         ]);

@@ -90,6 +90,7 @@ class UserService
     /** Update User */
     public static function update(UserUpdateRequest $request, $id)
     {
+        // dd($request->all());
         // Validate Form
         $request->validated();
 

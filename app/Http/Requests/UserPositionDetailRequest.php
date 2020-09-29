@@ -24,7 +24,7 @@ class UserPositionDetailRequest extends FormRequest
     public function rules()
     {
         return [
-            'position_detail' => 'required|min:3|max:50',
+            'position_detail' => 'required|min:3|max:255',
         ];
     }
 }
