@@ -24,6 +24,8 @@ use App\MailMemo;
 
 use Carbon\Carbon;
 
+use Yajra\DataTables\Facades\DataTables as Datatables;
+
 use PDF;
 
 class TestingController extends Controller
@@ -56,30 +58,55 @@ class TestingController extends Controller
         return view('app.mails.all-mail.archive-mail-year-list')->with(compact('years'));
     }
 
+
+    //Json method
+    public function jsonMailArchiveAll()
+    {
+        return Datatables::of(Mail::with('type', 'reference', 'priority')->where('status', 'archive')->orderBy('mail_created_at')->get())->addColumn('download', 'app.mails.all-mail.mail-download')->make(true);
+    }
+
+    public function jsonMailArchiveMailIn()
+    {
+        return Datatables::of(Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'in'])->orderBy('mail_created_at')->get())->addColumn('download', 'app.mails.all-mail.mail-download')->make(true);
+    }
+
+    public function jsonMailArchiveMailOut()
+    {
+        return Datatables::of(Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'out'])->orderBy('mail_created_at')->get())->addColumn('download', 'app.mails.all-mail.mail-download')->make(true);
+    }
+
+    public function jsonMailArchiveYear($year)
+    {
+        return Datatables::of(Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where('status', 'archive')->orderBy('mail_created_at')->get())->addColumn('download', 'app.mails.all-mail.mail-download')->make(true);
+    }
+
     public function showMailArchiveAll()
     {
-        $mails = Mail::with('type', 'reference', 'priority')->where('status', 'archive')->orderBy('mail_created_at')->get();
-        return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+        // $mails = Mail::with('type', 'reference', 'priority')->where('status', 'archive')->orderBy('mail_created_at')->get();
+        // return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+        return view('app.mails.all-mail.archive-mail-list');
     }
 
     public function showMailArchiveMailIn()
     {
-        $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'in'])->orderBy('mail_created_at')->get();
-        return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+        // $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'in'])->orderBy('mail_created_at')->get();
+        // return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+        return view('app.mails.all-mail.archive-mail-list');
     }
 
     public function showMailArchiveMailOut()
     {
-        $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'out'])->orderBy('mail_created_at')->get();
-        return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+        // $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'out'])->orderBy('mail_created_at')->get();
+        // return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+        return view('app.mails.all-mail.archive-mail-list');
     }
 
     public function showMailArchiveYear($year)
     {
-        $mails = Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where('status', 'archive')->orderBy('mail_created_at')->get();
-        return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+        // $mails = Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where('status', 'archive')->orderBy('mail_created_at')->get();
+        // return view('app.mails.all-mail.archive-mail-list')->with(compact('mails'));
+        return view('app.mails.all-mail.archive-mail-list');
     }
-
 
 
     public function mailInList()

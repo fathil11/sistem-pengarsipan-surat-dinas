@@ -1,47 +1,91 @@
 <?php
 
-namespace App\Services\Mail;
+namespace App\Http\Controllers;
 
 use PDF;
 
-use App\Mail;
 use App\User;
-
-use App\MailLog;
-use App\MailFile;
-use App\MailMemo;
-use App\MailVersion;
 use App\UserDepartment;
+
+use App\Mail;
+use App\MailLog;
+use App\MailMemo;
+use App\MailType;
+use App\MailFile;
+use App\MailFolder;
+use App\MailVersion;
+use App\MailPriority;
+use App\MailReference;
+use App\MailCorrection;
 use App\MailTransaction;
+use App\MailCorrectionType;
+
 use App\Mail\Notification;
 
 use App\Repository\MailRepository;
-
-use App\Http\Requests\MailInRequest;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\MailMemoRequest;
+use App\Http\Requests\MailInRequest;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail as Mailer;
 
-class MailInService
+class MailInController extends Controller
 {
-    // Read/Show Mail
-    public static function show($id)
-    {
-        // Check user is authorized for updating Mail In
-        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
+    /**
+        Mail In Controller
+        Available Functions :
+            1.  index => Show List of Mail In
+            2.  create => Show Form Create Mail In
+            3.  store => Store Mail In
+            4.  show => Show Mail In
+            5.  update => Update Mail In
+            6.  destroy => Delete Mail In
+            7.  download => Download Mail In
+            8.  downloadDisposition =>  Download Mail In Disposition &
+                                        Automatically Archive Mail In When All User Has Download Mail In Disposition
+            9.  showProcess => Show Form Forward & Disposition Mail In
+            10. disposition => Disposition Mail In
+            11. archive => Archive Mail In
+    */
 
-        if ($mail == null) {
-            return abort(403, 'Anda tidak punya akses');
+    // Show List of Mail In
+    public function index()
+    {
+        $mail_repository = new MailRepository();
+
+        $mail_kind = 'in';
+        $mails = $mail_repository->getMailData($mail_kind);
+        return view('app.mails.mail-list', compact(['mails', 'mail_kind']));
+    }
+
+    // Show Mail In Create Form
+    public function create()
+    {
+        /** @var App\User $Auth */
+        if (!Auth::user()->isTU()) {
+            return abort(403, 'Anda tidak memiliki akses');
         }
-        return view('app.mails.mail-view', compact('mail'));
+
+        $mail_kind = 'masuk';
+
+        $mail_extra['type'] = MailType::all();
+        $mail_extra['reference'] = MailReference::all();
+        $mail_extra['priority'] = MailPriority::all();
+        $mail_extra['folder'] = MailFolder::all();
+
+        return view('app.mails.mail-create', compact(['mail_extra', 'mail_kind']));
     }
 
     // Store Mail In
-    public static function store($request)
+    public function store(MailInRequest $request)
     {
+        // Validate Form
+        $request->validated();
+
         //Create Mail
         $mail = Mail::create([
             'kind' => 'in',
@@ -99,8 +143,23 @@ class MailInService
         return redirect('/surat/masuk')->with('success', 'Berhasil menambahkan surat masuk.');
     }
 
-    //Update Mail In
-    public static function update(MailInRequest $request, $id)
+    // Show Mail In
+    public function show(MailRepository $mail_repository, $id)
+    {
+        /** @var App\User $user */
+        $mail = Mail::findOrFail($id);
+
+        // Check user is authorized for updating EmailOut
+        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
+
+        if ($mail == null) {
+            return abort(403, 'Anda tidak punya akses');
+        }
+        return view('app.mails.mail-view', compact('mail'));
+    }
+
+    // Update Mail In
+    public function update(MailInRequest $request, $id)
     {
         // Validate Form
         $request->validated();
@@ -189,8 +248,8 @@ class MailInService
         return redirect('/surat/masuk')->with('success', 'Berhasil mengubah surat.');
     }
 
-    //Delete Mail In
-    public static function destroy($id)
+    // Delete Mail In
+    public function destroy($id)
     {
         $user_id = Auth::id();
 
@@ -215,8 +274,8 @@ class MailInService
         return redirect()->back()->with('success', 'Berhasil menghapus data');
     }
 
-    //Download Mail
-    public static function download($id)
+    // Download Mail In
+    public function download($id)
     {
         $mail = (new MailRepository)->getMailData('in', false, $id, true)->first();
 
@@ -229,178 +288,8 @@ class MailInService
         return Storage::download($mail->file->directory_name, $mail->file->original_name);
     }
 
-    // Form Forward & Disposition
-    public static function showProccess($id)
-    {
-        $mail = Mail::findOrFail($id);
-
-        // Check user is authorized for updating EmailOut
-        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
-
-        $user_departments = UserDepartment::get();
-
-        if ($mail == null) {
-            return abort(403, 'Anda tidak punya akses');
-        }
-
-        $user = User::with('position')->where('id', Auth::id())->first();
-        if ($user->getRole() == 'sekretaris') {
-            return view('app.mails.mail-in.forward')->with(compact('mail', 'user_departments'));
-        } elseif ($user->getRole() == 'kepala_dinas') {
-            return view('app.mails.mail-in.disposition')->with(compact('mail', 'user_departments'));
-        } else {
-            return redirect('/surat/masuk');
-        }
-    }
-
-    //Forward Mail In
-    public static function forward(MailMemoRequest $request, $id)
-    {
-        // Validate Form
-        $request->validated();
-
-        //Check if Mail Exists and Mail kind is 'in'
-        $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'in') {
-            return abort(403);
-        }
-
-        //Get Last Mail Version
-        $mail_version_last = $mail->mailVersions->last();
-
-        //Check if Last Mail Transaction type is 'memo' or 'archive'
-        $last_mail_transaction_is_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isNotEmpty();
-        $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
-
-        //Redirect if Last Mail Transaction type is 'memo' or 'archive'
-        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition) {
-            return redirect('/');
-        }
-
-        $user_id = Auth::id();
-        $target_user = User::select(['id', 'email'])->withPosition($request->target_user)->first();
-
-        //Create Mail Transaction Memo
-        $mail_transaction = MailTransaction::create([
-            'mail_version_id' => $mail_version_last->id,
-            'user_id' => $user_id,
-            'target_user_id' => $target_user->id,
-            'type' => 'memo',
-        ]);
-
-        //Store Memo
-        MailMemo::create([
-            'mail_transaction_id' => $mail_transaction->id,
-            'memo' => $request->memo,
-        ]);
-
-        //Create Mail Log
-        MailLog::create([
-            'mail_transaction_id' => $mail_transaction->id,
-            'user_id' => $user_id,
-            'log' => 'memo',
-        ]);
-
-        MailLog::create([
-            'mail_transaction_id' => $mail_transaction->id,
-            'user_id' => $user_id,
-            'log' => 'send',
-        ]);
-
-        Mailer::to($target_user->email)->send(new Notification($mail));
-
-        return redirect('/surat/masuk')->with('success', 'Berhasil meneruskan surat');
-    }
-
-    // Disposition Mail
-    public static function disposition(MailMemoRequest $request, $id)
-    {
-        // Validate Form
-        $request->validated();
-
-        //Check if Mail Exists and Mail kind is 'in'
-        $mail = Mail::findOrFail($id);
-        if ($mail->kind != 'in') {
-            return response(403);
-        }
-
-        //Get Last Mail Version
-        $mail_version_last = $mail->mailVersions->last();
-
-        //Check if Last Mail Transaction type has 'memo' or 'archive'
-        $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
-        $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
-
-        //Redirect if Last Mail Transaction type isn't 'memo' or mail has disposition before
-        if ($last_mail_transaction_isnt_memo || $mail_has_disposition) {
-            return redirect('/');
-        }
-
-        $user_id = Auth::id();
-
-        $user = Auth::user();
-
-        //Get Last Mail Transaction
-        $mail_transaction_last = $mail_version_last->mailTransactions->last();
-        // $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->position->id)->last();
-
-        $target_users = $request->target_user;
-        foreach ($target_users as $target_department_abbreviation) {
-            $user_department = UserDepartment::where('department_abbreviation', $target_department_abbreviation)->first();
-
-            $target_user = User::withRole('kepala_bidang')->withDepartment($user_department->department)->first();
-
-            //Create Mail Transaction Archive
-            $mail_transaction = MailTransaction::create([
-                'mail_version_id' => $mail_version_last->id,
-                'user_id' => $user_id,
-                'target_user_id' => $target_user->id,
-                'type' => 'disposition',
-            ]);
-
-            //Store Memo
-            MailMemo::create([
-                'mail_transaction_id' => $mail_transaction->id,
-                'memo' => $request->memo,
-            ]);
-
-            //Create Mail Log
-            MailLog::create([
-                'mail_transaction_id' => $mail_transaction->id,
-                'user_id' => $user_id,
-                'log' => 'disposition',
-            ]);
-
-            MailLog::create([
-                'mail_transaction_id' => $mail_transaction->id,
-                'user_id' => $user_id,
-                'log' => 'send',
-            ]);
-
-            Mailer::to($target_user->email)->send(new Notification($mail));
-        }
-        $target_user = User::select(['id', 'email'])->withPosition('Kepala Bidang')->first();
-
-        return redirect('/surat/masuk')->with('success', 'Berhasil mendisposisi surat');
-
-        //=== Create & Download Disposition File ===
-        // $secretary_memo = $mail_transaction_last->transactionMemo->memo;
-        // $hod_memo = $request->memo;
-
-        // $memo = new Collection();
-        // $memo->secretary = $secretary_memo;
-        // $memo->hod = $hod_memo;
-
-        // $mail_attribute = new Collection();
-        // $mail_attribute->mail = $mail;
-        // $mail_attribute->memo = $memo;
-
-        // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
-        // return $pdf->download('disposisi.pdf');
-    }
-
-    //Download Mail Disposition
-    public static function downloadDisposition($id)
+    // Download Disposition Mail In
+    public function downloadDisposition($id)
     {
         $mail = Mail::findOrFail($id);
         $mail_version_last = MailVersion::select('id')->where('mail_id', $mail->id)->get()->last();
@@ -458,8 +347,179 @@ class MailInService
         return $pdf->download('Disposisi.pdf');
     }
 
-    // Archive Mail
-    public static function archive($id)
+    // Form Forward & Disposition Mail In
+    public function showProcess($id)
+    {
+        $mail = Mail::findOrFail($id);
+
+        // Check user is authorized for updating EmailOut
+        $mail = (new MailRepository)->getMailData('in', false, $id)->first();
+
+        $user_departments = UserDepartment::get();
+
+        if ($mail == null) {
+            return abort(403, 'Anda tidak punya akses');
+        }
+
+        $user = User::with('position')->where('id', Auth::id())->first();
+        if ($user->getRole() == 'sekretaris') {
+            return view('app.mails.mail-in.forward')->with(compact('mail', 'user_departments'));
+        } elseif ($user->getRole() == 'kepala_dinas') {
+            return view('app.mails.mail-in.disposition')->with(compact('mail', 'user_departments'));
+        } else {
+            return redirect('/surat/masuk');
+        }
+    }
+
+    // Forward Mail In
+    public function forward(MailMemoRequest $request, $id)
+    {
+        // Validate Form
+        $request->validated();
+
+        //Check if Mail Exists and Mail kind is 'in'
+        $mail = Mail::findOrFail($id);
+        if ($mail->kind != 'in') {
+            return abort(403);
+        }
+
+        //Get Last Mail Version
+        $mail_version_last = $mail->mailVersions->last();
+
+        //Check if Last Mail Transaction type is 'memo' or 'archive'
+        $last_mail_transaction_is_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isNotEmpty();
+        $last_mail_transaction_is_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
+
+        //Redirect if Last Mail Transaction type is 'memo' or 'archive'
+        if ($last_mail_transaction_is_memo || $last_mail_transaction_is_disposition) {
+            return redirect('/');
+        }
+
+        $user_id = Auth::id();
+        $target_user = User::select(['id', 'email'])->withPosition($request->target_user)->first();
+
+        //Create Mail Transaction Memo
+        $mail_transaction = MailTransaction::create([
+            'mail_version_id' => $mail_version_last->id,
+            'user_id' => $user_id,
+            'target_user_id' => $target_user->id,
+            'type' => 'memo',
+        ]);
+
+        //Store Memo
+        MailMemo::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'memo' => $request->memo,
+        ]);
+
+        //Create Mail Log
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'user_id' => $user_id,
+            'log' => 'memo',
+        ]);
+
+        MailLog::create([
+            'mail_transaction_id' => $mail_transaction->id,
+            'user_id' => $user_id,
+            'log' => 'send',
+        ]);
+
+        Mailer::to($target_user->email)->send(new Notification($mail));
+
+        return redirect('/surat/masuk')->with('success', 'Berhasil meneruskan surat');
+    }
+
+    // Disposition Mail In
+    public function disposition(MailMemoRequest $request, $id)
+    {
+        // Validate Form
+        $request->validated();
+
+        //Check if Mail Exists and Mail kind is 'in'
+        $mail = Mail::findOrFail($id);
+        if ($mail->kind != 'in') {
+            return response(403);
+        }
+
+        //Get Last Mail Version
+        $mail_version_last = $mail->mailVersions->last();
+
+        //Check if Last Mail Transaction type has 'memo' or 'archive'
+        $last_mail_transaction_isnt_memo = $mail_version_last->mailTransactions->where('type', 'memo')->isEmpty();
+        $mail_has_disposition = $mail_version_last->mailTransactions->where('type', 'disposition')->isNotEmpty();
+
+        //Redirect if Last Mail Transaction type isn't 'memo' or mail has disposition before
+        if ($last_mail_transaction_isnt_memo || $mail_has_disposition) {
+            return redirect('/');
+        }
+
+        $user_id = Auth::id();
+        $user = Auth::user();
+
+        //Get Last Mail Transaction
+        $mail_transaction_last = $mail_version_last->mailTransactions->last();
+        // $mail_transaction_last = $mail_version_last->mailTransactions->where('target_user_id', $user->position->id)->last();
+
+        $target_users = $request->target_user;
+        foreach ($target_users as $target_department_abbreviation) {
+            $user_department = UserDepartment::where('department_abbreviation', $target_department_abbreviation)->first();
+
+            $target_user = User::withRole('kepala_bidang')->withDepartment($user_department->department)->first();
+
+            //Create Mail Transaction Archive
+            $mail_transaction = MailTransaction::create([
+                'mail_version_id' => $mail_version_last->id,
+                'user_id' => $user_id,
+                'target_user_id' => $target_user->id,
+                'type' => 'disposition',
+            ]);
+
+            //Store Memo
+            MailMemo::create([
+                'mail_transaction_id' => $mail_transaction->id,
+                'memo' => $request->memo,
+            ]);
+
+            //Create Mail Log
+            MailLog::create([
+                'mail_transaction_id' => $mail_transaction->id,
+                'user_id' => $user_id,
+                'log' => 'disposition',
+            ]);
+
+            MailLog::create([
+                'mail_transaction_id' => $mail_transaction->id,
+                'user_id' => $user_id,
+                'log' => 'send',
+            ]);
+
+            Mailer::to($target_user->email)->send(new Notification($mail));
+        }
+
+        $target_user = User::select(['id', 'email'])->withPosition('Kepala Bidang')->first();
+
+        return redirect('/surat/masuk')->with('success', 'Berhasil mendisposisi surat');
+
+
+        //=== Create & Download Disposition File ===
+        // $secretary_memo = $mail_transaction_last->transactionMemo->memo;
+        // $hod_memo = $request->memo;
+
+        // $memo = new Collection();
+        // $memo->secretary = $secretary_memo;
+        // $memo->hod = $hod_memo;
+
+        // $mail_attribute = new Collection();
+        // $mail_attribute->mail = $mail;
+        // $mail_attribute->memo = $memo;
+
+        // $pdf = PDF::loadView('pdf-example', ['mail' => $mail_attribute])->setPaper('A4','potrait');
+        // return $pdf->download('disposisi.pdf');
+    }
+
+    // Archive Mail In
+    public function archive($id)
     {
         $mail = Mail::findOrFail($id);
         $mail->status = 'archive';

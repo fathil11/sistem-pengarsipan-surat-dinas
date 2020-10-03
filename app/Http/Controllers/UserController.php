@@ -1,26 +1,39 @@
 <?php
 
-namespace App\Services\User;
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 
 use App\User;
 use App\UserPosition;
 use App\UserDepartment;
 use App\UserPositionDetail;
-use App\Http\Requests\UserRequest;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\UserUpdateRequest;
 
-class UserService
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserRequest;
+
+class UserController extends Controller
 {
-    /**Show User List */
-    public static function shows()
+    /**
+       User Controller
+        Available Functions :
+            1.  index => Show List of User
+            2.  create => Show Form Create User
+            3.  store => Store User
+            4.  edit => Show Form Edit User
+            5.  update => Update User
+            6.  destroy => Delete User
+    */
+
+    // Show List of User
+    public function index()
     {
         $users = User::with(['position', 'department', 'positionDetail'])->get();
         return view('app.users.user-list', compact('users'));
     }
 
-    /** Create User */
-    public static function create()
+    // Show Form Create User
+    public function create()
     {
         $positions = UserPosition::get();
         $position_details = UserPositionDetail::get();
@@ -32,8 +45,8 @@ class UserService
         return view('app.users.user-add')->with(compact('positions', 'position_details', 'departments'));
     }
 
-    /** Store User */
-    public static function store(UserRequest $request)
+    // Store User
+    public function store(UserRequest $request)
     {
         // Validate Form
         $request->validated();
@@ -47,6 +60,7 @@ class UserService
             Kepala Dinas, Sekretaris, or Kepala TU
             does't have UserDepartment and UserPositionDetail.
         */
+
         $user_department_id = null;
         $user_position_detail_id = null;
         if ($position->checkRoleHasExtra()) {
@@ -77,8 +91,8 @@ class UserService
         return redirect('/pengguna/lihat')->with('success', 'Berhasil menambahkan pengguna.');
     }
 
-    /** Edit User Position Detail */
-    public static function edit($id)
+    // Show Form Edit User
+    public function edit($id)
     {
         $user = User::findOrFail($id);
         $positions = UserPosition::get();
@@ -87,10 +101,9 @@ class UserService
         return view('app.users.user-edit')->with(compact('user', 'positions', 'position_details', 'departments'));
     }
 
-    /** Update User */
-    public static function update(UserRequest $request, $id)
+    // Update User
+    public function update(UserRequest $request, $id)
     {
-        // dd($request->all());
         // Validate Form
         $request->validated();
 
@@ -106,11 +119,12 @@ class UserService
             Kepala Dinas, Sekretaris, or Kepala TU
             does't have UserDepartment and UserPositionDetail.
         */
+
         $user_department_id = null;
         $user_position_detail_id = null;
 
         if ($position->checkRoleHasExtra()) {
-            // Valudate UserDepartment is empty
+            // Validate UserDepartment is empty
             if ($request->user_department_id == null) {
                 return redirect()->back()->withErrors('Bidang tidak boleh kosong !');
             } elseif ($request->user_department_id != null && $request->user_position_detail_id == null) {
@@ -150,13 +164,13 @@ class UserService
         return redirect('/pengguna/lihat')->with('success', 'Berhasil mengupdate pengguna');
     }
 
-    /** Delete User */
-    public static function delete($id)
+    // Delete User
+    public function destroy($id)
     {
         // Check User is Exists
         $user = User::findOrFail($id);
-
         $user->delete();
+
         return redirect('/pengguna/lihat')->with('success', 'Berhasil menghapus pengguna');
     }
 }

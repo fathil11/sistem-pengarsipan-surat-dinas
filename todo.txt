@@ -1,0 +1,35 @@
+1.  Separate MailController to :
+        MailInController (Andre)    [v]
+        MailOutController (Fathil)  [v]
+
+2.  Rename function in MailInController & MailOutController to RestFull standart naming.
+    Refactor the route too.
+        MailInController (Andre)    [v]
+        Remove MailInService (Andre)[v]
+        MailOutController (Fathil)  [v]
+
+    Note :
+    - Add "tanggapan" before mail response route && refactor connected route (in view).
+
+3.  Separate MailSettingController to :
+        MailTypeController (Andre)    [v]
+        MailReferenceController (Andre)  [v]
+        MailPriorityController (Fathil)    [v]
+        MailFolderController (Fathil)  [v]
+
+4.  Separate UserSettingController to :
+        UserController (Andre)    [v]
+        UserPositionController (Andre)  [v]
+        UserDepartmentController (Fathil)    [v]
+        UserPositionDetailController (Fathil)  [v]
+
+5.  Refactor TestingController to :
+        MailArchiveController (Andre)    [v]
+        MailController (Andre)  [v]
+
+6.  Change (Semua Surat) route implementation to Yajra/laravel-datatables
+        Install yajra []
+        Do (Andre) [o]
+
+7.  Change all URL / Redirection URL to Route Name
+        Do (Fathil) []

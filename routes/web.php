@@ -71,110 +71,117 @@ Route::group(['middlware', 'auth'], function () {
 
     Route::group(['prefix' => 'pengguna'], function () {
         // User
-        Route::get('/lihat', 'UserSettingController@showUsers');
-        Route::get('/', 'UserSettingController@createUser');
-        Route::post('/', 'UserSettingController@storeUser');
-        Route::get('/{id}', 'UserSettingController@editUser');
-        Route::patch('/{id}', 'UserSettingController@updateUser');
-        Route::delete('/{id}', 'UserSettingController@deleteUser');
+        Route::get('/lihat', 'UserController@index')->name('user.index');
+        Route::get('/', 'UserController@create')->name('user.create');
+        Route::post('/', 'UserController@store')->name('user.store');
+        Route::get('/{id}', 'UserController@edit')->name('user.edit');
+        Route::patch('/{id}', 'UserController@update')->name('user.update');
+        Route::delete('/{id}', 'UserController@destroy')->name('user.destroy');
 
         Route::group(['prefix' => 'pengaturan'], function () {
+
             Route::group(['prefix' => 'jabatan'], function () {
-                Route::get('/', 'UserSettingController@showUsersPosition');
-                Route::get('/tambah', 'UserSettingController@createUserPosition');
-                Route::post('/tambah', 'UserSettingController@storeUserPosition');
-                Route::get('/{id}', 'UserSettingController@editUserPosition');
-                Route::patch('/{id}', 'UserSettingController@updateUserPosition');
-                Route::delete('/{id}', 'UserSettingController@deleteUserPosition');
+                Route::get('/', 'UserPositionController@index')->name('user.position.index');
+                Route::get('/tambah', 'UserPositionController@create')->name('user.position.create');
+                Route::post('/tambah', 'UserPositionController@store')->name('user.position.store');
+                Route::get('/{id}', 'UserPositionController@edit')->name('user.position.edit');
+                Route::patch('/{id}', 'UserPositionController@update')->name('user.position.update');
+                Route::delete('/{id}', 'UserPositionController@destroy')->name('user.position.destroy');
             });
-            Route::group(['prefix' => 'unit-kerja'], function () {
-                Route::get('/', 'UserSettingController@showUsersPositionDetail');
-                Route::get('/tambah', 'UserSettingController@createUserPositionDetail');
-                Route::post('/tambah', 'UserSettingController@storeUserPositionDetail');
-                Route::get('/{id}', 'UserSettingController@editUserPositionDetail');
-                Route::patch('/{id}', 'UserSettingController@updateUserPositionDetail');
-                Route::delete('/{id}', 'UserSettingController@deleteUserPositionDetail');
-            });
+
             Route::group(['prefix' => 'bidang'], function () {
-                Route::get('/', 'UserSettingController@showUsersDepartment');
-                Route::get('/tambah', 'UserSettingController@createUserDepartment');
-                Route::post('/tambah', 'UserSettingController@storeUserDepartment');
-                Route::get('/{id}', 'UserSettingController@editUserDepartment');
-                Route::patch('/{id}', 'UserSettingController@updateUserDepartment');
-                Route::delete('/{id}', 'UserSettingController@deleteUserDepartment');
+                Route::get('/', 'UserDepartmentController@index')->name('user.department.index');
+                Route::get('/tambah', 'UserDepartmentController@create')->name('user.department.create');
+                Route::post('/tambah', 'UserDepartmentController@store')->name('user.department.store');
+                Route::get('/{id}', 'UserDepartmentController@edit')->name('user.department.edit');
+                Route::patch('/{id}', 'UserDepartmentController@update')->name('user.department.update');
+                Route::delete('/{id}', 'UserDepartmentController@destroy')->name('user.department.destroy');
             });
+
+            Route::group(['prefix' => 'unit-kerja'], function () {
+                Route::get('/', 'UserPositionDetailController@index')->name('user.position-detail.index');
+                Route::get('/tambah', 'UserPositionDetailController@create')->name('user.position-detail.create');
+                Route::post('/tambah', 'UserPositionDetailController@store')->name('user.position-detail.store');
+                Route::get('/{id}', 'UserPositionDetailController@edit')->name('user.position-detail.edit');
+                Route::patch('/{id}', 'UserPositionDetailController@update')->name('user.position-detail.update');
+                Route::delete('/{id}', 'UserPositionDetailController@destroy')->name('user.position-detail.destroy');
+            });
+
         });
+
     });
 
     Route::group(['prefix' => 'surat'], function () {
-        Route::delete('/{id}', 'MailController@deleteMail');
-
+        //Mail In Route
         Route::group(['prefix' => 'masuk'], function () {
-            Route::get('/', 'MailController@showMailInList');
-            Route::get('/buat', 'MailController@showCreateMailIn');
-            Route::post('/', 'MailController@storeMailIn');
-            Route::post('/{id}/download', 'MailController@downloadMailIn');
-            Route::patch('/{id}/download-disposisi', 'MailController@downloadDispositionMailIn');
-            Route::get('/{id}', 'MailController@showMailIn');
-            Route::patch('/{id}', 'MailController@updateMailIn');
-            Route::delete('/{id}', 'MailController@deleteMailIn');
-            Route::patch('/{id}/arsip', 'MailController@archiveMailIn');
-            Route::get('/{id}/teruskan', 'MailController@showProcessMailIn');
-            Route::post('/{id}/teruskan', 'MailController@forwardMailIn');
-            Route::get('/{id}/disposisi', 'MailController@showProcessMailIn');
-            Route::post('/{id}/disposisi', 'MailController@dispositionMailIn');
+            Route::get('/', 'MailInController@index')->name('mail.out.index');
+            Route::get('/buat', 'MailInController@create')->name('mail.out.create');
+            Route::post('/', 'MailInController@store')->name('mail.out.store');
+            Route::get('/{id}', 'MailInController@show')->name('mail.out.show');
+            Route::patch('/{id}', 'MailInController@update')->name('mail.out.update');
+            Route::delete('/{id}', 'MailInController@destroy')->name('mail.out.destroy');
+            Route::post('/{id}/download', 'MailInController@download')->name('mail.out.download');
+            Route::patch('/{id}/download-disposisi', 'MailInController@downloadDisposition')->name('mail.out.downloadDisposition');
+            Route::get('/{id}/teruskan', 'MailInController@showProcess')->name('mail.out.showProcess');
+            Route::patch('/{id}/teruskan', 'MailInController@forward')->name('mail.out.forward');
+            Route::get('/{id}/disposisi', 'MailInController@showProcess')->name('mail.out.showProcess');
+            Route::patch('/{id}/disposisi', 'MailInController@disposition')->name('mail.out.disposition');
+            Route::patch('/{id}/arsip', 'MailInController@archive')->name('mail.out.archive');
         });
 
+        //Mail Out Route
         Route::group(['prefix' => 'keluar'], function () {
-            Route::get('/', 'MailController@showMailOutList');
-            Route::get('/buat', 'MailController@showCreateMailOut');
-            Route::post('/', 'MailController@storeMailOut');
-
-            Route::patch('/{id}/buat-koreksi', 'MailController@createCorrection');
-
-            Route::get('/{id}/koreksi', 'MailController@showMailOutCorrection');
-            Route::patch('/{id}/koreksi', 'MailController@updateMailOut');
-
-            Route::patch('/{id}/teruskan', 'MailController@forwardMailOut');
-            Route::post('/{id}/download', 'MailController@downloadMailOut');
-            Route::patch('/{id}/buat-nomor', 'MailController@storeNumber');
-            Route::get('/{id}/arsip', 'MailController@archiveMailOut');
-            Route::get('/{id}', 'MailController@showMailOut');
+            Route::get('/', 'MailOutController@index')->name('mail.out.index');
+            Route::get('/buat', 'MailOutController@create')->name('mail.out.create');
+            Route::post('/', 'MailOutController@store')->name('mail.out.store');
+            Route::get('/{id}', 'MailOutController@show')->name('mail.out.show');
+            Route::get('/{id}/koreksi', 'MailOutController@edit')->name('mail.out.edit');
+            Route::patch('/{id}/koreksi', 'MailOutController@update')->name('mail.out.update');
+            Route::delete('/{id}', 'MailOutController@destroy')->name('mail.out.destroy');
+            Route::get('/{id}/arsip', 'MailOutController@archive')->name('mail.out.archive');
+            Route::post('/{id}/download', 'MailOutController@download')->name('mail.out.download');
+            Route::patch('/{id}/teruskan', 'MailOutController@forward')->name('mail.out.forward');
+            Route::patch('/{id}/buat-koreksi', 'MailOutController@createCorrection')->name('mail.out.createCorrection');
+            Route::patch('/{id}/buat-nomor', 'MailOutController@storeNumber')->name('mail.out.storeNumber');
         });
 
         Route::group(['prefix' => 'pengaturan'], function () {
             Route::group(['prefix' => 'jenis-surat'], function () {
-                Route::get('/', 'MailSettingController@showMailsType');
-                Route::get('/tambah', 'MailSettingController@createMailType');
-                Route::post('/tambah', 'MailSettingController@storeMailType');
-                Route::get('/{id}', 'MailSettingController@editMailType');
-                Route::patch('/{id}', 'MailSettingController@updateMailType');
-                Route::delete('/{id}', 'MailSettingController@deleteMailType');
+                Route::get('/', 'MailTypeController@index')->name('mail.type.index');
+                Route::get('/tambah', 'MailTypeController@create')->name('mail.type.create');
+                Route::post('/tambah', 'MailTypeController@store')->name('mail.type.store');
+                Route::get('/{id}', 'MailTypeController@edit')->name('mail.type.edit');
+                Route::patch('/{id}', 'MailTypeController@update')->name('mail.type.update');
+                Route::delete('/{id}', 'MailTypeController@destroy')->name('mail.type.destroy');
             });
+
             Route::group(['prefix' => 'sifat-surat'], function () {
-                Route::get('/', 'MailSettingController@showMailsReference');
-                Route::get('/tambah', 'MailSettingController@createMailReference');
-                Route::post('/tambah', 'MailSettingController@storeMailReference');
-                Route::get('/{id}', 'MailSettingController@editMailReference');
-                Route::patch('/{id}', 'MailSettingController@updateMailReference');
-                Route::delete('/{id}', 'MailSettingController@deleteMailReference');
+                Route::get('/', 'MailReferenceController@index')->name('mail.reference.index');
+                Route::get('/tambah', 'MailReferenceController@create')->name('mail.reference.create');
+                Route::post('/tambah', 'MailReferenceController@store')->name('mail.reference.store');
+                Route::get('/{id}', 'MailReferenceController@edit')->name('mail.reference.edit');
+                Route::patch('/{id}', 'MailReferenceController@update')->name('mail.reference.update');
+                Route::delete('/{id}', 'MailReferenceController@destroy')->name('mail.reference.destroy');
             });
+
             Route::group(['prefix' => 'prioritas-surat'], function () {
-                Route::get('/', 'MailSettingController@showMailsPriority');
-                Route::get('/tambah', 'MailSettingController@createMailPriority');
-                Route::post('/tambah', 'MailSettingController@storeMailPriority');
-                Route::get('/{id}', 'MailSettingController@editMailPriority');
-                Route::patch('/{id}', 'MailSettingController@updateMailPriority');
-                Route::delete('/{id}', 'MailSettingController@deleteMailPriority');
+                Route::get('/', 'MailPriorityController@index')->name('mail.priority.index');
+                Route::get('/tambah', 'MailPriorityController@create')->name('mail.priority.create');
+                Route::post('/tambah', 'MailPriorityController@store')->name('mail.priority.store');
+                Route::get('/{id}', 'MailPriorityController@edit')->name('mail.priority.edit');
+                Route::patch('/{id}', 'MailPriorityController@update')->name('mail.priority.update');
+                Route::delete('/{id}', 'MailPriorityController@destroy')->name('mail.priority.destroy');
             });
+
             Route::group(['prefix' => 'folder-surat'], function () {
-                Route::get('/', 'MailSettingController@showMailsFolder');
-                Route::get('/tambah', 'MailSettingController@createMailFolder');
-                Route::post('/tambah', 'MailSettingController@storeMailFolder');
-                Route::get('/{id}', 'MailSettingController@editMailFolder');
-                Route::patch('/{id}', 'MailSettingController@updateMailFolder');
-                Route::delete('/{id}', 'MailSettingController@deleteMailFolder');
+                Route::get('/', 'MailFolderController@index')->name('mail.folder.index');
+                Route::get('/tambah', 'MailFolderController@create')->name('mail.folder.create');
+                Route::post('/tambah', 'MailFolderController@store')->name('mail.folder.store');
+                Route::get('/{id}', 'MailFolderController@edit')->name('mail.folder.edit');
+                Route::patch('/{id}', 'MailFolderController@update')->name('mail.folder.update');
+                Route::delete('/{id}', 'MailFolderController@destroy')->name('mail.folder.destroy');
             });
+
             Route::group(['prefix' => 'tipe-koreksi'], function () {
                 Route::get('/', 'MailSettingController@showMailsCorrectionType');
                 Route::get('/tambah', 'MailSettingController@createMailCorrectionType');
@@ -184,16 +191,26 @@ Route::group(['middlware', 'auth'], function () {
                 Route::delete('/{id}', 'MailSettingController@deleteMailCorrectionType');
             });
         });
+
         Route::group(['prefix' => 'semua'], function () {
             Route::get('/masuk', 'TestingController@mailInList');
             Route::get('/keluar', 'TestingController@mailOutList');
+
             Route::group(['prefix' => 'arsip'], function () {
-                Route::get('/', 'TestingController@showMailArchiveFolder');
-                Route::get('/semua', 'TestingController@showMailArchiveAll');
-                Route::get('/surat-masuk', 'TestingController@showMailArchiveMailIn');
-                Route::get('/surat-keluar', 'TestingController@showMailArchiveMailOut');
-                Route::get('/tahun', 'TestingController@showMailArchiveFolderYear');
-                Route::get('/tahun/{year}', 'TestingController@showMailArchiveYear');
+
+                Route::group(['prefix' => 'json'], function () {
+                    Route::get('/semua', 'TestingController@jsonMailArchiveAll')->name('json.mail.archive.all');
+                    Route::get('/surat-masuk', 'TestingController@jsonMailArchiveMailIn')->name('json.mail.archive.mail.in');
+                    Route::get('/surat-keluar', 'TestingController@jsonMailArchiveMailOut')->name('json.mail.archive.mail.out');
+                    Route::get('/tahun/{year}', 'TestingController@jsonMailArchiveYear')->name('json.mail.archive.year');
+                });
+
+                Route::get('/', 'TestingController@showMailArchiveFolder')->name('mail.archive.folder');
+                Route::get('/semua', 'TestingController@showMailArchiveAll')->name('mail.archive.all');
+                Route::get('/surat-masuk', 'TestingController@showMailArchiveMailIn')->name('mail.archive.mail.in');
+                Route::get('/surat-keluar', 'TestingController@showMailArchiveMailOut')->name('mail.archive.mail.out');
+                Route::get('/tahun', 'TestingController@showMailArchiveFolderYear')->name('mail.archive.folder.year');
+                Route::get('/tahun/{year}', 'TestingController@showMailArchiveYear')->name('mail.archive.year');
             });
         });
     });
