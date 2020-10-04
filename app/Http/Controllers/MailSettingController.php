@@ -60,44 +60,6 @@ class MailSettingController extends Controller
     }
 
 
-    //=== CRUD FOR MAIL PRIORITY ===
-    public function showMailsPriority()
-    {
-        return MailComponentPriorityService::shows();
-    }
-
-    public function createMailPriority()
-    {
-        return MailComponentPriorityService::create();
-    }
-
-    public function storeMailPriority(MailComponentsRequest $request)
-    {
-        if (MailComponentPriorityService::store($request)) {
-            return redirect('/surat/pengaturan/prioritas-surat')->with('success', 'Berhasil menambahkan prioritas surat');
-        }
-    }
-
-    public function editMailPriority($id)
-    {
-        return MailComponentPriorityService::edit($id);
-    }
-
-    public function updateMailPriority(MailComponentsRequest $request, $id)
-    {
-        if (MailComponentPriorityService::update($request, $id)) {
-            return redirect('/surat/pengaturan/prioritas-surat')->with('success', 'Berhasil mengupdate prioritas surat');
-        }
-    }
-
-    public function deleteMailPriority($id)
-    {
-        if (MailComponentPriorityService::delete($id)) {
-            return redirect('/surat/pengaturan/prioritas-surat')->with('success', 'Berhasil menghapus prioritas surat');
-        }
-    }
-
-
     //=== CRUD FOR MAIL REFERENCE ===
     public function showMailsReference()
     {
@@ -135,42 +97,7 @@ class MailSettingController extends Controller
         }
     }
 
-    //=== CRUD FOR MAIL FOLDER ===
-    public function showMailsFolder()
-    {
-        return MailCompFolderService::shows();
-    }
 
-    public function createMailFolder()
-    {
-        return MailCompFolderService::create();
-    }
-
-    public function storeMailFolder(MailCompFolderRequest $request)
-    {
-        if (MailCompFolderService::store($request)) {
-            return redirect('/surat/pengaturan/folder-surat')->with('Berhasil menambahkan folder surat');
-        }
-    }
-
-    public function editMailFolder($id)
-    {
-        return MailCompFolderService::edit($id);
-    }
-
-    public function updateMailFolder(MailCompFolderRequest $request, $id)
-    {
-        if (MailCompFolderService::update($request, $id)) {
-            return redirect('/surat/pengaturan/folder-surat')->with('Berhasil mengupdate folder surat');
-        }
-    }
-
-    public function deleteMailFolder($id)
-    {
-        if (MailCompFolderService::delete($id)) {
-            return redirect('/surat/pengaturan/folder-surat')->with('Berhasil menghapus folder surat');
-        }
-    }
 
     //=== CRUD FOR MAIL CORRECTION TYPE ===
     public function showMailsCorrectionType()

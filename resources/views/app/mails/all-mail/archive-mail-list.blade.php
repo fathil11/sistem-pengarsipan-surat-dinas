@@ -17,6 +17,106 @@ Arsip Surat
                                 <th class="text-center font-weight-bold">Aksi</th>
                             </tr>
                         </thead>
+                    </table>
+                    @if (Route::currentRouteName() == 'json.mail.archive.all')
+                    <script>
+                        $(function(){
+                            $('#dataTable').DataTable({
+                                processing: true,
+                                serverSide: true,
+                                ajax: {
+                                    url: '{{ route("json.mail.archive.all") }}'
+                                }
+                                columns: [
+                                    { data: 'title', name: 'title' },
+                                    { data: 'origin', name: 'origin' },
+                                    { data: 'download', name: 'download' },
+                                ]
+                            });
+                        });
+                    </script>
+                    @elseif (Route::currentRouteName() == 'json.mail.archive.mail.in')
+                    <script>
+                        $(function(){
+                            $('#dataTable').DataTable({
+                                processing: true,
+                                serverSide: true,
+                                ajax: {
+                                    url: '{{ route("json.mail.archive.mail.in") }}'
+                                }
+                                columns: [
+                                    { data: 'title', name: 'title' },
+                                    { data: 'origin', name: 'origin' },
+                                    { data: 'download', name: 'download' },
+                                ]
+                            });
+                        });
+                    </script>
+                    @elseif (Route::currentRouteName() == 'json.mail.archive.mail.out')
+                    <script>
+                        $(function(){
+                            $('#dataTable').DataTable({
+                                processing: true,
+                                serverSide: true,
+                                ajax: {
+                                    url: '{{ route("json.mail.archive.mail.out") }}'
+                                }
+                                columns: [
+                                    { data: 'title', name: 'title' },
+                                    { data: 'origin', name: 'origin' },
+                                    { data: 'download', name: 'download' },
+                                ]
+                            });
+                        });
+                    </script>
+                    @elseif (Route::currentRouteName() == 'json.mail.archive.year')
+                    <script>
+                        $(function(){
+                            $('#dataTable').DataTable({
+                                processing: true,
+                                serverSide: true,
+                                ajax: {
+                                    url: '{{ route("json.mail.archive.year") }}'
+                                }
+                                columns: [
+                                    { data: 'title', name: 'title' },
+                                    { data: 'origin', name: 'origin' },
+                                    { data: 'download', name: 'download' },
+                                ]
+                            });
+                        });
+                    </script>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+@section('js')
+<script src="//code.jquery.com/jquery.js"></script>
+<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+@endsection
+
+
+{{-- @extends('layouts.app')
+@section('title')
+Arsip Surat
+@endsection
+@section('content')
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive p-1">
+                    <table id="dataTable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="font-weight-bold">Surat</th>
+                                <th class="font-weight-bold">Instansi</th>
+                                <th class="text-center font-weight-bold">Aksi</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             @forelse($mails as $mail)
                             <tr>
@@ -54,4 +154,4 @@ Arsip Surat
         </div>
     </div>
 </div>
-@endsection
+@endsection --}}
