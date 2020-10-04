@@ -24,7 +24,9 @@ use App\MailMemo;
 
 use Carbon\Carbon;
 
-use Yajra\DataTables\Facades\DataTables as Datatables;
+use Illuminate\Support\Str;
+
+use Yajra\DataTables\Facades\DataTables as DataTables;
 
 use PDF;
 
@@ -62,22 +64,142 @@ class TestingController extends Controller
     //Json method
     public function jsonMailArchiveAll()
     {
-        return Datatables::of(Mail::with('type', 'reference', 'priority')->where('status', 'archive')->orderBy('mail_created_at')->get())->addColumn('download', 'app.mails.all-mail.mail-download')->make(true);
+        $mails = Mail::with('type', 'reference', 'priority')->where('status', 'archive')->select('mails.*');
+        return DataTables::of($mails)
+                            ->addColumn('folder', function(Mail $mails){
+                                return $mails->folder->folder;
+                            })
+                            ->addColumn('type', function(Mail $mails){
+                                return $mails->type->type;
+                            })
+                            ->addColumn('reference', function(Mail $mails){
+                                return $mails->reference->type;
+                            })
+                            ->addColumn('priority', function(Mail $mails){
+                                return $mails->priority->type;
+                            })
+                            ->addColumn('download', 'layouts.mail-download')
+                            ->addColumn('full-title', function(Mail $mails){
+                                $fullTitle = '<div class="text-wrap">
+                                <h6>' . Str::limit($mails->title, 40) . '</h6>
+                            </div>
+                            <div>' . $mails->code . '</div>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->type->color . '">' . Str::upper($mails->type->type) . '</label>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->reference->color . '">' . Str::upper($mails->reference->type) . '</label>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->priority->color.'">'.Str::upper($mails->priority->type) . '</label>';
+
+                                return $fullTitle;
+                            })
+                            ->rawColumns(['download', 'full-title'])
+                            ->make(true);
     }
 
     public function jsonMailArchiveMailIn()
     {
-        return Datatables::of(Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'in'])->orderBy('mail_created_at')->get())->addColumn('download', 'app.mails.all-mail.mail-download')->make(true);
+        $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'in'])->select('mails.*');
+        return DataTables::of($mails)
+                            ->addColumn('folder', function(Mail $mails){
+                                return $mails->folder->folder;
+                            })
+                            ->addColumn('type', function(Mail $mails){
+                                return $mails->type->type;
+                            })
+                            ->addColumn('reference', function(Mail $mails){
+                                return $mails->reference->type;
+                            })
+                            ->addColumn('priority', function(Mail $mails){
+                                return $mails->priority->type;
+                            })
+                            ->addColumn('download', 'layouts.mail-download')
+                            ->addColumn('full-title', function(Mail $mails){
+                                $fullTitle = '<div class="text-wrap">
+                                <h6>' . Str::limit($mails->title, 40) . '</h6>
+                            </div>
+                            <div>' . $mails->code . '</div>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->type->color . '">' . Str::upper($mails->type->type) . '</label>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->reference->color . '">' . Str::upper($mails->reference->type) . '</label>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->priority->color.'">'.Str::upper($mails->priority->type) . '</label>';
+
+                                return $fullTitle;
+                            })
+                            ->rawColumns(['download', 'full-title'])
+                            ->make(true);
     }
 
     public function jsonMailArchiveMailOut()
     {
-        return Datatables::of(Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'out'])->orderBy('mail_created_at')->get())->addColumn('download', 'app.mails.all-mail.mail-download')->make(true);
+        $mails = Mail::with('type', 'reference', 'priority')->where(['status' => 'archive', 'kind' => 'out'])->select('mails.*');
+        return DataTables::of($mails)
+                            ->addColumn('folder', function(Mail $mails){
+                                return $mails->folder->folder;
+                            })
+                            ->addColumn('type', function(Mail $mails){
+                                return $mails->type->type;
+                            })
+                            ->addColumn('reference', function(Mail $mails){
+                                return $mails->reference->type;
+                            })
+                            ->addColumn('priority', function(Mail $mails){
+                                return $mails->priority->type;
+                            })
+                            ->addColumn('download', 'layouts.mail-download')
+                            ->addColumn('full-title', function(Mail $mails){
+                                $fullTitle = '<div class="text-wrap">
+                                <h6>' . Str::limit($mails->title, 40) . '</h6>
+                            </div>
+                            <div>' . $mails->code . '</div>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->type->color . '">' . Str::upper($mails->type->type) . '</label>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->reference->color . '">' . Str::upper($mails->reference->type) . '</label>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->priority->color.'">'.Str::upper($mails->priority->type) . '</label>';
+
+                                return $fullTitle;
+                            })
+                            ->rawColumns(['download', 'full-title'])
+                            ->make(true);
     }
 
     public function jsonMailArchiveYear($year)
     {
-        return Datatables::of(Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where('status', 'archive')->orderBy('mail_created_at')->get())->addColumn('download', 'app.mails.all-mail.mail-download')->make(true);
+        $mails = Mail::with('type', 'reference', 'priority')->whereYear('mail_created_at', $year)->where(['status' => 'archive'])->select('mails.*');
+        return DataTables::of($mails)
+                            ->addColumn('folder', function(Mail $mails){
+                                return $mails->folder->folder;
+                            })
+                            ->addColumn('type', function(Mail $mails){
+                                return $mails->type->type;
+                            })
+                            ->addColumn('reference', function(Mail $mails){
+                                return $mails->reference->type;
+                            })
+                            ->addColumn('priority', function(Mail $mails){
+                                return $mails->priority->type;
+                            })
+                            ->addColumn('download', 'layouts.mail-download')
+                            ->addColumn('full-title', function(Mail $mails){
+                                $fullTitle = '<div class="text-wrap">
+                                <h6>' . Str::limit($mails->title, 40) . '</h6>
+                            </div>
+                            <div>' . $mails->code . '</div>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->type->color . '">' . Str::upper($mails->type->type) . '</label>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->reference->color . '">' . Str::upper($mails->reference->type) . '</label>
+                            <label class="badge mt-2 text-white"
+                                style="background: ' . $mails->priority->color.'">'.Str::upper($mails->priority->type) . '</label>';
+
+                                return $fullTitle;
+                            })
+                            ->rawColumns(['download', 'full-title'])
+                            ->make(true);
     }
 
     public function showMailArchiveAll()

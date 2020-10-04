@@ -57,6 +57,7 @@
     @include('components.swal')
 
     @yield('js')
+    @stack('scripts')
 
 </body>
 

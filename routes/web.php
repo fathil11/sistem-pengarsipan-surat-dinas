@@ -198,7 +198,7 @@ Route::group(['middlware', 'auth'], function () {
 
             Route::group(['prefix' => 'arsip'], function () {
 
-                Route::group(['prefix' => 'json'], function () {
+                Route::group(['prefix' => 'api'], function () {
                     Route::get('/semua', 'TestingController@jsonMailArchiveAll')->name('json.mail.archive.all');
                     Route::get('/surat-masuk', 'TestingController@jsonMailArchiveMailIn')->name('json.mail.archive.mail.in');
                     Route::get('/surat-keluar', 'TestingController@jsonMailArchiveMailOut')->name('json.mail.archive.mail.out');
